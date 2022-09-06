@@ -22,7 +22,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(this.apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.a205.mafya.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.a205.mafya.api.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
