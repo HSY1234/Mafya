@@ -16,6 +16,7 @@ export const drawRect = (detections, ctx) => {
     ctx.fillText(text, x, y);
     ctx.rect(x, y, width, height);
     ctx.stroke();
+    
 
     // let image = new Image();
     // image.onload = function () {

@@ -10,6 +10,7 @@ import axios from "axios";
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+ 
   const [maskLoading, setMaskLoading] = useState(false)
 
   // Main function
@@ -20,10 +21,24 @@ function App() {
     if (!maskLoading){
       setInterval(() => {
         detect(net);
-      }, 1000);
+      }, 500);
 
     }
   };
+  const dataURLtoFile = (dataurl, fileName) => {
+ 
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], fileName, {type:mime});
+}
 
   const detect = async (net) => {
     // Check data is available
@@ -45,43 +60,86 @@ function App() {
       canvasRef.current.width = videoWidth;
       canvasRef.current.height = videoHeight;
 
+      
       // Make Detections
       const obj = await net.detect(video);
 
       // Draw mesh
 
       const ctx = canvasRef.current.getContext("2d");
+
+    
       
-      console.log(obj)
-      obj.forEach((box) => {
-        if(box.bbox[2] >= 520 && box.bbox[3] >= 320 && box.score >= 0.85 && box.class==="person"){
-          drawRect(obj, ctx);
-          // console.log(ctx.canvas.toDataURL());
-          const imageFile = webcamRef.current.getScreenshot();
-          let formData = new FormData();
-          formData.set("file", imageFile);
-          for (let key of formData.keys()) {
-            console.log(key);
-          }
-          for (let value of formData.values()) {
-            console.log(value);
-          }
-          axios
-            .post("http://localhost:8080/", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                // "Access-Control-Allow-Origin": "*",
-              },
-            })
-            .then((res) => {
-            console.log("성공")
-            setMaskLoading(true)
+    
+      const findHuman = obj ? obj.filter((box)=>{
+        return box.class === "person" && box.score >= 0.8  
+      }) : null
+     
+      let humanDetact = findHuman ?  findHuman.filter((box)=>{
+        return 15<=box.bbox[0]<=160 && 15<=box.bbox[1]<=160 && box.bbox[2] >= 400 && box.bbox[3] >= 400
+      }) : []
+      console.log(humanDetact)
+      if (humanDetact.length>0){
+        drawRect(humanDetact, ctx)
+        const imageUrl = webcamRef.current.getScreenshot();
+        console.log(imageUrl)
+        let imageFile = dataURLtoFile(imageUrl,'test.jpeg');
+        console.log(imageFile)
+        let formData = new FormData();
+        formData.set("file", imageFile);
+        // for (let key of formData.keys()) {
+        //   console.log(key);
+        // }
+        // for (let value of formData.values()) {
+        //   console.log(value);
+        // }
+        axios
+          .post("http://localhost:8080/img/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              // "Access-Control-Allow-Origin": "*",
+            },
           })
-            .catch((err) => {
-              console.log(err.message);
-            });
-        }
-      });
+          .then((res) => {
+          console.log("성공")
+          setMaskLoading(true)
+        })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      }
+     
+      
+      // console.log(findHuman)
+      // obj.forEach((box) => {
+      //   if(box.bbox[2] >= 520 && box.bbox[3] >= 320 && box.score >= 0.85 && box.class==="person"){
+      //     drawRect(obj, ctx);
+      //     // console.log(ctx.canvas.toDataURL());
+      //     const imageFile = webcamRef.current.getScreenshot();
+      //     let formData = new FormData();
+      //     formData.set("file", imageFile);
+      //     for (let key of formData.keys()) {
+      //       console.log(key);
+      //     }
+      //     for (let value of formData.values()) {
+      //       console.log(value);
+      //     }
+      //     axios
+      //       .post("http://localhost:8080/", formData, {
+      //         headers: {
+      //           "Content-Type": "multipart/form-data",
+      //           // "Access-Control-Allow-Origin": "*",
+      //         },
+      //       })
+      //       .then((res) => {
+      //       console.log("성공")
+      //       setMaskLoading(true)
+      //     })
+      //       .catch((err) => {
+      //         console.log(err.message);
+      //       });
+      //   }
+      // });
 
       // if(obj.length == 1 ){
       //   if(obj[0].score >= 0.75 && obj[0].class==='person'){
