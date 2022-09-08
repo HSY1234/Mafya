@@ -1,4 +1,3 @@
-// Import dependencies
 import React, { useRef, useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
@@ -7,24 +6,44 @@ import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 import axios from "axios";
 
+
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
- 
-  const [maskLoading, setMaskLoading] = useState(false)
+  const [timerId, setTimerId] = useState(null)
+  const [humanDetacting, setHumanDetacting] = useState(false)
+  const [faceDetacting, setFaceDetacting] = useState(false)
+  const [model, setModel] = useState(null)
+  const [sentence, setSentence] = useState('')
+  const [codeName, setCodeName] = useState('')
 
   // Main function
-  const runCocoSsd = async () => {
-    const net = await cocossd.load();
-    console.log("모델 업로드 끝");
-    //  Loop and detect hands
-    if (!maskLoading){
-      setInterval(() => {
-        detect(net);
-      }, 500);
+  // const runCocoSsd = async () => {
+  //   const net = await cocossd.load();
+  //   console.log("모델 업로드 끝");
+  //   //  Loop and detect hands
+  //   if (!maskLoading){
+  //     setInterval(() => {
+  //       detect(net);
+  //     }, 500);
 
-    }
-  };
+  //   }
+  // };
+
+//   const dialog = (humanDetacting, faceDetacting, maskConfirm=false) => {
+//     let announcement = ''
+//     if (humanDetacting){
+//         announcement = '탐지 되었습니다. 마스크를 벗어주세요.'
+//     }
+//     else if(faceDetacting){
+//         announcement = '인식되었습니다. 마스크를 착용해주세요'
+//     }
+//     else if(humanDetacting && faceDetacting && maskConfirm){
+//         announcement = '김무종 님 출석 되었습니다.'
+//     }
+//     setSentence(announcement)
+// }
+
   const dataURLtoFile = (dataurl, fileName) => {
  
     var arr = dataurl.split(','),
@@ -40,6 +59,63 @@ function App() {
     return new File([u8arr], fileName, {type:mime});
 }
 
+const detectMask = (codeName) => {
+ 
+ 
+
+  setTimeout(() => {
+    const imageUrl = webcamRef.current.getScreenshot();
+    console.log(imageUrl)
+    let imageFile = dataURLtoFile(imageUrl,'test1.jpeg');
+    console.log(imageFile)
+    let formData = new FormData();
+    formData.set("file", imageFile);
+    console.log(imageFile)
+    formData.set("codeName", codeName)
+    // for (let key of formData.keys()) {
+    //   console.log(key);
+    // }
+    // for (let value of formData.values()) {
+    //   console.log(value);
+    // }
+    axios
+      .post("http://localhost:8080/img/mask/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          // "Access-Control-Allow-Origin": "*",
+        },
+      })
+      .then((res) => {
+        if (res.data.status == 0){
+          setHumanDetacting(false)
+          setFaceDetacting(false)
+          setSentence(`${res.data.name}님 출석되었습니다.`)
+    
+          setTimeout(() => {
+            setSentence('')
+          }, 1000);
+
+        } else {
+          setHumanDetacting(false)
+          setFaceDetacting(false)
+          setSentence('')
+          setCodeName('')
+        }
+    })
+      .catch((err) => {
+        console.log(err.message);
+        setHumanDetacting(false)
+        setFaceDetacting(false)
+        setSentence('')
+        setCodeName('')
+        
+        
+     
+
+      });
+    
+  }, 2000);
+}
   const detect = async (net) => {
     // Check data is available
     if (
@@ -70,43 +146,60 @@ function App() {
 
     
       
-    
+      console.log(obj)
       const findHuman = obj ? obj.filter((box)=>{
         return box.class === "person" && box.score >= 0.8  
       }) : null
      
       let humanDetact = findHuman ?  findHuman.filter((box)=>{
-        return 15<=box.bbox[0]<=160 && 15<=box.bbox[1]<=160 && box.bbox[2] >= 400 && box.bbox[3] >= 400
+        return 15<=box.bbox[0]<=160 && 15<=box.bbox[1]<=160 && box.bbox[2] >= 350 && box.bbox[3] >= 300
       }) : []
       console.log(humanDetact)
       if (humanDetact.length>0){
-        drawRect(humanDetact, ctx)
+        setHumanDetacting(true)
+        setSentence('탐지 되었습니다. 마스크를 벗어주세요.')
         const imageUrl = webcamRef.current.getScreenshot();
-        console.log(imageUrl)
         let imageFile = dataURLtoFile(imageUrl,'test.jpeg');
-        console.log(imageFile)
-        let formData = new FormData();
-        formData.set("file", imageFile);
-        // for (let key of formData.keys()) {
-        //   console.log(key);
-        // }
-        // for (let value of formData.values()) {
-        //   console.log(value);
-        // }
-        axios
-          .post("http://localhost:8080/img/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              // "Access-Control-Allow-Origin": "*",
-            },
+        setTimeout(() => {
+          drawRect(humanDetact, ctx)
+          // console.log(imageUrl)
+          
+          let formData = new FormData();
+          formData.set("file", imageFile);
+          // for (let key of formData.keys()) {
+          //   console.log(key);
+          // }
+          // for (let value of formData.values()) {
+          //   console.log(value);
+          // }
+          axios
+            .post("http://localhost:8080/img/face/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                // "Access-Control-Allow-Origin": "*",
+              },
+            })
+            .then((res) => {
+            if(res.data.status == 0){
+              console.log("성공")
+              setFaceDetacting(true)
+              setSentence('인식되었습니다. 마스크를 착용해주세요')
+              setCodeName(res.data.code_name)
+              detectMask(codeName)
+            } else {
+              setHumanDetacting(false)
+              setSentence('')
+            }
+            
+
           })
-          .then((res) => {
-          console.log("성공")
-          setMaskLoading(true)
-        })
-          .catch((err) => {
-            console.log(err.message);
-          });
+            .catch((err) => {
+              console.log(err.message);
+              setHumanDetacting(false)
+              setSentence('')
+            });
+          
+        }, 2000);
       }
      
       
@@ -167,12 +260,51 @@ function App() {
     }
   };
 
+  const defineInterval = (net) => {
+    if (net){
+      setCodeName('')
+     
+      const timeId = setInterval(() => {
+        detect(net);
+      }, 5000)
+      setTimerId(timeId)
+    }
+    if (humanDetacting) {
+      console.log("인간 인식", net)
+      clearInterval(timerId)
+      setTimerId(null)
+    }
+  }
   useEffect(() => {
-    runCocoSsd();
+     async function runModel() {
+      const net = await cocossd.load();
+      console.log("모델 업로드 끝");
+      setModel(net)
+      // defineInterval(net)    
+    }
+    runModel()
+    // runCocoSsd();
   }, []);
 
+
+  useEffect(()=>{
+    console.log(model)
+    if(model && !humanDetacting){
+      console.log("확인")
+      
+      
+      defineInterval(model)
+    }
+    else if(model && humanDetacting){
+      defineInterval(null)
+    }   
+   
+  },[humanDetacting, model])
+
+ 
   return (
     <div>
+      <span>{sentence}</span>
       <Webcam
         ref={webcamRef}
         muted={true}
@@ -209,3 +341,4 @@ function App() {
 }
 
 export default App;
+
