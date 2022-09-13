@@ -1,5 +1,6 @@
 package com.a205.mafya.db.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Data
+@Builder
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
