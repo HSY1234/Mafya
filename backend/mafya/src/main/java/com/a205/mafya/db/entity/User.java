@@ -1,15 +1,17 @@
 package com.a205.mafya.db.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "user")
+@Table(name = "_user")
 public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
@@ -33,4 +35,6 @@ public class User extends BaseEntity {
 
     @Column(name = "team_ldeader")
     private boolean teamLeader;
+
+
 }
