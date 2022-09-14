@@ -1,13 +1,14 @@
 package com.a205.mafya.api.response;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ExceptionRes {
+@SuperBuilder
+public class BasicResponse {
     private String msg;
-    private int codeNum;
+    private int resultCode;
 }
+
