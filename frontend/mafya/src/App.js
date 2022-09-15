@@ -1,5 +1,5 @@
 import React from "react";
-import Camera from "./features/Camera/camera";
+import Camera from './features/Camera/webcam'
 import { Switch, BrowserRouter, Route } from "react-router-dom";
 import AdminCreatePage from "./features/Admin/adminCreate/adminCreatePage";
 import AdminPage from "./features/Admin/adminPage";
