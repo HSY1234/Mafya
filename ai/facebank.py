@@ -24,6 +24,12 @@ test_transform = trans.Compose([
     trans.ToTensor(),
     trans.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
+# by hong
+if torch.cuda.is_available():
+    gpu_flag = 1
+else:
+    gpu_flag = 0
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -89,7 +95,10 @@ def prepare_facebank(model, path='facebank', tta=True):
 
 def load_facebank(path='facebank'):
     data_path = Path(path)
-    embeddings = torch.load(data_path/'facebank.pth', map_location=lambda storage, loc: storage)
+    if gpu_flag:
+        embeddings = torch.load(data_path/'facebank.pth')
+    else:
+        embeddings = torch.load(data_path/'facebank.pth', map_location=lambda storage, loc: storage)
     names = np.load(data_path/'names.npy')
     return embeddings, names
 

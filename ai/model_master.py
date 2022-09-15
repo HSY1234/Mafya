@@ -25,8 +25,8 @@ from keras.models import load_model
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True' # 라이브러리 충돌
 # 마스크 인식
-model = load_model('.\mask_reco_model.h5', compile=False)
-data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+mask_model = load_model('.\mask_reco_model.h5', compile=False)
+mask_data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # 얼굴 인식
 # device_0 = torch.device("cpu")
@@ -162,54 +162,54 @@ def get_info(URL, landmark, device, targets=target, names=name):
     student_list = []
     frame = URL2Frame(URL)
     landmark = np.array(landmark)
-    try:
+    # try:
 
-        faces = []
-        landmark = landmark.reshape(2, 5).T
+    faces = []
+    landmark = landmark.reshape(2, 5).T
 
-        coord5point = [[38.29459953, 51.69630051],
-                       [73.53179932, 51.50139999],
-                       [56.02519989, 71.73660278],
-                       [41.54930115, 92.3655014],
-                       [70.72990036, 92.20410156]]
+    coord5point = [[38.29459953, 51.69630051],
+                    [73.53179932, 51.50139999],
+                    [56.02519989, 71.73660278],
+                    [41.54930115, 92.3655014],
+                    [70.72990036, 92.20410156]]
 
-        pts1 = np.float64(
-            np.matrix([[point[0], point[1]] for point in landmark]))
-        pts2 = np.float64(np.matrix([[point[0], point[1]]
-                                     for point in coord5point]))
-        M = transformation_from_points(pts1, pts2)
-        aligned_image = cv2.warpAffine(
-            frame, M[:2], (frame.shape[1], frame.shape[0]))
-        crop_img = aligned_image[0:112, 0:112]
-        faces.append(crop_img)
+    pts1 = np.float64(
+        np.matrix([[point[0], point[1]] for point in landmark]))
+    pts2 = np.float64(np.matrix([[point[0], point[1]]
+                                    for point in coord5point]))
+    M = transformation_from_points(pts1, pts2)
+    aligned_image = cv2.warpAffine(
+        frame, M[:2], (frame.shape[1], frame.shape[0]))
+    crop_img = aligned_image[0:112, 0:112]
+    faces.append(crop_img)
 
-        embs = []
+    embs = []
 
-        test_transform = trans.Compose([
-            trans.ToTensor(),
-            trans.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
+    test_transform = trans.Compose([
+        trans.ToTensor(),
+        trans.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
-        for img in faces:
-            embs.append(detect_model(
-                test_transform(img).to(device).unsqueeze(0)))
+    for img in faces:
+        embs.append(detect_model(
+            test_transform(img).to(device).unsqueeze(0)))
 
-        if embs != []:
-            source_embs = torch.cat(embs)
-            diff = source_embs.unsqueeze(-1) - \
-                targets.transpose(1, 0).unsqueeze(0)
-            dist = torch.sum(torch.pow(diff, 2), dim=1)
-            minimum, min_idx = torch.min(dist, dim=1)
-            min_idx[minimum > ((75-156)/(-80))] = -1
-            results = min_idx
+    if embs != []:
+        source_embs = torch.cat(embs)
+        diff = source_embs.unsqueeze(-1) - \
+            targets.transpose(1, 0).unsqueeze(0)
+        dist = torch.sum(torch.pow(diff, 2), dim=1)
+        minimum, min_idx = torch.min(dist, dim=1)
+        min_idx[minimum > ((75-156)/(-80))] = -1
+        results = min_idx
 
-            if results[0] == -1:
-                student_list.append('Unknown')
-            else:
-                student_list.append(names[results[0] + 1])
-        return student_list
-    except:
-        print("문제발생!")
-        return ['Unknown']
+        if results[0] == -1:
+            student_list.append('Unknown')
+        else:
+            student_list.append(names[results[0] + 1])
+    return student_list
+    # except:
+    #     print("문제발생!")
+    #     return ['Unknown']
 
 
 app = Flask(__name__)
@@ -224,9 +224,9 @@ def maskreco():
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
         normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
-        data[0] = normalized_image_array
+        mask_data[0] = normalized_image_array
 
-        prediction = model.predict(data)
+        prediction = mask_model.predict(mask_data)
         if prediction[0][0]>prediction[0][1] and prediction[0][0]>prediction[0][2]:
             return {'result': 'mask'}
         elif prediction[0][1]>prediction[0][0] and prediction[0][1]>prediction[0][2]:
