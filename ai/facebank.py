@@ -89,7 +89,7 @@ def prepare_facebank(model, path='facebank', tta=True):
 
 def load_facebank(path='facebank'):
     data_path = Path(path)
-    embeddings = torch.load(data_path/'facebank.pth')
+    embeddings = torch.load(data_path/'facebank.pth', map_location=lambda storage, loc: storage)
     names = np.load(data_path/'names.npy')
     return embeddings, names
 
