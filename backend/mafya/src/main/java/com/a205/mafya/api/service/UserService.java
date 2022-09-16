@@ -2,7 +2,7 @@ package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
-import com.a205.mafya.api.response.UserInfo;
+import com.a205.mafya.db.dto.UserInfo;
 
 import java.util.List;
 

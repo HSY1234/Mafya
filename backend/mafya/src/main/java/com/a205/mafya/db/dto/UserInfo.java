@@ -1,4 +1,4 @@
-package com.a205.mafya.api.response;
+package com.a205.mafya.db.dto;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
