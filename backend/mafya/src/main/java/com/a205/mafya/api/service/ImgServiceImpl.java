@@ -13,10 +13,9 @@ public class ImgServiceImpl implements ImgService {
 
 //        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path
         String filePath = "/sehyeon";
- 
+
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
-
         String originalFileName = img.getOriginalFilename();
         String fileFullPath = filePath + "/" + originalFileName;
 
