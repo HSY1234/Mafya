@@ -1,5 +1,5 @@
 import React from "react";
-import Camera from "./features/camera/webcam";
+import Camera from "./features/webcam/camera";
 import { Switch, BrowserRouter, Route } from "react-router-dom";
 import studentForm from "./features/Admin/studentForm/studentForm";
 import MainPage from "./features/Admin/mainPage/mainPage";

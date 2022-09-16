@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
-import classes from "./studentForm.module.css";
+// import classes from "./studentForm.module.css";
 
 const StudentForm = () => {
   const location = useLocation();
