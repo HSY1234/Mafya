@@ -3,9 +3,7 @@ package com.a205.mafya.db.entity;
 import com.a205.mafya.api.request.ModifyUserReq;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
@@ -14,24 +12,30 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
-    @Column(nullable = false, length = 20)
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @Column(name = "name",nullable = false, length = 20)
     private String name;
 
-    @Column(length = 20, name = "user_code")
+    @Column(name = "user_code", length = 20)
     private String userCode;
 
-    @Column(length = 200)
+    @Column(name = "password", length = 200)
     private String password;
 
+    @Column(name = "status", length = 200)
     private int status;
 
-    @Column(length = 20, name = "team_code")
+    @Column( name = "team_code", length = 20)
     private String teamCode;
 
-    @Column(length = 20, name = "class_code")
+    @Column(name = "class_code", length = 20)
     private String classCode;
 
-    @Column(length = 20, name = "phone_num")
+    @Column(name = "phone_num", length = 20)
     private String phoneNum;
 
     @Column(name = "team_leader")
