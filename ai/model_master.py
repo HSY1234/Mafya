@@ -25,7 +25,7 @@ from keras.models import load_model
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True' # 라이브러리 충돌
 # 마스크 인식
-mask_model = load_model('.\mask_reco_model.h5', compile=False)
+mask_model = load_model('mask_reco_model.h5', compile=False)
 mask_data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # 얼굴 인식
@@ -65,7 +65,7 @@ def URL2Frame(URL):
     #print(type(urllib.request.urlopen(URL).read()))
     #print(type(image_to_byte_array(Image.open('AR.jpg'))))
     img_arr = np.array(
-        bytearray(image_to_byte_array(Image.open('SH2.jpg'))), dtype=np.uint8)
+        bytearray(image_to_byte_array(Image.open('../../MJ.jpg'))), dtype=np.uint8)
         #bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
     frame = cv2.imdecode(img_arr, -1)
     # print(frame)
@@ -216,10 +216,11 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/maskreco', methods=['GET'])
+@app.route('/ai/maskreco', methods=['GET'])
 def maskreco():
+    print("들어왔어요!")
     if request.method == 'GET':
-        image = Image.open('SH2.jpg')
+        image = Image.open('../../MJ.jpg')
         size = (224, 224)
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
@@ -235,7 +236,7 @@ def maskreco():
             return {'result': 'no_mask'}
         return {'result': 'undefined'}
 
-@app.route('/modelfr', methods=['GET'])
+@app.route('/ai/modelfr', methods=['GET'])
 def modelfr():
     if request.method == 'GET':
         URL_fr = request.args.get('ip', '')
@@ -243,7 +244,7 @@ def modelfr():
         return {'box': student_list}
 
 
-@app.route('/modelat', methods=['GET'])
+@app.route('/ai/modelat', methods=['GET'])
 def modelat():
     if request.method == 'GET':
         URL_at = request.args.get('ip', '')
@@ -251,9 +252,10 @@ def modelat():
         return {'id': student_list}
 
 
-@app.route('/modelin', methods=['GET'])
+@app.route('/ai/modelin', methods=['GET'])
 def modelin():
     if request.method == 'GET':
+        print("찾아볼께요")
         URL_in = request.args.get('ip', '')
         landmark = request.args.get('landmark', '')
         try:
@@ -266,4 +268,4 @@ def modelin():
 
 #@app.router('/update')
 if __name__ == '__main__':
-    app.run(port=8081)
+    app.run(host='0.0.0.0', port=8081)
