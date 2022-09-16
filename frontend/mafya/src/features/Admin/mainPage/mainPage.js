@@ -26,6 +26,7 @@ const MainPage = () => {
         newStudents.splice(index, 1);
         setStudents(newStudents);
         alert("학생 정보 제거");
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
