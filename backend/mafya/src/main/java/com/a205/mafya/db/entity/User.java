@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     @Column(length = 20, name = "phone_num")
     private String phoneNum;
 
-    @Column(name = "team_ldeader")
+    @Column(name = "team_leader")
     private boolean teamLeader;
 
 
