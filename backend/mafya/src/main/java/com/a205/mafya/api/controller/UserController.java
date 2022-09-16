@@ -26,12 +26,12 @@ public class UserController {
 
         userService.addUser(userReq);
 
-        BasicRes BR = BasicRes.builder()
+        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+                .userInfo(UserInfo.builder().userCode(userReq.getUserCode()).build())
                 .msg("SUCCESS")
-                // 0 : 요청한 사용자 있음
                 .resultCode(0)
                 .build();
-        return new ResponseEntity<>(BR, HttpStatus.OK);
+        return new ResponseEntity<>(UOR, HttpStatus.OK);
     }
 
     // 학생 정보 지우기
@@ -41,6 +41,20 @@ public class UserController {
         userService.deleteUser(id);
 
         BasicRes BR = BasicRes.builder()
+                .msg("SUCCESS")
+                // 0 : 요청한 사용자 있음
+                .resultCode(0)
+                .build();
+        return new ResponseEntity<>(BR, HttpStatus.OK);
+    }
+
+    // 학생 정보 수정
+    @PutMapping ("{id}")
+    public ResponseEntity<?> UpdateStudent(@PathVariable int id, @RequestBody ModifyUserReq userReq) throws Exception{
+
+        userService.modifyUser(id, userReq);
+
+        BasicResponse BR = BasicResponse.builder()
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
                 .resultCode(0)

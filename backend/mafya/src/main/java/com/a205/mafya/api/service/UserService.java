@@ -11,6 +11,7 @@ public interface UserService {
     public void deleteUser(int id) throws Exception;
     public void modifyUser(int id, ModifyUserReq userDto) throws Exception;
     public UserInfo findUser(int id) throws Exception;
+    public List<UserInfo> [] findAttendList() throws Exception;
     public List<UserInfo> findAttendUsersByClassCode(String classCode) throws Exception;
     public List<UserInfo> findUserAll() throws Exception;
 

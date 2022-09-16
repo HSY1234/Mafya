@@ -13,8 +13,6 @@ public class AddUserReq {
 
     private String userCode;
 
-    private String password;
-
     private String teamCode;
 
     private String classCode;
