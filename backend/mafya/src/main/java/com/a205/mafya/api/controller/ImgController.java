@@ -42,7 +42,7 @@ public class ImgController {
     @GetMapping(value = "/{userCode}")
     public Resource requestimgURL(@PathVariable String userCode) throws Exception{
         String path = "/sehyeon";
-        File file = new File(path + "/" + userCode);
+        File file = new File(path + "/" + userCode + ".jpg");
         return (new UrlResource("file:" + file.getPath()));
     }
 
