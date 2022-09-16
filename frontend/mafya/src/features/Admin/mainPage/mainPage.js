@@ -7,10 +7,15 @@ import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
 import ReadonlyRow from "./ReadOnlyRow";
 import classes from "./mainPage.module.css";
+import AttendStudents from "./attendStudents";
+import NotAttendStudents from "./notAttendStudents";
 
 const MainPage = () => {
   const [students, setStudents] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [attList, setAttList] = useState([]);
+  const [notAttList, setNotAttList] = useState([]);
+
   const history = useHistory();
   const deleteHandler = (studentId) => {
     axios
@@ -35,17 +40,31 @@ const MainPage = () => {
       .get(API_URL + "student")
       .then((res) => {
         setStudents(res.data.userList);
-        setIsLoading(false);
       })
       .catch((err) => {
         alert("학생 정보를 불러오지 못했습니다.");
-        setIsLoading(false);
       });
+    setIsLoading(true);
+    axios
+      .get(API_URL + "student/attend")
+      .then((res) => {
+        setAttList(res.data.attList);
+        setNotAttList(res.data.notAttList);
+      })
+      .catch((err) => {
+        alert("출석 정보를 불러오지 못했습니다.");
+      });
+    setIsLoading(false);
   }, []);
+
   return !isLoading && students ? (
     <div>
       <AdminHeader />
+      <AttendStudents attList={attList} />
+      <NotAttendStudents notAttList={notAttList} />
+
       <div>
+        <h3>학생 명단</h3>
         <table>
           <thead>
             <tr>
@@ -75,6 +94,8 @@ const MainPage = () => {
   ) : (
     <div>
       <AdminHeader />
+      <AttendStudents attList={attList} />
+      <NotAttendStudents notAttList={notAttList} />
       <span>학생 정보가 없습니다.</span>
     </div>
   );
