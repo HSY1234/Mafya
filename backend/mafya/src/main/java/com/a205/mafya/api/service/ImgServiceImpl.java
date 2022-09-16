@@ -16,7 +16,7 @@ public class ImgServiceImpl implements ImgService {
         if (!dir.exists()) dir.mkdir();
 
         String originalFileName = img.getOriginalFilename();
-        String fileFullPath = filePath + "/" + userCode;
+        String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {
             img.transferTo(new File(fileFullPath));
