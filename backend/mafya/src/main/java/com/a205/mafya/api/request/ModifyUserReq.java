@@ -10,8 +10,6 @@ public class ModifyUserReq {
 
     private String name;
 
-    private int status;
-
     private String teamCode;
 
     private String classCode;

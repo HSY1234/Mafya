@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
                 .name(userReq.getName())
                 .userCode(userReq.getUserCode())
-                .password(userReq.getPassword())
                 // 회원가입 시 상태는 기본값으로
                 // status(0) : 입실
                 // status(1) : 입실안함
@@ -57,18 +56,13 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void modifyUser(int id, ModifyUserReq userReq) throws Exception {
-        if(!userRepository.findById(id).isPresent()){
+        Optional<User> opUser = userRepository.findById(id);
+        if(!opUser.isPresent()){
             throw new NoSuchElementException("Not existent id");
         }
+        User user = opUser.get();
 
-        User user = User.builder()
-                .name(userReq.getName())
-                .status(userReq.getStatus())
-                .teamCode(userReq.getTeamCode())
-                .classCode(userReq.getClassCode())
-                .phoneNum(userReq.getPhoneNum())
-                .teamLeader(userReq.isTeamLeader())
-                .build();
+        user.modifyInfo(userReq);
 
         userRepository.save(user);
 
@@ -85,7 +79,30 @@ public class UserServiceImpl implements UserService{
         User user = opUser.get();
 
 
-        return UserToUserInfoRes(user);
+        return UserToUserInfo(user);
+    }
+
+    @Override
+    public List<UserInfo>[] findAttendList() throws Exception {
+        List<User> userList = userRepository.findAll();
+        List<UserInfo> userAttend = new ArrayList<>();
+        List<UserInfo> userNotAttend = new ArrayList<>();
+        for(User user : userList){
+            // 출석
+            if(user.getStatus() == 0){
+                userAttend.add(UserToUserInfo(user));
+            }else if(user.getStatus() == 1){
+                userNotAttend.add(UserToUserInfo(user));
+            }
+        }
+
+        // 미완ㅁㅁㅁㅁ
+
+
+
+
+
+        return new List[0];
     }
 
     @Override
@@ -97,7 +114,7 @@ public class UserServiceImpl implements UserService{
         List<UserInfo> uirList = new ArrayList<>();
         for( User user : userList) {
 
-            uirList.add(UserToUserInfoRes(user));
+            uirList.add(UserToUserInfo(user));
         }
 
         return uirList;
@@ -113,7 +130,7 @@ public class UserServiceImpl implements UserService{
         List<UserInfo> uirList = new ArrayList<>();
         for( User user : userList) {
 
-            uirList.add(UserToUserInfoRes(user));
+            uirList.add(UserToUserInfo(user));
         }
 
         return uirList;
@@ -126,7 +143,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public UserInfo UserToUserInfoRes(User user) throws Exception {
+    public UserInfo UserToUserInfo(User user) throws Exception {
         UserInfo uir = UserInfo.builder()
                 .id(user.getId())
                 .name(user.getName())

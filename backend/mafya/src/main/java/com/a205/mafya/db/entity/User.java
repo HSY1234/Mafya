@@ -1,5 +1,6 @@
 package com.a205.mafya.db.entity;
 
+import com.a205.mafya.api.request.ModifyUserReq;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -35,6 +36,14 @@ public class User extends BaseEntity {
 
     @Column(name = "team_ldeader")
     private boolean teamLeader;
+
+    public void modifyInfo(ModifyUserReq userReq){
+        this.name = userReq.getName();
+        this.teamCode = userReq.getTeamCode();
+        this.classCode = userReq.getClassCode();
+        this.phoneNum = userReq.getPhoneNum();
+        this.teamLeader = userReq.isTeamLeader();
+    }
 
 
 }

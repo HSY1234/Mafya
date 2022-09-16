@@ -1,6 +1,7 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.AddUserReq;
+import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.api.response.BasicResponse;
 import com.a205.mafya.api.response.UserInfo;
 import com.a205.mafya.api.response.UserListRes;
@@ -30,6 +31,20 @@ public class UserController {
 
         userService.addUser(userReq);
 
+        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+                .userInfo(UserInfo.builder().userCode(userReq.getUserCode()).build())
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
+        return new ResponseEntity<>(UOR, HttpStatus.OK);
+    }
+
+    // 학생 정보 지우기
+    @DeleteMapping ("{id}")
+    public ResponseEntity<?> DeleteStudent(@PathVariable int id) throws Exception{
+
+        userService.deleteUser(id);
+
         BasicResponse BR = BasicResponse.builder()
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
@@ -38,11 +53,11 @@ public class UserController {
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
 
-    // 학생 정보 지우기
-    @DeleteMapping ("{id}")
-    public ResponseEntity<?> DeleteStudent(@PathVariable int id) throws Exception{
+    // 학생 정보 수정
+    @PutMapping ("{id}")
+    public ResponseEntity<?> UpdateStudent(@PathVariable int id, @RequestBody ModifyUserReq userReq) throws Exception{
 
-        userService.deleteUser(id);
+        userService.modifyUser(id, userReq);
 
         BasicResponse BR = BasicResponse.builder()
                 .msg("SUCCESS")
