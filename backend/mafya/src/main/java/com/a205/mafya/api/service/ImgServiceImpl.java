@@ -22,6 +22,7 @@ public class ImgServiceImpl implements ImgService {
             img.transferTo(new File(fileFullPath));
             System.out.println("경로: " + fileFullPath);
         } catch (Exception e) {
+            System.out.println("경로: " + fileFullPath);
             System.out.println("저장 중 에러");
         }
         return (true);
