@@ -10,7 +10,7 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img) throws Exception {
 //        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path
-        String filePath = "/home/ubuntu/img";
+        String filePath = "./img";
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
@@ -20,6 +20,7 @@ public class ImgServiceImpl implements ImgService {
 
         try {
             img.transferTo(new File(fileFullPath));
+            System.out.println("경로: " + fileFullPath);
         } catch (Exception e) {
             System.out.println("저장 중 에러");
         }
