@@ -1,4 +1,4 @@
-package com.a205.mafya.api.repository;
+package com.a205.mafya.db.repository;
 
 import com.a205.mafya.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

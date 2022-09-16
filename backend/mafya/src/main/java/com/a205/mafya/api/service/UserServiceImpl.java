@@ -1,10 +1,10 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.exception.UserCodeOverlapException;
-import com.a205.mafya.api.repository.UserRepository;
+import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
-import com.a205.mafya.api.response.UserInfo;
+import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

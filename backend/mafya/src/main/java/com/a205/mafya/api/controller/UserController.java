@@ -1,9 +1,7 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.AddUserReq;
-import com.a205.mafya.api.request.ModifyUserReq;
-import com.a205.mafya.api.response.BasicResponse;
-import com.a205.mafya.api.response.UserInfo;
+import com.a205.mafya.api.response.BasicRes;
 import com.a205.mafya.api.response.UserListRes;
 import com.a205.mafya.api.response.UserOneRes;
 import com.a205.mafya.api.service.UserService;
@@ -12,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,7 +40,7 @@ public class UserController {
 
         userService.deleteUser(id);
 
-        BasicResponse BR = BasicResponse.builder()
+        BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
                 .resultCode(0)
@@ -98,7 +93,7 @@ public class UserController {
     public ResponseEntity<?> UserCodeOverLapCheck(@PathVariable String userCode) throws Exception{
         userService.checkUserCodeOverlap(userCode);
 
-        BasicResponse BR = BasicResponse.builder()
+        BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
                 .resultCode(0)
                 .build();

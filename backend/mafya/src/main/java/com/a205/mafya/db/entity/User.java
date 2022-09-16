@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "_user")
+@Table(name = "user")
 public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
@@ -34,7 +34,7 @@ public class User extends BaseEntity {
     @Column(length = 20, name = "phone_num")
     private String phoneNum;
 
-    @Column(name = "team_ldeader")
+    @Column(name = "team_leader")
     private boolean teamLeader;
 
     public void modifyInfo(ModifyUserReq userReq){
