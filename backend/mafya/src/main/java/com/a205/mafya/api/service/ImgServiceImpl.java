@@ -8,24 +8,22 @@ import java.io.File;
 @Service
 public class ImgServiceImpl implements ImgService {
     @Override
-    public boolean saveImg(MultipartFile img) throws Exception {
-//        System.out.println(System.getProperty("user.dir"));
-
-//        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path
+    public boolean saveImg(MultipartFile img, String userCode) {
+//        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path //System.getProperty("user.dir")
         String filePath = "/sehyeon";
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
+
         String originalFileName = img.getOriginalFilename();
-        String fileFullPath = filePath + "/" + originalFileName;
+        String fileFullPath = filePath + "/" + userCode;
 
         try {
             img.transferTo(new File(fileFullPath));
-            System.out.println("경로: " + fileFullPath);
+            return (true);
         } catch (Exception e) {
-            System.out.println("경로: " + fileFullPath);
             System.out.println("저장 중 에러");
+            return (false);
         }
-        return (true);
     }
 }
