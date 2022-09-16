@@ -3,6 +3,7 @@ package com.a205.mafya.api.controller;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.api.response.BasicRes;
+import com.a205.mafya.api.response.UserAttendRes;
 import com.a205.mafya.api.response.UserListRes;
 import com.a205.mafya.api.response.UserOneRes;
 import com.a205.mafya.api.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -81,16 +84,15 @@ public class UserController {
     @GetMapping ("attend")
     public ResponseEntity<?> GetAttendList() throws Exception{
 
+        List<UserInfo>[] attList =  userService.findAttendList();
+        UserAttendRes UAR = UserAttendRes.builder()
+                .attList(attList[0])
+                .notAttList(attList[1])
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
 
-
-        
-        /// 미완ㅁㅁㅁㅁㅁㅁㅁㅁ
-
-
-
-
-
-        return new ResponseEntity<>(, HttpStatus.OK);
+        return new ResponseEntity<>(UAR, HttpStatus.OK);
     }
 
     // 학생 리스트 불러오기
