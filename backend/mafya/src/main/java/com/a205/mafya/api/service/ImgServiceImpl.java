@@ -9,6 +9,8 @@ import java.io.File;
 public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img) throws Exception {
+        System.out.println(System.getProperty("user.dir"));
+
 //        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path
         String filePath = "/parksehyeon";
 
