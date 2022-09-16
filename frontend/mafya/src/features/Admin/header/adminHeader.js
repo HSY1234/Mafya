@@ -10,10 +10,10 @@ const AdminHeader = () => {
         <Link to={"/admin"} className={classes.navbar__item}>
           Main
         </Link>
-        <Link to={"/admin/addstudent"} className={classes.navbar__item}>
+        <Link to={"/admin/form"} className={classes.navbar__item}>
           Create
         </Link>
-        <span className={classes.navbar__item}>Logout</span>
+        {/* <span className={classes.navbar__item}>Logout</span> */}
       </ul>
     </nav>
   );

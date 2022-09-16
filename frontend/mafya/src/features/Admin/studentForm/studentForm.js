@@ -1,17 +1,22 @@
 import axios from "axios";
 import { useState } from "react";
 import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
-import classes from "./adminCreatePage.module.css";
+import classes from "./studentForm.module.css";
 
-const AdminCreatePage = () => {
-  const [name, setName] = useState("");
-  const [userCode, setUserCode] = useState("");
-  const [teamCode, setTeamCode] = useState("");
-  const [classCode, setClassCode] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [teamLeader, setTeamLeader] = useState(null);
+const StudentForm = () => {
+  const location = useLocation();
+  const student = location.state;
+  const [name, setName] = useState(student ? student.name : "");
+  const [userCode, setUserCode] = useState(student ? student.userCode : "");
+  const [teamCode, setTeamCode] = useState(student ? student.teamCode : "");
+  const [classCode, setClassCode] = useState(student ? student.classCode : "");
+  const [phoneNum, setPhoneNum] = useState(student ? student.phoneNum : "");
+  const [teamLeader, setTeamLeader] = useState(
+    student ? student.teamLeader : null
+  );
   const [isUserCodeUnique, setIsUserCodeUnique] = useState(false);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewURL] = useState(null);
@@ -68,15 +73,15 @@ const AdminCreatePage = () => {
 
   const teamLeaderChangeHandler = (event) => {
     console.log(event);
-    if (event.target.value === "teamLeader") {
+    if (event.target.value === "true") {
       const tempTeamLeader = true;
       console.log(tempTeamLeader);
       setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "teamMember") {
+    } else if (event.target.value === "false") {
       const tempTeamLeader = false;
       console.log(tempTeamLeader);
       setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "default") {
+    } else if (event.target.value === "null") {
       setTeamLeader(null);
     }
   };
@@ -99,6 +104,8 @@ const AdminCreatePage = () => {
   // };
 
   const isTeamLeader = (value) => {
+    console.log(typeof value);
+    console.log(value);
     if (typeof value === "boolean") {
       return true;
     } else {
@@ -142,6 +149,7 @@ const AdminCreatePage = () => {
         alert("학생 정보 등록 실패");
       });
   };
+  console.log(formIsVaild);
   return (
     // <div className={classes.v105_113}>
     //   <div className={classes.v105_123}>
@@ -175,7 +183,7 @@ const AdminCreatePage = () => {
     <div>
       <AdminHeader />
       <div>
-        <span>학생 정보 등록</span>
+        <span>{student ? "학생 정보 수정" : "학생 정보 등록"}</span>
       </div>
       <form onSubmit={onSubmitHandler}>
         <h5>이름</h5>
@@ -194,11 +202,16 @@ const AdminCreatePage = () => {
             type="text"
             id="userCode"
             value={userCode}
+            readOnly={student ? true : false}
             onChange={userCodeChangeHandler}
             placeholder="학번을 입력해 주세요"
           />
           <button onClick={userCodeDupCheckHandler} type="button">
-            {isUserCodeUnique ? "사용 가능" : "중복 확인"}
+            {student
+              ? "수정 불가"
+              : isUserCodeUnique
+              ? "사용 가능"
+              : "중복 확인"}
           </button>
         </div>
         <h5>팀 코드</h5>
@@ -233,14 +246,14 @@ const AdminCreatePage = () => {
         </div>
         <h5>팀장 여부</h5>
         <div>
-          <select defaultValue="default" onChange={teamLeaderChangeHandler}>
-            <option key="default" value="default">
+          <select defaultValue={teamLeader} onChange={teamLeaderChangeHandler}>
+            <option key="default" value="null">
               팀장 여부 선택
             </option>
-            <option key="teamLeader" value="teamLeader">
+            <option key="teamLeader" value="true">
               팀장
             </option>
-            <option key="teamMember" value="teamMember">
+            <option key="teamMember" value="false">
               팀원
             </option>
           </select>
@@ -263,10 +276,12 @@ const AdminCreatePage = () => {
           ></input>
           {file && <img src={previewUrl} alt="preview" />}
         </div>
-        <button disabled={!formIsVaild}>정보 등록</button>
+        <button disabled={!formIsVaild}>
+          {student ? "정보 수정" : "정보 등록"}
+        </button>
       </form>
     </div>
   );
 };
 
-export default AdminCreatePage;
+export default StudentForm;
