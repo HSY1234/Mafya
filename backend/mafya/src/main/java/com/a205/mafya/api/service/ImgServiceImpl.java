@@ -10,7 +10,7 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img) throws Exception {
 //        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path
-        String filePath = "./img";
+        String filePath = "/parksehyeon";
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
