@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
 // import classes from "./studentForm.module.css";
 
 const StudentForm = () => {
   const location = useLocation();
+  const history = useHistory();
   const student = location.state;
   const [name, setName] = useState(student ? student.name : "");
   const [userCode, setUserCode] = useState(student ? student.userCode : "");
@@ -17,7 +18,9 @@ const StudentForm = () => {
   const [teamLeader, setTeamLeader] = useState(
     student ? student.teamLeader : null
   );
-  const [isUserCodeUnique, setIsUserCodeUnique] = useState(false);
+  const [isUserCodeUnique, setIsUserCodeUnique] = useState(
+    student ? true : false
+  );
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewURL] = useState(null);
   const fileRef = useRef();
@@ -133,21 +136,37 @@ const StudentForm = () => {
       // file,
     };
     console.log(tmpStudentInfo);
-
-    axios
-      .post(API_URL + "student/", tmpStudentInfo, {
-        headers: {
-          "Content-Type": "application/json",
-          // "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        alert("학생 정보 등록 완료");
-        window.location.reload();
-      })
-      .catch((err) => {
-        alert("학생 정보 등록 실패");
-      });
+    if (!student) {
+      axios
+        .post(API_URL + "student/", tmpStudentInfo, {
+          headers: {
+            "Content-Type": "application/json",
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          alert("학생 정보 등록 완료");
+          window.location.reload();
+        })
+        .catch((err) => {
+          alert("학생 정보 등록 실패");
+        });
+    } else {
+      axios
+        .put(API_URL + `student/${student.id}`, tmpStudentInfo, {
+          headers: {
+            "Content-Type": "application/json",
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          alert("학생 정보 수정 완료");
+          history.push("/admin");
+        })
+        .catch((err) => {
+          alert("학생 정보 수정 실패");
+        });
+    }
   };
   console.log(formIsVaild);
   return (
