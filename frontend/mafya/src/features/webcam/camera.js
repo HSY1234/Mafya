@@ -16,7 +16,7 @@ function Camera() {
   const [faceDetacting, setFaceDetacting] = useState(false);
   const [model, setModel] = useState(null);
   const [sentence, setSentence] = useState("");
-  const [codeName, setCodeName] = useState("");
+  const [userCode, setUserCode] = useState("");
 
   // Main function
   // const runCocoSsd = async () => {
@@ -59,7 +59,7 @@ function Camera() {
     return new File([u8arr], fileName, { type: mime });
   };
 
-  const detectMask = (codeName) => {
+  const detectMask = (userCode) => {
     setTimeout(() => {
       const imageUrl = webcamRef.current.getScreenshot();
       console.log(imageUrl);
@@ -68,7 +68,7 @@ function Camera() {
       let formData = new FormData();
       formData.set("file", imageFile);
       console.log(imageFile);
-      formData.set("codeName", codeName);
+      formData.set("userCode", userCode);
       // for (let key of formData.keys()) {
       //   console.log(key);
       // }
@@ -95,7 +95,7 @@ function Camera() {
             setHumanDetacting(false);
             setFaceDetacting(false);
             setSentence("");
-            setCodeName("");
+            setUserCode("");
           }
         })
         .catch((err) => {
@@ -103,7 +103,7 @@ function Camera() {
           setHumanDetacting(false);
           setFaceDetacting(false);
           setSentence("");
-          setCodeName("");
+          setUserCode("");
         });
     }, 2000);
   };
@@ -181,8 +181,8 @@ function Camera() {
                 console.log("성공");
                 setFaceDetacting(true);
                 setSentence("인식되었습니다. 마스크를 착용해주세요");
-                setCodeName(res.data.code_name);
-                detectMask(codeName);
+                setUserCode(res.data.userCode);
+                detectMask(userCode);
               } else {
                 setHumanDetacting(false);
                 setSentence("");
@@ -254,7 +254,7 @@ function Camera() {
 
   const defineInterval = (net) => {
     if (net) {
-      setCodeName("");
+      setUserCode("");
 
       const timeId = setInterval(() => {
         detect(net);

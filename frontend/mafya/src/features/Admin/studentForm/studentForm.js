@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { API_URL } from "../../../common/api";
@@ -10,11 +10,13 @@ const StudentForm = () => {
   const location = useLocation();
   const history = useHistory();
   const student = location.state;
+  console.log(student);
   const [name, setName] = useState(student ? student.name : "");
   const [userCode, setUserCode] = useState(student ? student.userCode : "");
   const [teamCode, setTeamCode] = useState(student ? student.teamCode : "");
   const [classCode, setClassCode] = useState(student ? student.classCode : "");
   const [phoneNum, setPhoneNum] = useState(student ? student.phoneNum : "");
+
   const [teamLeader, setTeamLeader] = useState(
     student ? student.teamLeader : null
   );
@@ -24,6 +26,17 @@ const StudentForm = () => {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewURL] = useState(null);
   const fileRef = useRef();
+  useEffect(() => {
+    if (student === undefined) {
+      setName("");
+      setUserCode("");
+      setTeamCode("");
+      setClassCode("");
+      setPhoneNum("");
+      setTeamLeader(null);
+      setIsUserCodeUnique(false);
+    }
+  }, [student]);
   const nameChangeHandler = (event) => {
     const tempName = event.target.value;
     setName(tempName);
@@ -122,7 +135,8 @@ const StudentForm = () => {
     classCode &&
     phoneNum &&
     isUserCodeUnique &&
-    isTeamLeader(teamLeader);
+    isTeamLeader(teamLeader) &&
+    file;
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -145,6 +159,22 @@ const StudentForm = () => {
           },
         })
         .then((res) => {
+          console.log("학생 정보 등록 완료");
+        })
+        .catch((err) => {
+          alert("학생 정보 등록 실패");
+        });
+      let formData = new FormData();
+      formData.set("file", file);
+      formData.set("userCode", userCode);
+      axios
+        .post(API_URL + `img/register/${userCode}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Access-Control-Allow-Origin": "*",
+          },
+        })
+        .then((res) => {
           alert("학생 정보 등록 완료");
           window.location.reload();
         })
@@ -157,6 +187,22 @@ const StudentForm = () => {
           headers: {
             "Content-Type": "application/json",
             // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("학생 정보 수정 완료");
+        })
+        .catch((err) => {
+          alert("학생 정보 수정 실패");
+        });
+      let formData = new FormData();
+      formData.set("file", file);
+      formData.set("userCode", userCode);
+      axios
+        .post(API_URL + `img/register/${userCode}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Access-Control-Allow-Origin": "*",
           },
         })
         .then((res) => {
