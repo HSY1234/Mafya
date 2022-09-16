@@ -10,20 +10,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames={"user_code"}))
 public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false)
-    private Long id;
-    @Column(name = "name",nullable = false, length = 20)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
-    @Column(name = "user_code", length = 20)
+    @Column(name = "user_code", nullable = false, length = 20)
     private String userCode;
 
-    @Column(name = "password", length = 200)
+    @Column(name = "password", nullable = false, length = 200)
     private String password;
 
     @Column(name = "status", length = 200)
