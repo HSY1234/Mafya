@@ -1,5 +1,7 @@
 package com.a205.mafya.api.controller;
 
+import com.a205.mafya.api.service.ImgService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +19,18 @@ public class ImgController {
     static final String SUCCESS = "success";
     static final String FAIL = "fail";
 
+    @Autowired
+    private ImgService imgService;
+
     @PostMapping(value = "/register/{userCode}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> registFace(@RequestPart(value = "file") MultipartFile multipartFile, @PathVariable String userCode) {
+    public ResponseEntity<?> registFace(@RequestPart(value = "file") MultipartFile multipartFile, @PathVariable String userCode) throws Exception {
         LocalTime now = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
         String formatedNow = now.format(formatter);
         System.out.println("[register] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
         System.out.println("[register] : userCode = " + userCode);
 
-        boolean result = true;
+        boolean result = imgService.saveImg(multipartFile);
 
         if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
         else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
