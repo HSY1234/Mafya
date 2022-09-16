@@ -1,10 +1,12 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.AddUserReq;
+import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.api.response.BasicRes;
 import com.a205.mafya.api.response.UserListRes;
 import com.a205.mafya.api.response.UserOneRes;
 import com.a205.mafya.api.service.UserService;
+import com.a205.mafya.db.dto.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +56,7 @@ public class UserController {
 
         userService.modifyUser(id, userReq);
 
-        BasicResponse BR = BasicResponse.builder()
+        BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
                 .resultCode(0)
@@ -73,6 +75,22 @@ public class UserController {
                 .build();
 
         return new ResponseEntity<>(UOR, HttpStatus.OK);
+    }
+
+    // 출석, 불출석 학생 리스트 불러오기
+    @GetMapping ("attend")
+    public ResponseEntity<?> GetAttendList() throws Exception{
+
+
+
+        
+        /// 미완ㅁㅁㅁㅁㅁㅁㅁㅁ
+
+
+
+
+
+        return new ResponseEntity<>(, HttpStatus.OK);
     }
 
     // 학생 리스트 불러오기

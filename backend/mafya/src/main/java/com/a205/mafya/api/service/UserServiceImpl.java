@@ -91,18 +91,18 @@ public class UserServiceImpl implements UserService{
             // 출석
             if(user.getStatus() == 0){
                 userAttend.add(UserToUserInfo(user));
+                // 불출석
             }else if(user.getStatus() == 1){
                 userNotAttend.add(UserToUserInfo(user));
             }
         }
 
-        // 미완ㅁㅁㅁㅁ
+        List<UserInfo>[] AttAndNotAtt = new ArrayList[2];
+        AttAndNotAtt[0] = userAttend;
+        AttAndNotAtt[1] = userNotAttend;
 
 
-
-
-
-        return new List[0];
+        return AttAndNotAtt;
     }
 
     @Override
