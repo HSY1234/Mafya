@@ -6,6 +6,7 @@ import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 import axios from "axios";
 import { API_URL } from "../../common/api";
+import classes from "./webcam.module.css";
 
 function Camera() {
   const webcamRef = useRef(null);
