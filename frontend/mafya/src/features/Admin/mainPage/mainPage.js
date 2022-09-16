@@ -25,8 +25,22 @@ const MainPage = () => {
         const index = students.findIndex((stduent) => stduent.id === studentId);
         newStudents.splice(index, 1);
         setStudents(newStudents);
+        const newAttList = [...attList];
+        const attIndex = attList.findIndex(
+          (stduent) => stduent.id === studentId
+        );
+        if (attIndex == -1) {
+          const newNotAttList = [...notAttList];
+          const notAttIndex = notAttList.findIndex(
+            (stduent) => stduent.id === studentId
+          );
+          newNotAttList.splice(notAttIndex, 1);
+          setNotAttList(newNotAttList);
+        } else {
+          newAttList.splice(attIndex, 1);
+          setAttList(newAttList);
+        }
         alert("학생 정보 제거");
-        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
