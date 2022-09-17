@@ -1,14 +1,17 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.service.ImgService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -97,5 +100,31 @@ public class ImgController {
         result.put("name", name);
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
+    }
+
+    @PutMapping
+    public String test() throws JsonProcessingException {
+        String url = "https://mafya.ml/ai/modelsearch";
+
+        HashMap<String, Object> result = new HashMap<String, Object>();
+        String jsonInString = "";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        HttpEntity<?> entity = new HttpEntity<>(header);
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
+
+        ResponseEntity<?> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
+
+        result.put("statusCode", resultMap.getStatusCodeValue());
+        result.put("header", resultMap.getHeaders());
+        result.put("body", resultMap.getBody());
+
+        ObjectMapper mapper = new ObjectMapper();
+        jsonInString = mapper.writeValueAsString(resultMap.getBody());
+
+        return (jsonInString);
     }
 }
