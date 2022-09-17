@@ -134,7 +134,5 @@ public class ImgController {
 //        jsonInString = mapper.writeValueAsString(resultMap.getBody());
 //
 //        return (jsonInString);
-
-        return ("");
     }
 }
