@@ -50,7 +50,10 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public String makeUrl(String userCode) {
         String baseUrl = "https://mafya.ml/api/images";
+        String fullFilePath = baseUrl + "/" + userCode + "/" + userCode + ".jpg";
 
-        return (baseUrl + "/" + userCode + "/" + userCode + ".jpg");
+        File file = new File(fullFilePath);
+        if (!file.exists()) return ("");
+        else                return (fullFilePath);
     }
 }
