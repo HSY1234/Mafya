@@ -52,8 +52,9 @@ public class ImgServiceImpl implements ImgService {
         String baseUrl = "https://mafya.ml/api/images";
         String fullFilePath = baseUrl + "/" + userCode + "/" + userCode + ".jpg";
 
-        File file = new File("/home/ubuntu/ai/server/ai/facebank/" + userCode + "/" + userCode + ".jpg");
-        if (!file.exists()) return ("");
-        else                return (fullFilePath);
+//        File file = new File("/home/ubuntu/ai/server/ai/facebank/" + userCode + "/" + userCode + ".jpg");
+//        if (!file.exists()) return ("");
+//        else                return (fullFilePath);
+        return (fullFilePath);
     }
 }
