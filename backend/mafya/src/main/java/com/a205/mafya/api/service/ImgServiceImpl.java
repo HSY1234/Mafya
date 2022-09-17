@@ -9,17 +9,10 @@ import java.io.File;
 public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img, String userCode) {
-        File dir2 = new File("/sehyeon/" + userCode);
-        dir2.mkdir();
-
         String filePath = "/sehyeon";
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
-
-        filePath = filePath + "/" + userCode;
-        dir = new File(filePath);
-        dir.mkdir();
 
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
@@ -28,6 +21,24 @@ public class ImgServiceImpl implements ImgService {
             return (true);
         } catch (Exception e) {
             System.out.println("저장 중 에러");
+            return (false);
+        }
+    }
+
+    @Override
+    public boolean uploadCamImg(MultipartFile img) {
+        String filePath = "/identify";
+
+        File dir = new File(filePath);
+        if (!dir.exists()) dir.mkdir();
+
+        String fileFullPath = filePath + "/" + "cam.jpg";
+
+        try {
+            img.transferTo(new File(fileFullPath));
+            return (true);
+        } catch (Exception e) {
+            System.out.println("camImg 업로드 실패");
             return (false);
         }
     }
