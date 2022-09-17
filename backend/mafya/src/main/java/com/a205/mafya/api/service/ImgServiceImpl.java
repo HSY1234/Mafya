@@ -14,6 +14,10 @@ public class ImgServiceImpl implements ImgService {
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
 
+        filePath = filePath + "/" + userCode;
+        dir = new File(filePath);
+        dir.mkdir();
+
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {

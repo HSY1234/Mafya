@@ -37,12 +37,6 @@ public class ImgController {
 
         if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
         else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
-
-    }
-
-    @DeleteMapping
-    public void test() {
-        return ;
     }
 
     @PostMapping(value = "/uploadCam", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
