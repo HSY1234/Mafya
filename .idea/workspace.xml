@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c746ca0e-a07a-4863-9ad4-0e202b051653" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mafya/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +105,7 @@
       <workItem from="1662355248266" duration="53000" />
       <workItem from="1662355310298" duration="169000" />
       <workItem from="1663397671036" duration="362000" />
-      <workItem from="1663398053679" duration="889000" />
+      <workItem from="1663398053679" duration="3855000" />
     </task>
     <servers />
   </component>

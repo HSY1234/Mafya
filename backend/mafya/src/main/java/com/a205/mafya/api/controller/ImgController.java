@@ -43,7 +43,7 @@ public class ImgController {
     public Resource requestimgURL(@PathVariable String userCode) throws Exception{
         String path = "/sehyeon";
         File file = new File(path + "/" + userCode + ".jpg");
-        return (new UrlResource("file:" + file.getPath())); 
+        return (new UrlResource("file:" + file.getPath()));
     }
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
