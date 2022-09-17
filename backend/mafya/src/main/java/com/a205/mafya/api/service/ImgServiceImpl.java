@@ -9,13 +9,11 @@ import java.io.File;
 public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img, String userCode) {
-//        String filePath = "C:/Users/SSAFY/Desktop/tmp"; //local Test Path //System.getProperty("user.dir")
-        String filePath = "/sehyeon";
+        String filePath = "/sehyeon/" + userCode;
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
 
-        String originalFileName = img.getOriginalFilename();
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {
