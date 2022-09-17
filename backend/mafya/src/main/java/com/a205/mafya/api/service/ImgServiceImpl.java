@@ -46,4 +46,11 @@ public class ImgServiceImpl implements ImgService {
             return (false);
         }
     }
+
+    @Override
+    public String makeUrl(String userCode) {
+        String baseUrl = "/home/ubuntu/ai/server/ai/facebank";
+
+        return (baseUrl + "/" + userCode + "/" + userCode + ".jpg");
+    }
 }

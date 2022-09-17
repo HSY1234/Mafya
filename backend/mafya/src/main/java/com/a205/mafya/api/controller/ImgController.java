@@ -53,10 +53,13 @@ public class ImgController {
     }
 
     @GetMapping(value = "/{userCode}")
-    public Resource requestimgURL(@PathVariable String userCode) throws Exception{
-        String path = "/sehyeon";
-        File file = new File(path + "/" + userCode + ".jpg");
-        return (new UrlResource("file:" + file.getPath()));
+    public ResponseEntity<?> requestimgURL(@PathVariable String userCode) {
+        String imgUrl = imgService.makeUrl(userCode);
+
+        if ("".equals(imgUrl) || imgUrl == null)
+            return (new ResponseEntity<String>(FAIL, HttpStatus.OK));
+        else
+            return (new ResponseEntity<String>(imgUrl, HttpStatus.OK));
     }
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
