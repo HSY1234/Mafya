@@ -40,6 +40,11 @@ public class ImgController {
 
     }
 
+    @DeleteMapping
+    public void test() {
+        return ;
+    }
+
     @PostMapping(value = "/uploadCam", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> uploadCamImg(@RequestPart(value = "file") MultipartFile multipartFile) {
         LocalTime now = LocalTime.now();
