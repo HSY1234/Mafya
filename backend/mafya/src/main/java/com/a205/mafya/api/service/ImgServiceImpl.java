@@ -49,7 +49,7 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public String makeUrl(String userCode) {
-        String baseUrl = "/home/ubuntu/ai/server/ai/facebank";
+        String baseUrl = "https://mafya.ml/api/images";
 
         return (baseUrl + "/" + userCode + "/" + userCode + ".jpg");
     }

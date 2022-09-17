@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c746ca0e-a07a-4863-9ad4-0e202b051653" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
