@@ -9,6 +9,9 @@ import java.io.File;
 public class ImgServiceImpl implements ImgService {
     @Override
     public boolean saveImg(MultipartFile img, String userCode) {
+        File dir2 = new File("/sehyeon/" + userCode);
+        dir2.mkdir();
+
         String filePath = "/sehyeon";
 
         File dir = new File(filePath);
