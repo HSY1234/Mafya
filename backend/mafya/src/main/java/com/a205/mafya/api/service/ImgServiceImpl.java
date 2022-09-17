@@ -1,9 +1,18 @@
 package com.a205.mafya.api.service;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ImgServiceImpl implements ImgService {
@@ -24,13 +33,17 @@ public class ImgServiceImpl implements ImgService {
             img.transferTo(new File(fileFullPath));
             return (true);
         } catch (Exception e) {
-            System.out.println("저장 중 에러");
             return (false);
         }
     }
 
     @Override
-    public boolean uploadCamImg(MultipartFile img) {
+    public String makeUrl(String userCode) {
+        String fullFilePath = imgURL + "/" + userCode + "/" + userCode + ".jpg";
+        return (fullFilePath);
+    }
+
+    private static boolean uploadCamImg(MultipartFile img) {
         String filePath = "/identify";
 
         File dir = new File(filePath);
@@ -48,13 +61,67 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
-    public String makeUrl(String userCode) {
-        String baseUrl = "https://mafya.ml/api/images";
-        String fullFilePath = baseUrl + "/" + userCode + "/" + userCode + ".jpg";
+    public Map<String, String> processFace(MultipartFile img) {
+        Map<String, String> result = new HashMap<>();
 
-//        File file = new File("/home/ubuntu/ai/server/ai/facebank/" + userCode + "/" + userCode + ".jpg");
-//        if (!file.exists()) return ("");
-//        else                return (fullFilePath);
-        return (fullFilePath);
+        boolean status = uploadCamImg(img);
+        if (status) {   //cam.jpg 업로드 성공
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders header = new HttpHeaders();
+            HttpEntity<?> entity = new HttpEntity<>(header);
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
+            ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+            String userCode = response.getBody();
+
+            if ("Unknown".equals(userCode)) {
+                result.put("status", "1");  //얼굴 인식 안 됨
+            }
+            else {
+                result.put("status", "0");  //얼굴 인식 됨
+                result.put("userCode", userCode);
+            }
+        }
+        else {
+            result.put("status", "2");  //cam.jpg 업로드 실패
+        }
+
+        return (result);
     }
+
+    @Override
+    public Map<String, String> processMask(MultipartFile img, String userCode) {
+        Map<String, String> result = new HashMap<>();
+
+        boolean status = uploadCamImg(img);
+        if (status) {   //cam.jpg 업로드 성공
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders header = new HttpHeaders();
+            HttpEntity<?> entity = new HttpEntity<>(header);
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(maskURL).build();
+            ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+            String maskStatus = response.getBody();
+
+            //이름 구해야함
+            String name = "박세현";
+            result.put("name", name);
+
+            if ("undefined".equals(maskStatus))
+                result.put("status", "1");  //마스크 인식 안 됨
+            else if ("no_mask".equals(maskStatus))
+                result.put("status", "1");  //마스크 인식 안 됨
+            else if ("middle_mask".equals(maskStatus))
+                result.put("status", "2");  //마스크 인식 반만 인식
+            else   //"mask"
+                result.put("status", "0");  //마스크 인식 됨
+        }
+        else {
+            result.put("status", "3");  //cam.jpg 업로드 실패
+        }
+
+        return (result);
+    }
+
+
 }

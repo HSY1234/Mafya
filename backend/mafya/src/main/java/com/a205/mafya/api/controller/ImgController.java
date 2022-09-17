@@ -14,7 +14,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
-import java.net.URI;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,26 +30,9 @@ public class ImgController {
 
     @PostMapping(value = "/register/{userCode}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> registFace(@RequestPart(value = "file") MultipartFile multipartFile, @PathVariable String userCode) {
-        LocalTime now = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
-        String formatedNow = now.format(formatter);
-        System.out.println("[register] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
-        System.out.println("[register] userCode = " + userCode);
-
         boolean result = imgService.saveImg(multipartFile, userCode);
 
-        if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
-        else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
-    @PostMapping(value = "/uploadCam", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> uploadCamImg(@RequestPart(value = "file") MultipartFile multipartFile) {
-        LocalTime now = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
-        String formatedNow = now.format(formatter);
-        System.out.println("[uploadCam] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
-
-        boolean result =imgService.uploadCamImg(multipartFile);
+        //DB에 저장해야함 JPA 안했음
 
         if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
         else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
@@ -60,79 +42,39 @@ public class ImgController {
     public ResponseEntity<?> requestimgURL(@PathVariable String userCode) {
         String imgUrl = imgService.makeUrl(userCode);
 
-        if ("".equals(imgUrl) || imgUrl == null)
-            return (new ResponseEntity<String>(FAIL, HttpStatus.OK));
-        else
-            return (new ResponseEntity<String>(imgUrl, HttpStatus.OK));
+        //DB통해서 URL가져오도록 변경해야함
+
+        if ("".equals(imgUrl) || imgUrl == null)    return (new ResponseEntity<String>(FAIL, HttpStatus.OK));
+        else                                        return (new ResponseEntity<String>(imgUrl, HttpStatus.OK));
     }
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> recognizeFace(@RequestPart(value = "file") MultipartFile multipartFile) {
-        LocalTime now = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
-        String formatedNow = now.format(formatter);
-        System.out.println("[Face] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
-
-        int status = 0;
-        //int status = 1;   //얼굴 인식 안 됨
-        String codeName = "0743111";
-
-        Map<String, String> result = new HashMap<>();
-        result.put("status", "" + status);
-        result.put("code_name", codeName);
+        Map<String, String> result = imgService.processFace(multipartFile);
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
 
     @PostMapping(value = "/mask", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String codeName) {
-        LocalTime now = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
-        String formatedNow = now.format(formatter);
-        System.out.println("[Mask] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
+    public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String userCode) {
+        Map<String, String> result = imgService.processMask(multipartFile, userCode);
 
-        int status = 0;
-//        int status = 1; //얼굴 인식 안 됨
-        //int status = 2; //등록된 사용자 아님
-        String name = "기사 김무종";
-
-        Map<String, String> result = new HashMap<>();
-        result.put("status", "" + status);
-        result.put("name", name);
+        //User Repository을 이용하여 학번 -> 이름 구해야함
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
 
-    @PutMapping
-    public String test() throws JsonProcessingException {
-        String url = "https://mafya.ml/ai/modelsearch";
-
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        String jsonInString = "";
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        HttpEntity<?> entity = new HttpEntity<>(header);
-
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
-
-        //
-        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
-
-        System.out.println("body : " + response.getBody());
-
-        return (response.getBody());
-
-//        ResponseEntity<?> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
+//    @PostMapping(value = "/uploadCam", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+//    public ResponseEntity<?> uploadCamImg(@RequestPart(value = "file") MultipartFile multipartFile) {
+//        LocalTime now = LocalTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
+//        String formatedNow = now.format(formatter);
+//        System.out.println("[uploadCam] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
 //
-//        result.put("statusCode", resultMap.getStatusCodeValue());
-//        result.put("header", resultMap.getHeaders());
-//        result.put("body", resultMap.getBody());
+//        boolean result =imgService.uploadCamImg(multipartFile);
 //
-//        ObjectMapper mapper = new ObjectMapper();
-//        jsonInString = mapper.writeValueAsString(resultMap.getBody());
-//
-//        return (jsonInString);
-    }
+//        if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
+//        else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
+//    }
+
 }
