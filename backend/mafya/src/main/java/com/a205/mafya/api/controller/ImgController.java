@@ -49,7 +49,7 @@ public class ImgController {
         boolean result =imgService.uploadCamImg(multipartFile);
 
         if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
-        else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR)); 
+        else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @GetMapping(value = "/{userCode}")
@@ -76,8 +76,6 @@ public class ImgController {
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
-
-    //관리자가 학생 사진을 등록할 때 (200 - "
 
     @PostMapping(value = "/mask", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String codeName) {
