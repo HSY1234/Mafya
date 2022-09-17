@@ -65,7 +65,7 @@ def URL2Frame(URL):
     #print(type(urllib.request.urlopen(URL).read()))
     #print(type(image_to_byte_array(Image.open('AR.jpg'))))
     img_arr = np.array(
-        bytearray(image_to_byte_array(Image.open('../../MJ.jpg'))), dtype=np.uint8)
+        bytearray(image_to_byte_array(Image.open('identify/cam.jpg'))), dtype=np.uint8)
         #bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
     frame = cv2.imdecode(img_arr, -1)
     # print(frame)
@@ -218,9 +218,9 @@ CORS(app)
 
 @app.route('/ai/maskreco', methods=['GET'])
 def maskreco():
-    print("들어왔어요!")
+    print("마스크 인식 시작!")
     if request.method == 'GET':
-        image = Image.open('../../MJ.jpg')
+        image = Image.open('identify/cam.jpg')
         size = (224, 224)
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
@@ -229,12 +229,16 @@ def maskreco():
 
         prediction = mask_model.predict(mask_data)
         if prediction[0][0]>prediction[0][1] and prediction[0][0]>prediction[0][2]:
-            return {'result': 'mask'}
+            # return {'result': 'mask'}
+            return 'mask'
         elif prediction[0][1]>prediction[0][0] and prediction[0][1]>prediction[0][2]:
-            return {'result': 'middle_mask'}
+            # return {'result': 'middle_mask'}
+            return 'middle_mask'
         else:
-            return {'result': 'no_mask'}
-        return {'result': 'undefined'}
+            # return {'result': 'no_mask'}
+            return 'no_mask'
+        # return {'result': 'undefined'}
+        return 'undefined'
 
 @app.route('/ai/modelfr', methods=['GET'])
 def modelfr():
@@ -266,6 +270,27 @@ def modelin():
         student_id = get_info(URL_in, landmark, device_0, target, name)
         return {'id': student_id}
 
+@app.route('/ai/modelsearch', methods=['GET'])
+def modelsearch():
+    if request.method == 'GET':
+        print("누군지 찾아볼께요")
+        URL_fr = ""
+        URL_in = ""
+        student_list = get_face(URL_fr, device_0, target, name)
+        if not len(student_list):
+            return "Unknown"
+        landmark=student_list[0]["landmarks"]
+        try:
+            landmark = list(
+                map(float, landmark.rstrip(']').lstrip('[').split(',')))
+        except:
+            pass
+        student_id = get_info(URL_in, landmark, device_0, target, name)
+        
+        return student_id[0]
+        # return {'id': student_id}
+
+
 #@app.router('/update')
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=8081, debug=True)
