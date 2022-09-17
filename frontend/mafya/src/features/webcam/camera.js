@@ -83,19 +83,45 @@ function Camera() {
           },
         })
         .then((res) => {
-          if (res.data.status == 0) {
+          if (res.data.status === "0") {
             setHumanDetacting(false);
             setFaceDetacting(false);
             setSentence(`${res.data.name}님 출석되었습니다.`);
+            setUserCode("");
 
             setTimeout(() => {
               setSentence("");
-            }, 1000);
+            }, 2000);
+          } else if (res.data.status === "1") {
+            setHumanDetacting(false);
+            setFaceDetacting(false);
+            setUserCode("");
+            setSentence(
+              `${res.data.name}님 출석되었습니다. 마스크를 좀 더 올려주세요`
+            );
+
+            setTimeout(() => {
+              setSentence("");
+            }, 2000);
+          } else if (res.data.status === "2") {
+            setHumanDetacting(false);
+            setFaceDetacting(false);
+            setUserCode("");
+            setSentence("마스크를 착용하지 않았습니다. 처음부터 부탁드립니다.");
+
+            setTimeout(() => {
+              setSentence("");
+            }, 2000);
           } else {
             setHumanDetacting(false);
             setFaceDetacting(false);
             setSentence("");
+            setSentence("서버 에러");
             setUserCode("");
+
+            setTimeout(() => {
+              setSentence("");
+            }, 2000);
           }
         })
         .catch((err) => {
@@ -177,15 +203,26 @@ function Camera() {
               },
             })
             .then((res) => {
-              if (res.data.status == 0) {
+              if (res.data.status === "0") {
                 console.log("성공");
                 setFaceDetacting(true);
-                setSentence("인식되었습니다. 마스크를 착용해주세요");
+                setSentence(
+                  `인식되었습니다. 마스크를 착용해주세요. ${res.data.userCode}`
+                );
                 setUserCode(res.data.userCode);
                 detectMask(userCode);
-              } else {
+              } else if (res.data.status === "1") {
                 setHumanDetacting(false);
-                setSentence("");
+                setSentence("DB에 등록된 사용자가 아닙니다.");
+                setTimeout(() => {
+                  setSentence("");
+                }, 2000);
+              } else if (res.data.status === "2") {
+                setHumanDetacting(false);
+                setSentence("조금 더 중앙에 있어주세요");
+                setTimeout(() => {
+                  setSentence("");
+                }, 2000);
               }
             })
             .catch((err) => {
@@ -258,7 +295,7 @@ function Camera() {
 
       const timeId = setInterval(() => {
         detect(net);
-      }, 5000);
+      }, 3000);
       setTimerId(timeId);
     }
     if (humanDetacting) {

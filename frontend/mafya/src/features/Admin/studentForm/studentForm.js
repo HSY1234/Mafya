@@ -10,7 +10,6 @@ const StudentForm = () => {
   const location = useLocation();
   const history = useHistory();
   const student = location.state;
-  console.log(student);
   const [name, setName] = useState(student ? student.name : "");
   const [userCode, setUserCode] = useState(student ? student.userCode : "");
   const [teamCode, setTeamCode] = useState(student ? student.teamCode : "");
@@ -26,8 +25,9 @@ const StudentForm = () => {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewURL] = useState(null);
   const fileRef = useRef();
+
   useEffect(() => {
-    if (student === undefined) {
+    if (!student) {
       setName("");
       setUserCode("");
       setTeamCode("");
@@ -35,6 +35,34 @@ const StudentForm = () => {
       setPhoneNum("");
       setTeamLeader(null);
       setIsUserCodeUnique(false);
+      setFile(null);
+      setPreviewURL(null);
+      const fileInput = document.querySelector('input[type="file"]');
+      const dataTransfer = new DataTransfer();
+      fileInput.files = dataTransfer.files;
+    } else {
+      axios
+        .get(API_URL + `img/${student.userCode}`)
+        .then(async (res) => {
+          const url = res.data;
+          setPreviewURL(url);
+          const response = await fetch(url);
+          console.log(response);
+          const data = await response.blob();
+          console.log(data);
+          const ext = url.split(".").pop();
+          const filename = url.split("/").pop();
+          const metadata = { type: `image/${ext}` };
+          const tmpFile = new File([data], filename, metadata);
+          setFile(tmpFile);
+          const fileInput = document.querySelector('input[type="file"]');
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(tmpFile);
+          fileInput.files = dataTransfer.files;
+        })
+        .catch((err) => {
+          alert("이미지 업로드 실패");
+        });
     }
   }, [student]);
   const nameChangeHandler = (event) => {
@@ -149,7 +177,7 @@ const StudentForm = () => {
       teamLeader,
       // file,
     };
-    console.log(tmpStudentInfo);
+
     if (!student) {
       axios
         .post(API_URL + "student/", tmpStudentInfo, {
@@ -214,7 +242,7 @@ const StudentForm = () => {
         });
     }
   };
-  console.log(formIsVaild);
+
   return (
     // <div className={classes.v105_113}>
     //   <div className={classes.v105_123}>
@@ -336,6 +364,7 @@ const StudentForm = () => {
             type="file"
             accept="image/jpg,impge/png,image/jpeg,image/gif"
             name="profile_img"
+            id="file"
             ref={fileRef}
             onChange={handleFileOnChange}
           ></input>
