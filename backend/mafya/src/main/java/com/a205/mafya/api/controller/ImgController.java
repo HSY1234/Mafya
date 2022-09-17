@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
+import java.net.URI;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -116,15 +117,24 @@ public class ImgController {
 
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(url).build();
 
-        ResponseEntity<?> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
+        //
+        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
 
-        result.put("statusCode", resultMap.getStatusCodeValue());
-        result.put("header", resultMap.getHeaders());
-        result.put("body", resultMap.getBody());
+        System.out.println("body : " + response.getBody());
 
-        ObjectMapper mapper = new ObjectMapper();
-        jsonInString = mapper.writeValueAsString(resultMap.getBody());
+        return (response.getBody());
 
-        return (jsonInString);
+//        ResponseEntity<?> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Object.class);
+//
+//        result.put("statusCode", resultMap.getStatusCodeValue());
+//        result.put("header", resultMap.getHeaders());
+//        result.put("body", resultMap.getBody());
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        jsonInString = mapper.writeValueAsString(resultMap.getBody());
+//
+//        return (jsonInString);
+
+        return ("");
     }
 }
