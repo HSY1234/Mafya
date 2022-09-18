@@ -1,38 +1,74 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* by hong */
+.mainPageContainer {
+  position: absolute;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100%;
+  width: 100%;
+  min-height: 730px;
+  background-color: #1e1e1e;
+  margin: 0%;
+  padding: 0%;
 }
 
-.App-link {
-  color: #61dafb;
+.webCamArea {
+  border-radius: 15px;
+  /* position: "absolute";
+  margin-left: "auto";
+  margin-right: "auto";
+  left: 0;
+  right: 0; */
+  /* text-align: "center"; */
+  z-index: 9;
+  width: 960px;
+  height: 720px;
+}
+.detectNow {
+  padding: 7px;
+  border-radius: 15px;
+  background-color: #6495ed;
+}
+.nodetectNow {
+  padding: 7px;
+  border-radius: 15px;
+  background-color: #ff6347;
+}
+.tmp {
+  padding: 7px;
+  border-radius: 15px;
+  background-color: #acd282;
+}
+.humanNow {
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-sizing: content-box;
+  padding: 3px;
+  background-color: #acd282;
+  align-items: center;
+  justify-content: center;
+}
+.noHumanNow {
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-sizing: content-box;
+  padding: 3px;
+  background-color: #1e1e1e;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.webCanvas {
+  position: absolute;
+  /* margin-left: "auto";
+  margin-right: "auto"; */
+  /* left: 0;
+  right: 0; */
+  text-align: center;
+  z-index: 8;
+  width: 640px;
+  height: 480px;
+  display: none;
 }
