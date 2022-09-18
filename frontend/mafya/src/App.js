@@ -1,8 +1,8 @@
-import React from "react";
-import Camera from "./features/webcam/camera";
-import { Switch, BrowserRouter, Route } from "react-router-dom";
-import studentForm from "./features/Admin/studentForm/studentForm";
-import MainPage from "./features/Admin/mainPage/mainPage";
+import React from "react"
+import Camera from "./features/webcam/camera"
+import { Switch, BrowserRouter, Route } from "react-router-dom"
+import studentForm from "./features/Admin/studentForm/studentForm"
+import MainPage from "./features/Admin/mainPage/mainPage"
 function App() {
   return (
     <div>
@@ -14,6 +14,6 @@ function App() {
         </Switch>
       </BrowserRouter>
     </div>
-  );
+  )
 }
-export default App;
+export default App
