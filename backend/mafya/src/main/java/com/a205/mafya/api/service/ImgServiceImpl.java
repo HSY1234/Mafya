@@ -51,13 +51,13 @@ public class ImgServiceImpl implements ImgService {
         return (fullFilePath);
     }
 
-    private static boolean uploadCamImg(MultipartFile img) {
+    private static boolean uploadCamImg(MultipartFile img, String imgName) {
         String filePath = "/identify";
 
         File dir = new File(filePath);
         if (!dir.exists()) dir.mkdir();
 
-        String fileFullPath = filePath + "/" + "cam.jpg";
+        String fileFullPath = filePath + "/" + imgName;
 
         try {
             img.transferTo(new File(fileFullPath));
@@ -72,7 +72,7 @@ public class ImgServiceImpl implements ImgService {
     public Map<String, String> processFace(MultipartFile img) {
         Map<String, String> result = new HashMap<>();
 
-        boolean status = uploadCamImg(img);
+        boolean status = uploadCamImg(img, "face.jpg");
         if (status) {   //cam.jpg 업로드 성공
             RestTemplate restTemplate = new RestTemplate();
 
@@ -101,7 +101,7 @@ public class ImgServiceImpl implements ImgService {
     public Map<String, String> processMask(MultipartFile img, String userCode) {
         Map<String, String> result = new HashMap<>();
 
-        boolean status = uploadCamImg(img);
+        boolean status = uploadCamImg(img, "mask.jpg");
         if (status) {   //cam.jpg 업로드 성공
             RestTemplate restTemplate = new RestTemplate();
 
@@ -115,6 +115,8 @@ public class ImgServiceImpl implements ImgService {
 
             if (!user.isPresent())  result.put("name", "Unknown");
             else                    result.put("name", user.get().getName());
+
+            System.out.println(">>> " + user.get().getName());
 
             if ("undefined".equals(maskStatus))
                 result.put("status", "1");  //마스크 인식 안 됨
