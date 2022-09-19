@@ -113,10 +113,8 @@ public class ImgServiceImpl implements ImgService {
 
             Optional<User> user = userRepository.findByUserCode(userCode);
 
-            if(!user.isPresent())
-                throw new NoSuchElementException("Not existent userCode");
-
-            result.put("name", user.get().getName());
+            if (!user.isPresent())  result.put("name", "Unknown");
+            else                    result.put("name", user.get().getName());
 
             if ("undefined".equals(maskStatus))
                 result.put("status", "1");  //마스크 인식 안 됨
