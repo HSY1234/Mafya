@@ -100,7 +100,7 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public Map<String, String> processMask(MultipartFile img, String userCode) {
         Map<String, String> result = new HashMap<>();
-
+        
         boolean status = uploadCamImg(img, "mask.jpg");
         if (status) {   //cam.jpg 업로드 성공
             RestTemplate restTemplate = new RestTemplate();
