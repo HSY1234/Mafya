@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
     public UserInfo findUserByUserCode(String userCode) throws Exception {
         Optional<User> opUser =userRepository.findByUserCode(userCode);
         if(!opUser.isPresent()){
-            throw new NoSuchElementException("Not existent id");
+            throw new NoSuchElementException("Not existent userCode");
         }
 
         User user = opUser.get();
