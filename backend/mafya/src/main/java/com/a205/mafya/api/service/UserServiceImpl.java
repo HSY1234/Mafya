@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public UserInfo findUser(int id) throws Exception {
+    public UserInfo findUserById(int id) throws Exception {
         Optional<User> opUser =userRepository.findById(id);
         if(!opUser.isPresent()){
             throw new NoSuchElementException("Not existent id");
@@ -79,6 +79,18 @@ public class UserServiceImpl implements UserService{
 
         User user = opUser.get();
 
+        return UserToUserInfo(user);
+    }
+
+    @Override
+    @Transactional
+    public UserInfo findUserByUserCode(String userCode) throws Exception {
+        Optional<User> opUser =userRepository.findByUserCode(userCode);
+        if(!opUser.isPresent()){
+            throw new NoSuchElementException("Not existent id");
+        }
+
+        User user = opUser.get();
 
         return UserToUserInfo(user);
     }

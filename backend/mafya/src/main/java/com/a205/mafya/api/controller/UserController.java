@@ -67,12 +67,25 @@ public class UserController {
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
 
-    // 학생 정보 불러오기
-    @GetMapping ("{id}")
-    public ResponseEntity<?> GetStudentInfo(@PathVariable int id) throws Exception{
+    // 학생 정보 불러오기 By id
+    @GetMapping ("id/{id}")
+    public ResponseEntity<?> GetStudentInfoById(@PathVariable int id) throws Exception{
 
         UserOneRes UOR = (UserOneRes) UserOneRes.builder()
-                .userInfo(userService.findUser(id))
+                .userInfo(userService.findUserById(id))
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
+
+        return new ResponseEntity<>(UOR, HttpStatus.OK);
+    }
+
+    // 학생 정보 불러오기 By userCode
+    @GetMapping ("userCode/{userCode}")
+    public ResponseEntity<?> GetStudentInfoByUserCode(@PathVariable String userCode) throws Exception{
+
+        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+                .userInfo(userService.findUserByUserCode(userCode))
                 .msg("SUCCESS")
                 .resultCode(0)
                 .build();
