@@ -49,14 +49,14 @@ public class ImgController {
     }
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> recognizeFace(@RequestPart(value = "file") MultipartFile multipartFile) {
+    public ResponseEntity<?> recognizeFace(@RequestPart(value = "file") MultipartFile multipartFile) throws InterruptedException {
         Map<String, String> result = imgService.processFace(multipartFile);
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
 
     @PostMapping(value = "/mask", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String userCode) {
+    public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String userCode) throws InterruptedException {
         Map<String, String> result = imgService.processMask(multipartFile, userCode);
 
         //User Repository을 이용하여 학번 -> 이름 구해야함

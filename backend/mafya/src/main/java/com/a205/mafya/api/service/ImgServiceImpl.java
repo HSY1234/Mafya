@@ -75,7 +75,7 @@ public class ImgServiceImpl implements ImgService {
 
         boolean status = uploadCamImg(img, "face.jpg");
         if (status) {   //cam.jpg 업로드 성공
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
                 TimeUnit.SECONDS.sleep(1);
 
 
@@ -108,7 +108,7 @@ public class ImgServiceImpl implements ImgService {
 
         boolean status = uploadCamImg(img, "mask.jpg");
         if (status) {   //cam.jpg 업로드 성공
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
                 TimeUnit.SECONDS.sleep(1);
 
             RestTemplate restTemplate = new RestTemplate();
