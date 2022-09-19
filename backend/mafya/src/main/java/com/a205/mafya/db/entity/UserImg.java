@@ -15,6 +15,6 @@ public class UserImg extends BaseEntity {
     @Column(length = 1000, name = "img_url")
     private String imgUrl;
 
-    @OneToMany
-    private List<User> user;
+    @OneToOne
+    private User user;
 }

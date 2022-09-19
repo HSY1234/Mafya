@@ -1,5 +1,8 @@
 package com.a205.mafya.api.service;
 
+import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,9 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ImgServiceImpl implements ImgService {
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public boolean saveImg(MultipartFile img, String userCode) {
         String filePath = "/sehyeon";
@@ -103,9 +111,12 @@ public class ImgServiceImpl implements ImgService {
             ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
             String maskStatus = response.getBody();
 
-            //이름 구해야함
-            String name = "박세현";
-            result.put("name", name);
+            Optional<User> user = userRepository.findByUserCode(userCode);
+
+            if(!user.isPresent())
+                throw new NoSuchElementException("Not existent userCode");
+
+            result.put("name", user.get().getName());
 
             if ("undefined".equals(maskStatus))
                 result.put("status", "1");  //마스크 인식 안 됨
