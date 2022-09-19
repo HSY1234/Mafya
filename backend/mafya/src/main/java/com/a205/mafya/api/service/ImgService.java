@@ -13,9 +13,9 @@ public interface ImgService {
 
     public String makeUrl(String userCode);
 
-    public Map<String, String> processFace(MultipartFile img);
+    public Map<String, String> processFace(MultipartFile img) throws InterruptedException;
 
-    public Map<String, String> processMask(MultipartFile img, String userCode);
+    public Map<String, String> processMask(MultipartFile img, String userCode) throws InterruptedException;
 
 //    public boolean uploadCamImg(MultipartFile img);
 

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ImgServiceImpl implements ImgService {
@@ -69,11 +70,15 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
-    public Map<String, String> processFace(MultipartFile img) {
+    public Map<String, String> processFace(MultipartFile img) throws InterruptedException {
         Map<String, String> result = new HashMap<>();
 
         boolean status = uploadCamImg(img, "face.jpg");
         if (status) {   //cam.jpg 업로드 성공
+            for (int i = 0; i < 1; i++)
+                TimeUnit.SECONDS.sleep(2);
+
+
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders header = new HttpHeaders();
@@ -98,11 +103,14 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
-    public Map<String, String> processMask(MultipartFile img, String userCode) {
+    public Map<String, String> processMask(MultipartFile img, String userCode) throws InterruptedException {
         Map<String, String> result = new HashMap<>();
-        
+
         boolean status = uploadCamImg(img, "mask.jpg");
         if (status) {   //cam.jpg 업로드 성공
+            for (int i = 0; i < 1; i++)
+                TimeUnit.SECONDS.sleep(2);
+
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders header = new HttpHeaders();
