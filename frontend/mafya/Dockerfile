@@ -1,10 +1,16 @@
 FROM node:16
 
+RUN mkdir -p /usr/src/app
+
 WORKDIR /usr/src/app
 
-COPY ./ ./
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+COPY package*.json ./
 
 RUN npm install
+
+COPY ./ ./
 
 EXPOSE 3000
 

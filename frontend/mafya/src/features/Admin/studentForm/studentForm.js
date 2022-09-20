@@ -1,21 +1,70 @@
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
-import classes from "./adminCreatePage.module.css";
+// import classes from "./studentForm.module.css";
 
-const AdminCreatePage = () => {
-  const [name, setName] = useState("");
-  const [userCode, setUserCode] = useState("");
-  const [teamCode, setTeamCode] = useState("");
-  const [classCode, setClassCode] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [teamLeader, setTeamLeader] = useState(null);
-  const [isUserCodeUnique, setIsUserCodeUnique] = useState(false);
+const StudentForm = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const student = location.state;
+  const [name, setName] = useState(student ? student.name : "");
+  const [userCode, setUserCode] = useState(student ? student.userCode : "");
+  const [teamCode, setTeamCode] = useState(student ? student.teamCode : "");
+  const [classCode, setClassCode] = useState(student ? student.classCode : "");
+  const [phoneNum, setPhoneNum] = useState(student ? student.phoneNum : "");
+
+  const [teamLeader, setTeamLeader] = useState(
+    student ? student.teamLeader : null
+  );
+  const [isUserCodeUnique, setIsUserCodeUnique] = useState(
+    student ? true : false
+  );
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewURL] = useState(null);
   const fileRef = useRef();
+
+  useEffect(() => {
+    if (!student) {
+      setName("");
+      setUserCode("");
+      setTeamCode("");
+      setClassCode("");
+      setPhoneNum("");
+      setTeamLeader(null);
+      setIsUserCodeUnique(false);
+      setFile(null);
+      setPreviewURL(null);
+      const fileInput = document.querySelector('input[type="file"]');
+      const dataTransfer = new DataTransfer();
+      fileInput.files = dataTransfer.files;
+    } else {
+      axios
+        .get(API_URL + `img/${student.userCode}`)
+        .then(async (res) => {
+          const url = res.data;
+          setPreviewURL(url);
+          const response = await fetch(url);
+          console.log(response);
+          const data = await response.blob();
+          console.log(data);
+          const ext = url.split(".").pop();
+          const filename = url.split("/").pop();
+          const metadata = { type: `image/${ext}` };
+          const tmpFile = new File([data], filename, metadata);
+          setFile(tmpFile);
+          const fileInput = document.querySelector('input[type="file"]');
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(tmpFile);
+          fileInput.files = dataTransfer.files;
+        })
+        .catch((err) => {
+          alert("이미지 업로드 실패");
+        });
+    }
+  }, [student]);
   const nameChangeHandler = (event) => {
     const tempName = event.target.value;
     setName(tempName);
@@ -68,15 +117,15 @@ const AdminCreatePage = () => {
 
   const teamLeaderChangeHandler = (event) => {
     console.log(event);
-    if (event.target.value === "teamLeader") {
+    if (event.target.value === "true") {
       const tempTeamLeader = true;
       console.log(tempTeamLeader);
       setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "teamMember") {
+    } else if (event.target.value === "false") {
       const tempTeamLeader = false;
       console.log(tempTeamLeader);
       setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "default") {
+    } else if (event.target.value === "null") {
       setTeamLeader(null);
     }
   };
@@ -99,6 +148,8 @@ const AdminCreatePage = () => {
   // };
 
   const isTeamLeader = (value) => {
+    console.log(typeof value);
+    console.log(value);
     if (typeof value === "boolean") {
       return true;
     } else {
@@ -112,7 +163,8 @@ const AdminCreatePage = () => {
     classCode &&
     phoneNum &&
     isUserCodeUnique &&
-    isTeamLeader(teamLeader);
+    isTeamLeader(teamLeader) &&
+    file;
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -125,23 +177,72 @@ const AdminCreatePage = () => {
       teamLeader,
       // file,
     };
-    console.log(tmpStudentInfo);
 
-    axios
-      .post(API_URL + "student/", tmpStudentInfo, {
-        headers: {
-          "Content-Type": "application/json",
-          // "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        alert("학생 정보 등록 완료");
-        window.location.reload();
-      })
-      .catch((err) => {
-        alert("학생 정보 등록 실패");
-      });
+    if (!student) {
+      axios
+        .post(API_URL + "student/", tmpStudentInfo, {
+          headers: {
+            "Content-Type": "application/json",
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("학생 정보 등록 완료");
+        })
+        .catch((err) => {
+          alert("학생 정보 등록 실패");
+        });
+      let formData = new FormData();
+      formData.set("file", file);
+      formData.set("userCode", userCode);
+      axios
+        .post(API_URL + `img/register/${userCode}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Access-Control-Allow-Origin": "*",
+          },
+        })
+        .then((res) => {
+          alert("학생 정보 등록 완료");
+          window.location.reload();
+        })
+        .catch((err) => {
+          alert("학생 정보 등록 실패");
+        });
+    } else {
+      axios
+        .put(API_URL + `student/${student.id}`, tmpStudentInfo, {
+          headers: {
+            "Content-Type": "application/json",
+            // "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("학생 정보 수정 완료");
+        })
+        .catch((err) => {
+          alert("학생 정보 수정 실패");
+        });
+      let formData = new FormData();
+      formData.set("file", file);
+      formData.set("userCode", userCode);
+      axios
+        .post(API_URL + `img/register/${userCode}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Access-Control-Allow-Origin": "*",
+          },
+        })
+        .then((res) => {
+          alert("학생 정보 수정 완료");
+          history.push("/admin");
+        })
+        .catch((err) => {
+          alert("학생 정보 수정 실패");
+        });
+    }
   };
+
   return (
     // <div className={classes.v105_113}>
     //   <div className={classes.v105_123}>
@@ -175,7 +276,7 @@ const AdminCreatePage = () => {
     <div>
       <AdminHeader />
       <div>
-        <span>학생 정보 등록</span>
+        <span>{student ? "학생 정보 수정" : "학생 정보 등록"}</span>
       </div>
       <form onSubmit={onSubmitHandler}>
         <h5>이름</h5>
@@ -194,11 +295,16 @@ const AdminCreatePage = () => {
             type="text"
             id="userCode"
             value={userCode}
+            readOnly={student ? true : false}
             onChange={userCodeChangeHandler}
             placeholder="학번을 입력해 주세요"
           />
           <button onClick={userCodeDupCheckHandler} type="button">
-            {isUserCodeUnique ? "사용 가능" : "중복 확인"}
+            {student
+              ? "수정 불가"
+              : isUserCodeUnique
+              ? "사용 가능"
+              : "중복 확인"}
           </button>
         </div>
         <h5>팀 코드</h5>
@@ -233,14 +339,14 @@ const AdminCreatePage = () => {
         </div>
         <h5>팀장 여부</h5>
         <div>
-          <select defaultValue="default" onChange={teamLeaderChangeHandler}>
-            <option key="default" value="default">
+          <select defaultValue={teamLeader} onChange={teamLeaderChangeHandler}>
+            <option key="default" value="null">
               팀장 여부 선택
             </option>
-            <option key="teamLeader" value="teamLeader">
+            <option key="teamLeader" value="true">
               팀장
             </option>
-            <option key="teamMember" value="teamMember">
+            <option key="teamMember" value="false">
               팀원
             </option>
           </select>
@@ -258,15 +364,18 @@ const AdminCreatePage = () => {
             type="file"
             accept="image/jpg,impge/png,image/jpeg,image/gif"
             name="profile_img"
+            id="file"
             ref={fileRef}
             onChange={handleFileOnChange}
           ></input>
           {file && <img src={previewUrl} alt="preview" />}
         </div>
-        <button disabled={!formIsVaild}>정보 등록</button>
+        <button disabled={!formIsVaild}>
+          {student ? "정보 수정" : "정보 등록"}
+        </button>
       </form>
     </div>
   );
 };
 
-export default AdminCreatePage;
+export default StudentForm;
