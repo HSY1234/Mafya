@@ -65,7 +65,7 @@ def URL2Frame(URL):
     #print(type(urllib.request.urlopen(URL).read()))
     #print(type(image_to_byte_array(Image.open('AR.jpg'))))
     img_arr = np.array(
-        bytearray(image_to_byte_array(Image.open('identify/cam.jpg'))), dtype=np.uint8)
+        bytearray(image_to_byte_array(Image.open('identify/face.jpg'))), dtype=np.uint8)
         #bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
     frame = cv2.imdecode(img_arr, -1)
     # print(frame)
@@ -220,7 +220,7 @@ CORS(app)
 def maskreco():
     print("마스크 인식 시작!")
     if request.method == 'GET':
-        image = Image.open('identify/cam.jpg')
+        image = Image.open('identify/mask.jpg')
         size = (224, 224)
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
@@ -278,7 +278,7 @@ def modelsearch():
         URL_in = ""
         student_list = get_face(URL_fr, device_0, target, name)
         if not len(student_list):
-            return "Unknown"
+            return "no face"
         landmark=student_list[0]["landmarks"]
         try:
             landmark = list(
