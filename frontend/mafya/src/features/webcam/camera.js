@@ -153,7 +153,7 @@ function Camera() {
           setSentence("")
           setUserCode("")
         })
-    }, 2000)
+    }, 3000)
   }
   const detect = async (net) => {
     // Check data is available
@@ -358,7 +358,6 @@ function Camera() {
 
   return (
     <div className={styles.mainPageContainer}>
-      {/* <span>{sentence}</span> */}
       <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
         <div
           className={
@@ -379,6 +378,7 @@ function Camera() {
           <canvas ref={canvasRef} className={styles.webCanvas} />
         </div>
       </div>
+      <span className={styles.forMJDesign}>{sentence}</span>
     </div>
   )
 }
