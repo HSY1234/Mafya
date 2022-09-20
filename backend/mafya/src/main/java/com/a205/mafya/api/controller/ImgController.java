@@ -59,8 +59,6 @@ public class ImgController {
     public ResponseEntity<?> recognizeMask(@RequestPart(value = "file") MultipartFile multipartFile, String userCode) {
         Map<String, String> result = imgService.processMask(multipartFile, userCode);
 
-        //User Repository을 이용하여 학번 -> 이름 구해야함
-
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
 

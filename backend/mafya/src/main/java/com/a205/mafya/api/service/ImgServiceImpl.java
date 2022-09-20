@@ -87,6 +87,10 @@ public class ImgServiceImpl implements ImgService {
                 result.put("status", "1");  //얼굴 인식 안 됨
             }
             else {
+                Optional<User> user = userRepository.findByUserCode(userCode);
+
+                if (!user.isPresent())  result.put("name", "Unknown");
+                else                    result.put("name", user.get().getName());
                 result.put("status", "0");  //얼굴 인식 됨
                 result.put("userCode", userCode);
             }
