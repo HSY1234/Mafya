@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Axios 파일 업로드 기능</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <button id="btn-file-upload">파일 업로드</button>
+    <input type="file" id="upload-file" name="file" />
+    <script>
+      const inputFileUpload = document.querySelector("#upload-file");
+
+      const fileupload = () => {
+        const formData = new FormData();
+        formData.append("file", inputFileUpload.files[0]);
+
+        axios({
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Access-Control-Allow-Origin": "*",
+          },
+          url: "http://localhost:8082/multiWatchMask", // 파일 업로드 요청 URL
+          method: "POST",
+          data: formData,
+        }).then((response) => {
+          alert(response.data);
+          inputFileUpload.value = "";
+        });
+      };
+
+      // inputFileUpload.addEventListener("change", fileupload);
+
+      document
+        .querySelector("#btn-file-upload")
+        .addEventListener("click", () => {
+          fileupload();
+        });
+    </script>
+  </body>
+</html>
