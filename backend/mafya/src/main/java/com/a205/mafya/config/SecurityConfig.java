@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsUtils;
 
 
 @EnableWebSecurity
-@RequiredArgsConstructorf
+@RequiredArgsConstructor
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnDefaultWebSecurity
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
