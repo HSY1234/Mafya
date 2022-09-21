@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .antMatchers("/").permitAll()
 
                 //authenticated
-                .antMatchers(HttpMethod.GET,"/student").authenticated()
+//                .antMatchers(HttpMethod.GET,"/student").authenticated()
 
                 // jwt 필터 적용
                 .and()
