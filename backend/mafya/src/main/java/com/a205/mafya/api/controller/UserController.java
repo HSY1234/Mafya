@@ -1,13 +1,14 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.AddUserReq;
+import com.a205.mafya.api.request.LoginReq;
 import com.a205.mafya.api.request.ModifyUserReq;
-import com.a205.mafya.api.response.BasicRes;
-import com.a205.mafya.api.response.UserAttendRes;
-import com.a205.mafya.api.response.UserListRes;
-import com.a205.mafya.api.response.UserOneRes;
+import com.a205.mafya.api.response.*;
+import com.a205.mafya.api.service.AuthService;
 import com.a205.mafya.api.service.UserService;
 import com.a205.mafya.db.dto.UserInfo;
+import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -23,6 +25,28 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthService authService;
+
+    @Autowired
+    UserRepository userRepository;
+
+    // 로그인
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody LoginReq loginReq){
+
+        // jwt 생성
+        String accessToken = authService.login(loginReq);
+
+        LoginRes LR = (LoginRes) LoginRes.builder()
+                .accessToken(accessToken)
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
+
+        return new ResponseEntity<>(LR, HttpStatus.OK);
+    }
 
 
     // 학생 추가, 이미지는 아직
