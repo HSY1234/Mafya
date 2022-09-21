@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class ImgServiceImpl implements ImgService {
     UserImgRepository userImgRepository;
 
     @Override
+    @Transactional
     public boolean saveImg(MultipartFile img, String userCode) {
         String filePath = "/sehyeon";
 
@@ -40,21 +42,24 @@ public class ImgServiceImpl implements ImgService {
         filePath = filePath + "/" + userCode;
         dir = new File(filePath);
         dir.mkdir();
- 
+
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {
             UserImg userImg = new UserImg();
-            User user = new User();
+            Optional<User> user = userRepository.findByUserCode(userCode);
 
             img.transferTo(new File(fileFullPath));
 
-            user.setUserCode(userCode);
-            userImg.setUser(user);
-            userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+            if (user.isPresent()) {
+                userImg.setUser(user.get());
+                userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
 
-            userImgRepository.save(userImg);
-
+                userImgRepository.save(userImg);
+            }
+            else {
+                return (false);
+            }
             return (true);
         } catch (Exception e) {
             return (false);
