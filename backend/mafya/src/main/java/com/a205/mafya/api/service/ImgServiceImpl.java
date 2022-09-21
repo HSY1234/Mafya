@@ -40,7 +40,7 @@ public class ImgServiceImpl implements ImgService {
         filePath = filePath + "/" + userCode;
         dir = new File(filePath);
         dir.mkdir();
-
+ 
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {
