@@ -9,6 +9,8 @@ import ReadonlyRow from "./ReadOnlyRow";
 import styles from "./mainPage.module.css";
 import AttendStudents from "./attendStudents";
 import NotAttendStudents from "./notAttendStudents";
+import Pagination from "react-js-pagination";
+import "./mainPage.css";
 
 const MainPage = () => {
   const [students, setStudents] = useState([]);
@@ -26,6 +28,10 @@ const MainPage = () => {
   });
 
   const [filterNotAttList, setFilterNotAttList] = useState([]);
+  const [activePage, setActivePage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
+  const [totalItemsCount, setTotalItemsCount] = useState(null);
 
   useEffect(() => {
     setNotAttDatas(filterNotAttList.slice(0, scrollOptions.childLength));
@@ -93,16 +99,41 @@ const MainPage = () => {
   const updateHandler = (stduent) => {
     history.push({ pathname: "/admin/form", state: stduent });
   };
-  useEffect(() => {
+
+  const fetchStudents = (page) => {
     axios
-      .get(API_URL + "student")
+      .get(API_URL + `student?page=${page}&size=5`)
       .then((res) => {
         setStudents(res.data.userList);
-        setFilterStudents(res.data.userList);
+        setFilterStudents(res.data.userList.content);
+        setTotalPages(res.data.userList.totalPages);
+        setItemsCountPerPage(res.data.userList.size);
+        setTotalItemsCount(res.data.userList.totalElements);
       })
       .catch((err) => {
         alert("학생 정보를 불러오지 못했습니다.");
       });
+  };
+
+  const handlePageChange = (pageNumber) => {
+    console.log(`active page is ${pageNumber}`);
+    setActivePage(pageNumber);
+    fetchStudents(activePage);
+  };
+  useEffect(() => {
+    fetchStudents(activePage);
+    // axios
+    //   .get(API_URL + `student?page=${activePage}&size=5`)
+    //   .then((res) => {
+    //     setStudents(res.data.userList);
+    //     setFilterStudents(res.data.userList.content);
+    //     setTotalPages(res.data.userList.totalPages);
+    //     setItemsCountPerPage(res.data.userList.size);
+    //     setTotalItemsCount(res.data.userList.totalElements);
+    //   })
+    //   .catch((err) => {
+    //     alert("학생 정보를 불러오지 못했습니다.");
+    //   });
     setIsLoading(true);
     axios
       .get(API_URL + "student/attend")
@@ -228,6 +259,15 @@ const MainPage = () => {
             })}
           </tbody>
         </table>
+        <div>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={itemsCountPerPage}
+            totalItemsCount={totalItemsCount}
+            pageRangeDisplayed={totalPages}
+            onChange={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   ) : (
