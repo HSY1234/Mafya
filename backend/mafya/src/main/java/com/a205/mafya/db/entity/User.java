@@ -13,6 +13,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Entity
+@Data
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames={"user_code"}))
 public class User extends BaseEntity implements UserDetails {
 
