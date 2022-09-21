@@ -5,6 +5,7 @@ import studentForm from "./features/Admin/studentForm/studentForm";
 import MainPage from "./features/Admin/mainPage/mainPage";
 import LoginPage from "./features/login/loginPage";
 import StudentMainPage from "./features/student/studentMainPage";
+import "./App.module.css";
 function App() {
   return (
     <div>
