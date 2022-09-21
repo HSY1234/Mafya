@@ -40,8 +40,6 @@ public class ImgController {
     public ResponseEntity<?> requestimgURL(@PathVariable String userCode) {
         String imgUrl = imgService.getUrl(userCode);
 
-        //DB통해서 URL가져오도록 변경해야함
-
         if ("".equals(imgUrl) || imgUrl == null)    return (new ResponseEntity<String>(FAIL, HttpStatus.OK));
         else                                        return (new ResponseEntity<String>(imgUrl, HttpStatus.OK));
     }

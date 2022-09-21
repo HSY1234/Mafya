@@ -17,6 +17,6 @@ public class UserImg extends BaseEntity {
     private String imgUrl;
 
     @OneToOne
-    @JoinColumn(name = "user_code")
+    @JoinColumn(name = "user_id")
     private User user;
 }

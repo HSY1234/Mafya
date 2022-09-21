@@ -49,13 +49,20 @@ public class ImgServiceImpl implements ImgService {
             UserImg userImg = new UserImg();
             Optional<User> user = userRepository.findByUserCode(userCode);
 
-            img.transferTo(new File(fileFullPath));
-
             if (user.isPresent()) {
-                userImg.setUser(user.get());
-                userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+                //이미지 저장(새로운 저장 혹은 덮어 쓰기)
+                img.transferTo(new File(fileFullPath));
 
-                userImgRepository.save(userImg);
+                Optional<UserImg> info = userImgRepository.findByUser(user.get());
+                if (info.isPresent()) {
+                    info.get().setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+                    userImgRepository.save(info.get());
+                }
+                else {
+                    userImg.setUser(user.get());
+                    userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+                    userImgRepository.save(userImg);
+                }
             }
             else {
                 return (false);
@@ -68,13 +75,15 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public String getUrl(String userCode) {
-        User user = new User();
-        user.setUserCode(userCode);
+        Optional<User> user = userRepository.findByUserCode(userCode);
 
-        Optional<UserImg> userImg = userImgRepository.findByUser(user);
-
-        if (userImg.isPresent())    return (userImg.get().getImgUrl());
-        else                        return ("");
+        if (user.isPresent()) {
+            Optional<UserImg> userImg = userImgRepository.findByUser(user.get());
+            if (userImg.isPresent())    return (userImg.get().getImgUrl());
+            else                        return ("");
+        }
+        else
+            return ("");
     }
 
     private static boolean uploadCamImg(MultipartFile img, String imgName) {
