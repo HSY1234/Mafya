@@ -51,7 +51,7 @@ public class UserController {
         // refreshToken은 HttpOnly cookie로 보내기
         Cookie cookie = new Cookie("refreshToken", tokens[1]);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 1); // 유효기간 1일
+        cookie.setMaxAge(60 * 60 * 24 * 14); // 유효기간 2주
         // httpOnly 옵션을 추가해 서버만 쿠키에 접근할 수 있게 설정
         cookie.setHttpOnly(true);
         rep.addCookie(cookie);
