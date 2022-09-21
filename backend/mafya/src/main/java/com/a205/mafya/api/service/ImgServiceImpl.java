@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,24 +44,25 @@ public class ImgServiceImpl implements ImgService {
         dir = new File(filePath);
         dir.mkdir();
 
-        String fileFullPath = filePath + "/" + userCode + ".jpg" ;
-
         try {
             UserImg userImg = new UserImg();
             Optional<User> user = userRepository.findByUserCode(userCode);
 
             if (user.isPresent()) {
+                final String imgFullUrl = imgURL + "/" + userCode + "/" + userCode + ".jpg";
+                final String fileFullPath = filePath + "/" + userCode + ".jpg" ;
+
                 //이미지 저장(새로운 저장 혹은 덮어 쓰기)
                 img.transferTo(new File(fileFullPath));
 
                 Optional<UserImg> info = userImgRepository.findByUser(user.get());
                 if (info.isPresent()) {
-                    info.get().setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+                    info.get().setImgUrl(imgFullUrl);
                     userImgRepository.save(info.get());
                 }
                 else {
                     userImg.setUser(user.get());
-                    userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+                    userImg.setImgUrl(imgFullUrl);
                     userImgRepository.save(userImg);
                 }
             }
