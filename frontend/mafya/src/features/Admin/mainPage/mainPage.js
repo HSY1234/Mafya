@@ -101,8 +101,9 @@ const MainPage = () => {
   };
 
   const fetchStudents = (page) => {
+    let tmpPage = page - 1;
     axios
-      .get(API_URL + `student?page=${page}&size=5`)
+      .get(API_URL + `student?page=${tmpPage}&size=5`)
       .then((res) => {
         setStudents(res.data.userList);
         setFilterStudents(res.data.userList.content);
@@ -116,10 +117,12 @@ const MainPage = () => {
   };
 
   const handlePageChange = (pageNumber) => {
-    console.log(`active page is ${pageNumber}`);
     setActivePage(pageNumber);
-    fetchStudents(activePage);
   };
+
+  useEffect(() => {
+    fetchStudents(activePage);
+  }, [activePage]);
   useEffect(() => {
     fetchStudents(activePage);
     // axios
@@ -264,7 +267,9 @@ const MainPage = () => {
             activePage={activePage}
             itemsCountPerPage={itemsCountPerPage}
             totalItemsCount={totalItemsCount}
-            pageRangeDisplayed={totalPages}
+            pageRangeDisplayed={5}
+            prevPageText="<"
+            nextPageText=">"
             onChange={handlePageChange}
           />
         </div>
