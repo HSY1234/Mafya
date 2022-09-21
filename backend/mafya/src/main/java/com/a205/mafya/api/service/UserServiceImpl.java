@@ -8,6 +8,8 @@ import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.util.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,19 +141,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserInfo> findUserAll() throws Exception {
-        List<User> userList = userRepository.findAll();
-        if(userList.isEmpty()){
-            throw new NoSuchElementException("No Student exist");
-        }
-
-        List<UserInfo> uirList = new ArrayList<>();
-        for( User user : userList) {
-
-            uirList.add(UserToUserInfo(user));
-        }
-
-        return uirList;
+    public Page<UserInfo> findUserAll(Pageable pageable) throws Exception {
+        return userRepository.findAll(pageable).map(
+            user -> { return (UserToUserInfo(user)); }
+        );
+//        if(userList.isEmpty()){
+//            throw new NoSuchElementException("No Student exist");
+//        }
+//
+//        List<UserInfo> uirList = new ArrayList<>();
+//        for( User user : userList) {
+//
+//            uirList.add(UserToUserInfo(user));
+//        }
+//
+//        return uirList;
     }
 
     @Override
@@ -161,7 +165,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public UserInfo UserToUserInfo(User user) throws Exception {
+    public UserInfo UserToUserInfo(User user) {
         UserInfo uir = UserInfo.builder()
                 .id(user.getId())
                 .name(user.getName())

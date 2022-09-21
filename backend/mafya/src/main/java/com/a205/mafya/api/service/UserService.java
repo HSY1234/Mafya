@@ -3,6 +3,8 @@ package com.a205.mafya.api.service;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.db.dto.UserInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface UserService {
     public UserInfo findUserByUserCode(String userCode) throws Exception;
     public List<UserInfo> [] findAttendList() throws Exception;
     public List<UserInfo> findAttendUsersByClassCode(String classCode) throws Exception;
-    public List<UserInfo> findUserAll() throws Exception;
+    public Page<UserInfo> findUserAll(Pageable pageable) throws Exception;
 
     public void checkUserCodeOverlap(String userCode) throws Exception;
 
