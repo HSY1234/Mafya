@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c746ca0e-a07a-4863-9ad4-0e202b051653" name="Changes" comment="">
+    <list default="true" id="47618ffd-3de8-41c2-8230-28bdc901b287" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/mafya2.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/controller/ImgController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/api/service/ImgServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/config/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/db/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/db/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/db/entity/UserImg.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mafya/src/main/java/com/a205/mafya/db/entity/UserImg.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +48,13 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -64,15 +79,16 @@
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/SSAFY/mafya/src/main/java/com/a205/mafya/config&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/SSAFY/mafya2/backend/mafya&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.16015625&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;spring.configuration.checksum&quot;: &quot;7a378a7af88030da70084ec1b4698743&quot;
   }
 }</component>
@@ -97,7 +113,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c746ca0e-a07a-4863-9ad4-0e202b051653" name="Changes" comment="" />
+      <changelist id="47618ffd-3de8-41c2-8230-28bdc901b287" name="Changes" comment="" />
       <created>1662353418414</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -108,6 +124,7 @@
       <workItem from="1662355310298" duration="169000" />
       <workItem from="1663397671036" duration="362000" />
       <workItem from="1663398053679" duration="5911000" />
+      <workItem from="1663688995262" duration="3946000" />
     </task>
     <servers />
   </component>

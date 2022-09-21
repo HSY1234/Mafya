@@ -1,6 +1,8 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.entity.UserImg;
+import com.a205.mafya.db.repository.UserImgRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -25,6 +27,9 @@ public class ImgServiceImpl implements ImgService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserImgRepository userImgRepository;
+
     @Override
     public boolean saveImg(MultipartFile img, String userCode) {
         String filePath = "/sehyeon";
@@ -39,7 +44,17 @@ public class ImgServiceImpl implements ImgService {
         String fileFullPath = filePath + "/" + userCode + ".jpg" ;
 
         try {
+            UserImg userImg = new UserImg();
+            User user = new User();
+
             img.transferTo(new File(fileFullPath));
+
+            user.setUserCode(userCode);
+            userImg.setUser(user);
+            userImg.setImgUrl(imgURL + "/" + userCode + "/" + userCode + ".jpg");
+
+            userImgRepository.save(userImg);
+
             return (true);
         } catch (Exception e) {
             return (false);
@@ -47,9 +62,14 @@ public class ImgServiceImpl implements ImgService {
     }
 
     @Override
-    public String makeUrl(String userCode) {
-        String fullFilePath = imgURL + "/" + userCode + "/" + userCode + ".jpg";
-        return (fullFilePath);
+    public String getUrl(String userCode) {
+        User user = new User();
+        user.setUserCode(userCode);
+
+        Optional<UserImg> userImg = userImgRepository.findByUser(user);
+
+        if (userImg.isPresent())    return (userImg.get().getImgUrl());
+        else                        return ("");
     }
 
     private static boolean uploadCamImg(MultipartFile img, String imgName) {

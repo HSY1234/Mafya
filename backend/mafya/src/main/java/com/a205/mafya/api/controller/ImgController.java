@@ -32,15 +32,13 @@ public class ImgController {
     public ResponseEntity<?> registFace(@RequestPart(value = "file") MultipartFile multipartFile, @PathVariable String userCode) {
         boolean result = imgService.saveImg(multipartFile, userCode);
 
-        //DB에 저장해야함 JPA 안했음
-
         if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
         else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @GetMapping(value = "/{userCode}")
     public ResponseEntity<?> requestimgURL(@PathVariable String userCode) {
-        String imgUrl = imgService.makeUrl(userCode);
+        String imgUrl = imgService.getUrl(userCode);
 
         //DB통해서 URL가져오도록 변경해야함
 

@@ -11,7 +11,7 @@ public interface ImgService {
 
     public boolean saveImg(MultipartFile img, String userCode);
 
-    public String makeUrl(String userCode);
+    public String getUrl(String userCode);
 
     public Map<String, String> processFace(MultipartFile img);
 

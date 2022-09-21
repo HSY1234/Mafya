@@ -10,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Data
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames={"user_code"}))
 public class User extends BaseEntity {
 
