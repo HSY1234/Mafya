@@ -34,7 +34,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         return (time);
     }
 
-    private Date getDate() {
+    public Date getDate() {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         Date date = new Date();
 
@@ -63,7 +63,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
             data.setYear(date.getYear());
             data.setMonth(date.getMonth());
-            data.setDay(date.getYear());
+            data.setDay(date.getDay());
 
             data.setUser(user.get());
 
@@ -93,7 +93,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
                 data.setYear(date.getYear());
                 data.setMonth(date.getMonth());
-                data.setDay(date.getYear());
+                data.setDay(date.getDay());
 
                 data.setUser(user.get());
 

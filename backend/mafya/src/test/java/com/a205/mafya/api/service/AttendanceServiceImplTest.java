@@ -13,5 +13,8 @@ class AttendanceServiceImplTest {
 
     @Test
     void test() {
+        System.out.println(">>> " + attendanceServiceImpl.getDate());
+
+        attendanceServiceImpl.record("0743000");
     }
 }
