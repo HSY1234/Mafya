@@ -141,6 +141,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<UserInfo> findUserAllByTeamCode(String teamCode) throws Exception {
+        List<User> userList = userRepository.findAllByTeamCode(teamCode);
+        if(userList.isEmpty()){
+            throw new NoSuchElementException("No Student exist");
+        }
+        List<UserInfo> uirList = new ArrayList<>();
+        for( User user : userList) {
+            uirList.add(UserToUserInfo(user));
+        }
+
+        return uirList;
+    }
+
+    @Override
     public Page<UserInfo> findUserAll(Pageable pageable) throws Exception {
         return userRepository.findAll(pageable).map(
             user -> { return (UserToUserInfo(user)); }

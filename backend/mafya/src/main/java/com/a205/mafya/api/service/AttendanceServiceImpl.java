@@ -1,5 +1,7 @@
 package com.a205.mafya.api.service;
 
+import com.a205.mafya.api.response.AttendanceTeamRes;
+import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.Attendance;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.AttendanceRepository;
@@ -13,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -136,5 +140,27 @@ public class AttendanceServiceImpl implements AttendanceService {
         else                    result = recordExit(userCode);
 
         return (result);
+    }
+
+    @Override
+    @Transactional
+    public List<AttendanceTeamRes> getTeamInfo(String teamCode) {
+        List<AttendanceTeamRes> attendanceTeamResList = new LinkedList<>();
+
+        List<User> userList = userRepository.findAllByTeamCode(teamCode);
+        for (User user : userList) {
+            Optional<Attendance> attendance = attendanceRepository.findByUser(user);
+            AttendanceTeamRes attendanceTeamRes = new AttendanceTeamRes();
+
+            attendanceTeamRes.setId(user.getId());
+            attendanceTeamRes.setName(user.getName());
+            attendanceTeamRes.setStatus(user.getStatus());
+            attendanceTeamRes.setTeamCode(user.getTeamCode());
+            attendanceTeamRes.setClassCode(user.getClassCode());
+            attendanceTeamRes.setPhoneNum(user.getPhoneNum());
+            attendanceTeamRes.setTeamLeader(user.isTeamLeader());
+            attendanceTeamRes.setAttendanceStatus(attendance.get().getType());
+        }
+        return (attendanceTeamResList);
     }
 }

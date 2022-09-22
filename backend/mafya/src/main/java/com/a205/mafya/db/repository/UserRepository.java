@@ -10,4 +10,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUserCode(String userCode);
 
     List<User> findAllByClassCodeAndStatus(String classCode, int status);
+    List<User> findAllByTeamCode(String teamCode);
 }
