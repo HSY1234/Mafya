@@ -18,21 +18,27 @@ public class GateLogServiceImpl implements GateLogService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AttendanceService attendanceService;
+
     @Override
     @Transactional
-    public Boolean inputLog(String userCode) {
+    public int inputLog(String userCode) {
         Optional<User> user = userRepository.findByUserCode(userCode);
 
         if (user.isPresent()) {
             GateLog gateLog = new GateLog();
+            int result;
 
             gateLog.setUser(user.get());
             gateLogRepository.save(gateLog);
 
-            return (true);
+            result = attendanceService.record(userCode);
+
+            return (result);
         }
         else {
-            return (false);
+            return (-2);
         }
     }
 }

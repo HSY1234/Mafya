@@ -18,12 +18,22 @@ public class GateLogController {
     @Autowired
     private GateLogService gateLogService;
 
+    /**
+     * -2: 로그 입력 실패
+     * -1: 존재 하지 않는 유저
+     * 0: 입실
+     * 10: 지각
+     * 11: 지각 한 후 조퇴
+     * 12: 지각 한 후 정상 퇴실
+     * 2: 정상 입실 후 조퇴
+     * 3: 정상 퇴실
+     * 4: 입실 후 다시 입실 요청(요청 안 받고, 지각 시간 이후부터 다시 체크 가능)
+     */
     @GetMapping(value = "/{userCode}")
     public ResponseEntity<?> inputLog(@PathVariable String userCode) {
-        Boolean result = gateLogService.inputLog(userCode);
+        int result = gateLogService.inputLog(userCode);
 
-        if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
-        else        return (new ResponseEntity<String>(FAIL, HttpStatus.OK));
+        return (new ResponseEntity<Integer>(result, HttpStatus.OK));
     }
 
 }

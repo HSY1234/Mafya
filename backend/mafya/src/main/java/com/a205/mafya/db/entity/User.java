@@ -14,6 +14,7 @@ import java.util.Collection;
 @Builder
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames={"user_code"}))
 public class User extends BaseEntity implements UserDetails {
 

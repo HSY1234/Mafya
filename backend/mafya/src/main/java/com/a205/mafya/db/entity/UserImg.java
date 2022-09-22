@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "user_img")
 public class UserImg extends BaseEntity {
     @Column(length = 1000, name = "img_url")

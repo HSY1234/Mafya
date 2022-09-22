@@ -13,6 +13,7 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "gate_log")
 public class GateLog extends BaseEntity {
     @OneToOne
