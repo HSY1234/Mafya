@@ -84,7 +84,7 @@ function ExitCamera() {
       console.log(humanDetact);
       if (humanDetact.length > 0) {
         setHumanDetacting(true);
-        new Audio(humanDetactMp3).play();
+        // new Audio(humanDetactMp3).play();
         return new Promise((resolve) => {
           setTimeout(async () => {
             const imageUrl = webcamRef.current.getScreenshot();
@@ -135,7 +135,7 @@ function ExitCamera() {
                 }, 2500);
               });
             }
-          }, 4000);
+          }, 2000);
         });
       }
     }
