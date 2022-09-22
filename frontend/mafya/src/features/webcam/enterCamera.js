@@ -158,7 +158,7 @@ function EnterCamera() {
       console.log(humanDetact);
       if (humanDetact.length > 0) {
         setHumanDetacting(true);
-        new Audio(humanDetactMp3).play();
+        // new Audio(humanDetactMp3).play();
         return new Promise((resolve) => {
           setTimeout(async () => {
             const imageUrl = webcamRef.current.getScreenshot();
@@ -174,7 +174,7 @@ function EnterCamera() {
                 icon: "success",
                 title: `${res.data.name}님 어서오세요.`,
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 2500,
               });
               setUserCode(res.data.userCode);
               return new Promise((resolve) => {
@@ -188,13 +188,13 @@ function EnterCamera() {
                 title: "오류",
                 text: "DB에 등록된 사용자가 아닙니다.",
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 2500,
               });
 
               return new Promise((resolve) => {
                 setTimeout(() => {
                   setHumanDetacting(false);
-                }, 2000);
+                }, 2500);
               });
             } else if (res.data.status === "2") {
               Swal.fire({
@@ -202,15 +202,15 @@ function EnterCamera() {
                 title: "오류",
                 text: "중앙으로 와주세요",
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 2500,
               });
               return new Promise((resolve) => {
                 setTimeout(() => {
                   setHumanDetacting(false);
-                }, 2000);
+                }, 2500);
               });
             }
-          }, 3000);
+          }, 2000);
         });
       }
     }
