@@ -1,7 +1,7 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.response.AttendanceTeamRes;
-import com.a205.mafya.db.dto.UserInfo;
+import com.a205.mafya.db.dto.Date;
 import com.a205.mafya.db.entity.Attendance;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.AttendanceRepository;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -35,27 +34,36 @@ public class AttendanceServiceImpl implements AttendanceService {
         return (time);
     }
 
+    private Date getDate() {
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        Date date = new Date();
+
+        date.setYear(now.getYear() + "");
+        date.setMonth(now.getMonthValue() < 10 ? "0" + now.getMonthValue() : now.getMonthValue() + "");
+        date.setDay(now.getDayOfMonth() < 10 ? "0" + now.getDayOfMonth() : now.getDayOfMonth() + "");
+
+        return (date);
+    }
+
     @Transactional
     int recordEntrance(String userCode) {
         Optional<User> user = userRepository.findByUserCode(userCode);
 
         if (user.isPresent()) {
-            Optional<Attendance> attendance = attendanceRepository.findByUser(user.get());
-            LocalDate date = LocalDate.now(ZoneId.of("Asia/Seoul"));
-            LocalTime time = LocalTime.now(ZoneId.of("Asia/Seoul"));
-
-            if (attendance.isPresent()) return (4);
+            Date date = getDate();
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user.get(), date.getDay(), date.getMonth(), date.getYear());
+            if (attendance.isPresent()) return (RE_REQUEST);
 
             Attendance data = new Attendance();
 
-            data.setType(0);
+            data.setType(ENTRANCE);
 
             data.setEnterTime(getTime());
             data.setExitTime("");
 
-            data.setYear(date.getYear() + "");
-            data.setMonth(date.getMonthValue() < 10 ? "0" + date.getMonthValue() : date.getMonthValue() + "");
-            data.setDay(date.getDayOfMonth() < 10 ? "0" + date.getDayOfMonth() : date.getDayOfMonth() + "");
+            data.setYear(date.getYear());
+            data.setMonth(date.getMonth());
+            data.setDay(date.getYear());
 
             data.setUser(user.get());
 
@@ -64,7 +72,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             return (data.getType());
         }
         else
-            return (-1);
+            return (NO_USER);
     }
 
     @Transactional
@@ -72,21 +80,20 @@ public class AttendanceServiceImpl implements AttendanceService {
         Optional<User> user = userRepository.findByUserCode(userCode);
 
         if (user.isPresent()) {
-            Optional<Attendance> attendance = attendanceRepository.findByUser(user.get());
+            Date date = getDate();
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user.get(), date.getDay(), date.getMonth(), date.getYear());
 
             if (!attendance.isPresent()) {  //지각
-                LocalDate date = LocalDate.now(ZoneId.of("Asia/Seoul"));
-
                 Attendance data = new Attendance();
 
-                data.setType(10);
+                data.setType(TRADY);
 
                 data.setEnterTime(getTime());
                 data.setExitTime("");
 
-                data.setYear(date.getYear() + "");
-                data.setMonth(date.getMonthValue() < 10 ? "0" + date.getMonthValue() : date.getMonthValue() + "");
-                data.setDay(date.getDayOfMonth() < 10 ? "0" + date.getDayOfMonth() : date.getDayOfMonth() + "");
+                data.setYear(date.getYear());
+                data.setMonth(date.getMonth());
+                data.setDay(date.getYear());
 
                 data.setUser(user.get());
 
@@ -96,13 +103,13 @@ public class AttendanceServiceImpl implements AttendanceService {
             else {
                 LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
 
-                if (now.getHour() < exitTime) {
-                    if (attendance.get().getType() / 10 == 1)   attendance.get().setType(11);
-                    else                                        attendance.get().setType(2);
+                if (now.getHour() < EXITTIME) {
+                    if (attendance.get().getType() / 10 == 1)   attendance.get().setType(TRADY_AND_EARLYLEAVE);
+                    else                                        attendance.get().setType(ENTRANCE_AND_EARLYLEAVE);
                 }
                 else {
-                    if (attendance.get().getType() / 10 == 1)   attendance.get().setType(12);
-                    else                                        attendance.get().setType(3);
+                    if (attendance.get().getType() / 10 == 1)   attendance.get().setType(TRADY_AND_NORMALEXIT);
+                    else                                        attendance.get().setType(ENTRANCE_AND_NORMALEXIT);
                 }
                 attendance.get().setExitTime(getTime());
 
@@ -113,7 +120,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         }
         else
-            return (-1);
+            return (NO_USER);
     }
 
 
@@ -136,7 +143,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         int time = now.getHour();
         int result;
 
-        if (time < enterTime)    result = recordEntrance(userCode);
+        if (time < ENTERTIME)    result = recordEntrance(userCode);
         else                    result = recordExit(userCode);
 
         return (result);
@@ -149,7 +156,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         List<User> userList = userRepository.findAllByTeamCode(teamCode);
         for (User user : userList) {
-            Optional<Attendance> attendance = attendanceRepository.findByUser(user);
+            Date date = getDate();
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user, date.getDay(), date.getMonth(), date.getYear()); //이것 좀 손봐야함 오늘 날짜 기준으로 정보 있는지 없는지 분기처리해야함
+
             AttendanceTeamRes attendanceTeamRes = new AttendanceTeamRes();
 
             attendanceTeamRes.setId(user.getId());
@@ -159,7 +168,9 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceTeamRes.setClassCode(user.getClassCode());
             attendanceTeamRes.setPhoneNum(user.getPhoneNum());
             attendanceTeamRes.setTeamLeader(user.isTeamLeader());
-            attendanceTeamRes.setAttendanceStatus(attendance.get().getType());
+
+            if (attendance.isPresent()) attendanceTeamRes.setAttendanceStatus(attendance.get().getType());
+            else                        attendanceTeamRes.setAttendanceStatus(ABSENT);
         }
         return (attendanceTeamResList);
     }
