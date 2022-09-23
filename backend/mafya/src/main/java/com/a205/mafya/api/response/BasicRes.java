@@ -10,5 +10,12 @@ import lombok.experimental.SuperBuilder;
 public class BasicRes {
     private String msg;
     private int resultCode;
+
+    public void changeMsg(String msg){
+        this.msg = msg;
+    }
+    public void changeResultCode(int resultCode){
+        this.resultCode = resultCode;
+    }
 }
 
