@@ -53,6 +53,7 @@ public class SecurityConfig {
                 //authenticated
 //                .antMatchers(HttpMethod.GET,"/student").authenticated()
 
+
                 // jwt 필터 적용
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider),

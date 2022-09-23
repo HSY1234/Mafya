@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,16 +37,24 @@ public class UserController {
 
     // 로그인
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginReq loginReq){
+    public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpServletResponse rep){
 
         // jwt 생성
-        String accessToken = authService.login(loginReq);
+        String[] tokens = authService.login(loginReq);
 
-        LoginRes LR = (LoginRes) LoginRes.builder()
-                .accessToken(accessToken)
+        // accessToken은 responseEntity로 보내기
+        LoginRes LR = LoginRes.builder()
+                .accessToken(tokens[0])
                 .msg("SUCCESS")
                 .resultCode(0)
                 .build();
+        // refreshToken은 HttpOnly cookie로 보내기
+        Cookie cookie = new Cookie("refreshToken", tokens[1]);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 1); // 유효기간 1일
+        // httpOnly 옵션을 추가해 서버만 쿠키에 접근할 수 있게 설정
+        cookie.setHttpOnly(true);
+        rep.addCookie(cookie);
 
         return new ResponseEntity<>(LR, HttpStatus.OK);
     }
@@ -56,7 +66,7 @@ public class UserController {
 
         userService.addUser(userReq);
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(UserInfo.builder().userCode(userReq.getUserCode()).build())
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -96,7 +106,7 @@ public class UserController {
     @GetMapping ("id/{id}")
     public ResponseEntity<?> GetStudentInfoById(@PathVariable int id) throws Exception{
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(userService.findUserById(id))
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -109,7 +119,7 @@ public class UserController {
     @GetMapping ("userCode/{userCode}")
     public ResponseEntity<?> GetStudentInfoByUserCode(@PathVariable String userCode) throws Exception{
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(userService.findUserByUserCode(userCode))
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -138,7 +148,8 @@ public class UserController {
     public ResponseEntity<?> GetStudentList(@PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable) throws Exception{
         System.out.println(">>> processPaging : " + pageable);
 
-        UserListRes ULR = (UserListRes) UserListRes.builder()
+
+        UserListRes ULR = UserListRes.builder()
                 .userList(userService.findUserAll(pageable))
                 .msg("SUCCESS")
                 .resultCode(0)
