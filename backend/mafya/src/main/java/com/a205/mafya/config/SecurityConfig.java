@@ -60,6 +60,8 @@ public class SecurityConfig {
 
                 //permitAll
                 .antMatchers("/student/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/student").permitAll()
+                .antMatchers(HttpMethod.POST, "/manager").permitAll()
 
                 // jwt 필터 적용
                 .and()
