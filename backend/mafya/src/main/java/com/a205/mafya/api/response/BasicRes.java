@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 public class BasicRes {
     private String msg;
     private int resultCode;
-    private String tokenStatus;
 
     public void changeMsg(String msg){
         this.msg = msg;

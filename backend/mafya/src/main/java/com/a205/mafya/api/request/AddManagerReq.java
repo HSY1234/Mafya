@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginReq {
+public class AddManagerReq {
 
-    private String userCode;
+    private String managerCode;
+    private String name;
     private String password;
-
 }
