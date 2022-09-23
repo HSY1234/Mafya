@@ -111,7 +111,7 @@ def mask_image():
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/multiWatchMask',methods = ['POST'])
+@app.route('/test/multiWatchMask',methods = ['POST'])
 def upload_file():
 	if request.method == 'POST':
 		print("출력시작")
