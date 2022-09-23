@@ -1,4 +1,4 @@
-package com.a205.mafya.api.exception;
+package com.a205.mafya.api.filter.exception;
 
 import lombok.Getter;
 

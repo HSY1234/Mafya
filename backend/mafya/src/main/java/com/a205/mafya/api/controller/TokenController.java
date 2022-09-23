@@ -12,8 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,9 +58,9 @@ public class TokenController {
             log.debug("access 토큰이 만료되고 refresh 토큰은 유효하여 access/refresh 토큰을 모두 재발급합니다, uri: {}", requestURI);
 
             // 기존 refresh토큰은 유효하므로 이것으로 새로운 access, refresh 토큰을 발급한다.
-            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
-            String newAccessToken = tokenProvider.createToken(authentication,'a');
-            String newRefreshToken = tokenProvider.createToken(authentication, 'r');
+            String userCode = tokenProvider.getUserPk(refreshToken);
+            String newAccessToken = tokenProvider.createToken(userCode,'a');
+            String newRefreshToken = tokenProvider.createToken(userCode, 'r');
             // accessToken이 만료되었기 때문에 accessToken와 refreshToken을 업데이트 해줌.
             // 응답에 새로 발급한 access token을 넣어준다.
             ter.changeMsg("your access token and refresh token are updated");
