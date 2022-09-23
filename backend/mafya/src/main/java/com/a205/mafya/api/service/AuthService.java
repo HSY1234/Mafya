@@ -28,18 +28,8 @@ public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
 
-    public String login(LoginReq loginReq) {
+    public String[] login(LoginReq loginReq) {
 
-        Optional<User> opUser = userRepository.findByUserCode(loginReq.getUserCode());
-
-//        // 아이디 비번 검사
-//        if (!opUser.isPresent()) {
-//            throw new NoSuchElementException("No user has requested email");
-//        }
-//        User user = opUser.get();
-//        if( !passwordEncoder.matches(loginReq.getPassword(),user.getPassword())){
-//            throw new NoSuchElementException("Wrong Password");
-//        }
 
         // userCode, password를 파라미터로 받고 이를 이용해 UsernamePasswordAuthenticationToken을 생성
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -50,9 +40,15 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // authentication 을 기준으로 jwt token 생성
-        String accessToken = tokenProvider.createToken(authentication);
+        String accessToken = tokenProvider.createToken(authentication, 'a');
+        // authentication 을 기준으로 jwt token 생성
+        String refreshToken = tokenProvider.createToken(authentication, 'r');
 
-        return accessToken;
+        String [] tokens = new String[2];
+        tokens[0] = accessToken;
+        tokens[1] = refreshToken;
+
+        return tokens;
     }
 
 }
