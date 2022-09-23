@@ -157,7 +157,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<User> userList = userRepository.findAllByTeamCode(teamCode);
         for (User user : userList) {
             Date date = getDate();
-            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user, date.getDay(), date.getMonth(), date.getYear()); //이것 좀 손봐야함 오늘 날짜 기준으로 정보 있는지 없는지 분기처리해야함
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user, date.getDay(), date.getMonth(), date.getYear());
 
             AttendanceTeamRes attendanceTeamRes = new AttendanceTeamRes();
 
@@ -171,6 +171,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
             if (attendance.isPresent()) attendanceTeamRes.setAttendanceStatus(attendance.get().getType());
             else                        attendanceTeamRes.setAttendanceStatus(ABSENT);
+
+            attendanceTeamResList.add(attendanceTeamRes);
         }
         return (attendanceTeamResList);
     }

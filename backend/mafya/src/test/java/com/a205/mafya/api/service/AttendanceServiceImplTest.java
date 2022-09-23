@@ -13,8 +13,6 @@ class AttendanceServiceImplTest {
 
     @Test
     void test() {
-        System.out.println(">>> " + attendanceServiceImpl.getDate());
-
-        attendanceServiceImpl.record("0743000");
+        attendanceServiceImpl.getTeamInfo("A205").forEach(System.out::println);
     }
 }
