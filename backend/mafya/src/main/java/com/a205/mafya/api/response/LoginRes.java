@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,4 +14,7 @@ import lombok.experimental.SuperBuilder;
 public class LoginRes extends BasicRes{
 
     private String accessToken;
+    private String isManager;
+    private String classCode;
+    private String teamCode;
 }

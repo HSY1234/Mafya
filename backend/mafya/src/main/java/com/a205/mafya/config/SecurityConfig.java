@@ -55,8 +55,8 @@ public class SecurityConfig {
 
 
                 //authenticated
-//                .antMatchers(HttpMethod.GET,"/student").authenticated()
                 .antMatchers("/student").authenticated()
+                .antMatchers("/manager").authenticated()
 
                 //permitAll
                 .antMatchers("/student/login").permitAll()
@@ -71,27 +71,27 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring()
-                    .antMatchers(HttpMethod.POST,
-                            "/student/login"
-                    )
-                    // swagger 관련 접근에 대해 filtering 하지 않도록 한다.
-                    .antMatchers(
-                            "/swagger-ui.html",
-                            "/webjars/**",
-                            "/null/**",
-                            "/swagger-resources/**",
-                            "/v2/**",
-                            "/csrf/**"
-//                            "/"
-
-                    )
-            ;
-        };
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return web -> {
+//            web.ignoring()
+//                    .antMatchers(HttpMethod.POST,
+//                            "/student/login"
+//                    )
+//                    // swagger 관련 접근에 대해 filtering 하지 않도록 한다.
+//                    .antMatchers(
+//                            "/swagger-ui.html",
+//                            "/webjars/**",
+//                            "/null/**",
+//                            "/swagger-resources/**",
+//                            "/v2/**",
+//                            "/csrf/**"
+////                            "/"
+//
+//                    )
+//            ;
+//        };
+//    }
 
 
     @Bean
