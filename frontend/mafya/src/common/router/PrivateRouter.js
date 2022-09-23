@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Redirect, useHistory } from "react-router-dom";
-import { isLogin } from "../api/isLogin";
+import { isAdmin, isLogin } from "../api/isLogin";
 
 export default function PrivateRoute({ component: Component, ...rest }) {
   // }
@@ -9,7 +9,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={(props) =>
-        isLogin() ? <Component {...props} /> : <Redirect to="/login" />
+        isLogin() && !isAdmin() ? <Component {...props} /> : <Redirect to="/" />
       }
     />
   );
