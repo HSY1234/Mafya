@@ -7,6 +7,7 @@ import com.a205.mafya.api.response.*;
 import com.a205.mafya.api.service.AuthService;
 import com.a205.mafya.api.service.UserService;
 import com.a205.mafya.db.dto.UserInfo;
+import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

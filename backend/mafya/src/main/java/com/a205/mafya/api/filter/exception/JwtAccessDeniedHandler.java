@@ -1,4 +1,4 @@
-package com.a205.mafya.api.exception;
+package com.a205.mafya.api.filter.exception;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

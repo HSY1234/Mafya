@@ -1,4 +1,4 @@
-package com.a205.mafya.api.exception;
+package com.a205.mafya.api.filter.exception;
 
 import com.a205.mafya.api.response.BasicRes;
 import lombok.extern.slf4j.Slf4j;
