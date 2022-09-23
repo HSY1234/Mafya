@@ -52,16 +52,15 @@ public class SecurityConfig {
                 // Preflight request의 예비요청이 security에 의해 막히는 것을 방지하기 위함
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-
+                //permitAll, permitAll이 authenticated보다 먼저와야한다.
+                .antMatchers(HttpMethod.POST, "/student").permitAll()
+                .antMatchers(HttpMethod.POST, "/manager").permitAll()
 
                 //authenticated
                 .antMatchers("/student").authenticated()
                 .antMatchers("/manager").authenticated()
 
-                //permitAll
-                .antMatchers("/student/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/student").permitAll()
-                .antMatchers(HttpMethod.POST, "/manager").permitAll()
+
 
                 // jwt 필터 적용
                 .and()
