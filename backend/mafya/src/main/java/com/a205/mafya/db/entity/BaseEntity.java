@@ -8,7 +8,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @EntityListeners(value = AuditingEntityListener.class)	//Entity가  DB로 Load, Persist 되기 전 후에 커스텀 로직을 선언하는 인터페이스
 //AuditingEntityListener는 Spring에서 제공하는 구현클래스로 createdDate LastModifiedDate 같은 어노테이션을 탐색해 엔티티 변경 시 해당 값을 자동으로 업데이트
@@ -22,12 +24,19 @@ public class BaseEntity {
     private int id;
 
     @ApiModelProperty(value = "신경 x")
-    @CreatedDate
-    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @ApiModelProperty(value = "신경 x")
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.updatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 }
