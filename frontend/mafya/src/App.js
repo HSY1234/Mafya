@@ -7,17 +7,25 @@ import LoginPage from "./features/login/loginPage";
 import StudentMainPage from "./features/student/studentMainPage";
 import ExitCamera from "./features/webcam/exitCamera";
 import "./App.module.css";
+import PublicRoute from "./common/router/PublicRouter";
+import PrivateRoute from "./common/router/PrivateRouter";
+import AdminRoute from "./common/router/AdminRouter";
+
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/enter" component={EnterCamera}></Route>
-          <Route exact path="/admin/form" component={studentForm}></Route>
-          <Route exact path="/admin" component={MainPage}></Route>
-          <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/exit" component={ExitCamera} />
-          <Route exact path="/student" component={StudentMainPage} />
+          <AdminRoute exact path="/enter" component={EnterCamera}></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/form"
+            component={studentForm}
+          ></AdminRoute>
+          <AdminRoute exact path="/admin" component={MainPage}></AdminRoute>
+          <PublicRoute restricted exact path="/" component={LoginPage} />
+          <AdminRoute exact path="/exit" component={ExitCamera} />
+          <PrivateRoute exact path="/student" component={StudentMainPage} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -2,18 +2,21 @@ import { useState } from "react";
 import { useEffect } from "react";
 import TeamMemberRow from "./teamMemberRow.";
 import styles from "./teamMember.module.css";
+import axios from "axios";
+import { API_URL } from "../../../common/api";
 
 const TeamMember = () => {
+  localStorage.getItem("teamCode");
+
   const [team, setTeam] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    setTeam([
-      { id: "0", name: "박세현", phoneNum: "010456789" },
-      { id: "1", name: "홍성영", phoneNum: "010456789" },
-      { id: "2", name: "홍제민", phoneNum: "010456789" },
-      { id: "3", name: "김병수", phoneNum: "010456789" },
-      { id: "4", name: "김주한", phoneNum: "010456789" },
-    ]);
+    const teamCode = localStorage.getItem("teamCode");
+    axios.get(API_URL + `attendance/team/${teamCode}`).then((res) => {
+      const data = res.data;
+      setTeam(data);
+    });
+
     setIsLoading(false);
   }, []);
 

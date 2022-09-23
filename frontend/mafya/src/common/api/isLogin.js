@@ -1,2 +1,2 @@
-export const isLogin = () => !!localStorage.getItem("user");
-export const isAdmin = () => !!localStorage.getItem("isAdmin");
+export const isLogin = () => !!localStorage.getItem("userCode");
+export const isAdmin = () => !!localStorage.getItem("isManager");
