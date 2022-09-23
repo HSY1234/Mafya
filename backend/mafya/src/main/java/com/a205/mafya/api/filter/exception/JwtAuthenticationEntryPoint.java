@@ -1,4 +1,4 @@
-package com.a205.mafya.api.exception;
+package com.a205.mafya.api.filter.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
