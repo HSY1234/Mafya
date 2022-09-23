@@ -7,6 +7,9 @@ import com.a205.mafya.api.response.*;
 import com.a205.mafya.api.service.AuthService;
 import com.a205.mafya.api.service.UserService;
 import com.a205.mafya.db.dto.UserInfo;
+import com.a205.mafya.db.entity.Manager;
+import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.ManagerRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.util.CookieProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,9 @@ public class UserController {
     UserRepository userRepository;
 
     @Autowired
+    ManagerRepository managerRepository;
+
+    @Autowired
     CookieProvider cookieProvider;
 
     // 로그인
@@ -47,12 +52,30 @@ public class UserController {
         // jwt 생성
         String[] tokens = authService.login(loginReq);
 
+        // 매니저인지 확인
+        Optional<User> user = userRepository.findByUserCode(loginReq.getUserCode());
+        Optional<Manager> manager = managerRepository.findByManagerCode(loginReq.getUserCode());
+
+        String isManager = "";
+        String teamCode = "";
+        String classCode = "";
+        if(manager.isPresent()){
+            isManager = "Y";
+            classCode = manager.get().getClassCode();
+        }else{
+            isManager = "N";
+            teamCode = user.get().getTeamCode();
+        }
+
+
         // accessToken은 responseEntity로 보내기
         LoginRes LR = LoginRes.builder()
                 .accessToken(tokens[0])
-                .tokenStatus("valid")
                 .msg("SUCCESS")
                 .resultCode(0)
+                .isManager(isManager)
+                .classCode(classCode)
+                .teamCode(teamCode)
                 .build();
         // refreshToken은 HttpOnly cookie로 보내기
         cookieProvider.addTokenToCookie(resp,"refreshToken",tokens[1]);
@@ -75,7 +98,7 @@ public class UserController {
     }
 
 
-    // 학생 추가, 이미지는 아직
+    // 학생 추가
     @PostMapping("")
     public ResponseEntity<?> AddStudent(@RequestHeader(value="accessToken") String accessToken, @RequestBody AddUserReq userReq) throws Exception{
 
@@ -85,7 +108,6 @@ public class UserController {
                 .userInfo(UserInfo.builder().userCode(userReq.getUserCode()).build())
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
         return new ResponseEntity<>(UOR, HttpStatus.OK);
     }
@@ -100,7 +122,6 @@ public class UserController {
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
@@ -115,7 +136,6 @@ public class UserController {
                 .msg("SUCCESS")
                 // 0 : 요청한 사용자 있음
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
@@ -128,7 +148,6 @@ public class UserController {
                 .userInfo(userService.findUserById(id))
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
 
         return new ResponseEntity<>(UOR, HttpStatus.OK);
@@ -142,7 +161,6 @@ public class UserController {
                 .userInfo(userService.findUserByUserCode(userCode))
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
 
         return new ResponseEntity<>(UOR, HttpStatus.OK);
@@ -158,7 +176,6 @@ public class UserController {
                 .notAttList(attList[1])
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
 
         return new ResponseEntity<>(UAR, HttpStatus.OK);
@@ -174,7 +191,6 @@ public class UserController {
                 .userList(userService.findUserAll(pageable))
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
 
         return new ResponseEntity<>(ULR, HttpStatus.OK);
@@ -188,7 +204,6 @@ public class UserController {
         BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
                 .resultCode(0)
-                .tokenStatus("valid")
                 .build();
 
         return new ResponseEntity<>(BR, HttpStatus.OK);
