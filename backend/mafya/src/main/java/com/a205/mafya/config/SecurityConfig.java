@@ -55,10 +55,16 @@ public class SecurityConfig {
                 //permitAll, permitAll이 authenticated보다 먼저와야한다.
                 .antMatchers(HttpMethod.POST, "/student").permitAll()
                 .antMatchers(HttpMethod.POST, "/manager").permitAll()
+                .antMatchers("/student/login").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+
 
                 //authenticated
-                .antMatchers("/student").authenticated()
-                .antMatchers("/manager").authenticated()
+                .anyRequest().authenticated()
+
 
 
 
