@@ -23,6 +23,7 @@ public class ManagerServiceimpl implements ManagerService{
         Manager manager = Manager.builder()
                 .name(managerReq.getName())
                 .managerCode(managerReq.getManagerCode())
+                .classCode(managerReq.getClassCode())
                 .password(passwordEncoder.encode(managerReq.getPassword()))
                 .build();
 

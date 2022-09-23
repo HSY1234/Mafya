@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class AddManagerReq {
 
     private String managerCode;
+    private String classCode;
+
     private String name;
     private String password;
 }
