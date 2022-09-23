@@ -1,146 +1,149 @@
-import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRef } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { API_URL } from "../../../common/api";
-import AdminHeader from "../header/adminHeader";
-// import classes from "./studentForm.module.css";
+import axios from "axios"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { useRef } from "react"
+import { useHistory, useLocation } from "react-router-dom"
+import { API_URL } from "../../../common/api"
+import AdminHeader from "../header/adminHeader"
+import styles from "./studentForm.module.css"
+
+import Grid from "@material-ui/core/Grid"
 
 const StudentForm = () => {
-  const location = useLocation();
-  const history = useHistory();
-  const student = location.state;
-  const [name, setName] = useState(student ? student.name : "");
-  const [userCode, setUserCode] = useState(student ? student.userCode : "");
-  const [teamCode, setTeamCode] = useState(student ? student.teamCode : "");
-  const [classCode, setClassCode] = useState(student ? student.classCode : "");
-  const [phoneNum, setPhoneNum] = useState(student ? student.phoneNum : "");
+  const location = useLocation()
+  const history = useHistory()
+  const student = location.state
+  const [name, setName] = useState(student ? student.name : "")
+  const [userCode, setUserCode] = useState(student ? student.userCode : "")
+  const [teamCode, setTeamCode] = useState(student ? student.teamCode : "")
+  const [classCode, setClassCode] = useState(student ? student.classCode : "")
+  const [phoneNum, setPhoneNum] = useState(student ? student.phoneNum : "")
 
   const [teamLeader, setTeamLeader] = useState(
     student ? student.teamLeader : null
-  );
+  )
   const [isUserCodeUnique, setIsUserCodeUnique] = useState(
     student ? true : false
-  );
-  const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewURL] = useState(null);
-  const fileRef = useRef();
+  )
+  const [file, setFile] = useState(null)
+  const [previewUrl, setPreviewURL] = useState(null)
+  const fileRef = useRef()
 
   useEffect(() => {
     if (!student) {
-      setName("");
-      setUserCode("");
-      setTeamCode("");
-      setClassCode("");
-      setPhoneNum("");
-      setTeamLeader(null);
-      setIsUserCodeUnique(false);
-      setFile(null);
-      setPreviewURL(null);
-      const fileInput = document.querySelector('input[type="file"]');
-      const dataTransfer = new DataTransfer();
-      fileInput.files = dataTransfer.files;
+      setName("")
+      setUserCode("")
+      setTeamCode("")
+      setClassCode("")
+      setPhoneNum("")
+      setTeamLeader(false)
+      setIsUserCodeUnique(false)
+      setFile(null)
+      setPreviewURL(null)
+      const fileInput = document.querySelector('input[type="file"]')
+      const dataTransfer = new DataTransfer()
+      fileInput.files = dataTransfer.files
     } else {
       axios
         .get(API_URL + `img/${student.userCode}`)
         .then(async (res) => {
-          const url = res.data;
-          setPreviewURL(url);
-          const response = await fetch(url);
-          console.log(response);
-          const data = await response.blob();
-          console.log(data);
-          const ext = url.split(".").pop();
-          const filename = url.split("/").pop();
-          const metadata = { type: `image/${ext}` };
-          const tmpFile = new File([data], filename, metadata);
-          setFile(tmpFile);
-          const fileInput = document.querySelector('input[type="file"]');
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(tmpFile);
-          fileInput.files = dataTransfer.files;
+          const url = res.data
+          setPreviewURL(url)
+          const response = await fetch(url)
+          console.log(response)
+          const data = await response.blob()
+          console.log(data)
+          const ext = url.split(".").pop()
+          const filename = url.split("/").pop()
+          const metadata = { type: `image/${ext}` }
+          const tmpFile = new File([data], filename, metadata)
+          setFile(tmpFile)
+          const fileInput = document.querySelector('input[type="file"]')
+          const dataTransfer = new DataTransfer()
+          dataTransfer.items.add(tmpFile)
+          fileInput.files = dataTransfer.files
         })
         .catch((err) => {
-          alert("이미지 업로드 실패");
-        });
+          alert("이미지 업로드 실패")
+        })
     }
-  }, [student]);
+  }, [student])
   const nameChangeHandler = (event) => {
-    const tempName = event.target.value;
-    setName(tempName);
-  };
+    const tempName = event.target.value
+    setName(tempName)
+  }
 
   const userCodeChangeHandler = (event) => {
-    const tempUserCode = event.target.value;
-    setUserCode(tempUserCode);
-  };
+    const tempUserCode = event.target.value
+    setUserCode(tempUserCode)
+  }
 
   const userCodeDupCheckHandler = async () => {
-    const tempUserCode = userCode;
+    const tempUserCode = userCode
     if (userCode.trim() === "") {
-      alert("학번을 입력해주세요");
-      return;
+      alert("학번을 입력해주세요")
+      return
     }
     axios
       .get(API_URL + `student/checkId/${tempUserCode}`)
       .then((res) => {
-        if (res.data.resultCode == 0) {
-          alert("사용 가능한 학번입니다.");
-          setName((prevState) => name);
-          setIsUserCodeUnique(() => true);
-          document.getElementById("userCode").readOnly = true;
-        } else if (res.data.resultCode == 1) {
-          alert("이미 존재하는 학번입니다.");
-          setIsUserCodeUnique(() => false);
-          return;
+        if (res.data.resultCode === 0) {
+          alert("사용 가능한 학번입니다.")
+          setName((prevState) => name)
+          setIsUserCodeUnique(() => true)
+          document.getElementById("userCode").readOnly = true
+        } else if (res.data.resultCode === 1) {
+          alert("이미 존재하는 학번입니다.")
+          setIsUserCodeUnique(() => false)
+          return
         }
       })
       .catch((err) => {
-        alert("에러 발생");
-      });
-  };
+        alert("에러 발생")
+      })
+  }
 
   const teamCodeChangeHandler = (event) => {
-    const tempTeamCode = event.target.value;
-    setTeamCode(tempTeamCode);
-  };
+    const tempTeamCode = event.target.value
+    setTeamCode(tempTeamCode)
+  }
 
   const classCodeChangeHandler = (event) => {
-    const tempClassCode = event.target.value;
-    setClassCode(tempClassCode);
-  };
+    const tempClassCode = event.target.value
+    setClassCode(tempClassCode)
+  }
 
   const phoneNumChangeHandler = (event) => {
-    const tempPhoneNum = event.target.value;
-    setPhoneNum(tempPhoneNum);
-  };
+    const tempPhoneNum = event.target.value
+    setPhoneNum(tempPhoneNum)
+  }
 
   const teamLeaderChangeHandler = (event) => {
-    console.log(event);
-    if (event.target.value === "true") {
-      const tempTeamLeader = true;
-      console.log(tempTeamLeader);
-      setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "false") {
-      const tempTeamLeader = false;
-      console.log(tempTeamLeader);
-      setTeamLeader(tempTeamLeader);
-    } else if (event.target.value === "null") {
-      setTeamLeader(null);
-    }
-  };
+    console.log(event.target)
+    setTeamLeader(!teamLeader)
+    // if (event.target.value === "true") {
+    //   const tempTeamLeader = true
+    //   console.log(tempTeamLeader)
+    //   setTeamLeader(tempTeamLeader)
+    // } else if (event.target.value === "false") {
+    //   const tempTeamLeader = false
+    //   console.log(tempTeamLeader)
+    //   setTeamLeader(tempTeamLeader)
+    // } else if (event.target.value === "null") {
+    //   setTeamLeader(null)
+    // }
+  }
 
   const handleFileOnChange = (event) => {
-    event.preventDefault();
-    let file = event.target.files[0];
-    let reader = new FileReader();
+    event.preventDefault()
+    let file = event.target.files[0]
+    let reader = new FileReader()
 
     reader.onloadend = (e) => {
-      setFile(file);
-      setPreviewURL(reader.result);
-    };
-    if (file) reader.readAsDataURL(file);
-  };
+      setFile(file)
+      setPreviewURL(reader.result)
+    }
+    if (file) reader.readAsDataURL(file)
+  }
 
   // const handleFileButtonClick = (e) => {
   //   e.preventDefault();
@@ -148,14 +151,14 @@ const StudentForm = () => {
   // };
 
   const isTeamLeader = (value) => {
-    console.log(typeof value);
-    console.log(value);
+    console.log(typeof value)
+    console.log(value)
     if (typeof value === "boolean") {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
-  };
+  }
   const formIsVaild =
     name &&
     userCode &&
@@ -164,10 +167,10 @@ const StudentForm = () => {
     phoneNum &&
     isUserCodeUnique &&
     isTeamLeader(teamLeader) &&
-    file;
+    file
 
   const onSubmitHandler = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     const tmpStudentInfo = {
       name,
       userCode,
@@ -176,7 +179,7 @@ const StudentForm = () => {
       phoneNum,
       teamLeader,
       // file,
-    };
+    }
 
     if (!student) {
       axios
@@ -187,14 +190,14 @@ const StudentForm = () => {
           },
         })
         .then((res) => {
-          console.log("학생 정보 등록 완료");
+          console.log("학생 정보 등록 완료")
         })
         .catch((err) => {
-          alert("학생 정보 등록 실패");
-        });
-      let formData = new FormData();
-      formData.set("file", file);
-      formData.set("userCode", userCode);
+          alert("학생 정보 등록 실패")
+        })
+      let formData = new FormData()
+      formData.set("file", file)
+      formData.set("userCode", userCode)
       axios
         .post(API_URL + `img/register/${userCode}`, formData, {
           headers: {
@@ -203,12 +206,12 @@ const StudentForm = () => {
           },
         })
         .then((res) => {
-          alert("학생 정보 등록 완료");
-          window.location.reload();
+          alert("학생 정보 등록 완료")
+          window.location.reload()
         })
         .catch((err) => {
-          alert("학생 정보 등록 실패");
-        });
+          alert("학생 정보 등록 실패")
+        })
     } else {
       axios
         .put(API_URL + `student/${student.id}`, tmpStudentInfo, {
@@ -218,14 +221,14 @@ const StudentForm = () => {
           },
         })
         .then((res) => {
-          console.log("학생 정보 수정 완료");
+          console.log("학생 정보 수정 완료")
         })
         .catch((err) => {
-          alert("학생 정보 수정 실패");
-        });
-      let formData = new FormData();
-      formData.set("file", file);
-      formData.set("userCode", userCode);
+          alert("학생 정보 수정 실패")
+        })
+      let formData = new FormData()
+      formData.set("file", file)
+      formData.set("userCode", userCode)
       axios
         .post(API_URL + `img/register/${userCode}`, formData, {
           headers: {
@@ -234,14 +237,14 @@ const StudentForm = () => {
           },
         })
         .then((res) => {
-          alert("학생 정보 수정 완료");
-          history.push("/admin");
+          alert("학생 정보 수정 완료")
+          history.push("/admin")
         })
         .catch((err) => {
-          alert("학생 정보 수정 실패");
-        });
+          alert("학생 정보 수정 실패")
+        })
     }
-  };
+  }
 
   return (
     // <div className={classes.v105_113}>
@@ -273,109 +276,183 @@ const StudentForm = () => {
     //   <span className={classes.v105_140}>team</span>
     // </div>
 
-    <div>
+    <div className={styles.wholePage}>
       <AdminHeader />
-      <div>
-        <span>{student ? "학생 정보 수정" : "학생 정보 등록"}</span>
-      </div>
-      <form onSubmit={onSubmitHandler}>
-        <h5>이름</h5>
-        <div>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            placeholder="이름을 입력해 주세요"
-            onChange={nameChangeHandler}
-          />
-        </div>
-        <h5>학번</h5>
-        <div>
-          <input
-            type="text"
-            id="userCode"
-            value={userCode}
-            readOnly={student ? true : false}
-            onChange={userCodeChangeHandler}
-            placeholder="학번을 입력해 주세요"
-          />
-          <button onClick={userCodeDupCheckHandler} type="button">
-            {student
-              ? "수정 불가"
-              : isUserCodeUnique
-              ? "사용 가능"
-              : "중복 확인"}
-          </button>
-        </div>
-        <h5>팀 코드</h5>
-        <div>
-          <input
-            type="text"
-            id="teamCode"
-            value={teamCode}
-            onChange={teamCodeChangeHandler}
-            placeholder="팀 코드를 입력해 주세요"
-          />
-        </div>
-        <h5>반</h5>
-        <div>
-          <input
-            type="text"
-            id="classCode"
-            value={classCode}
-            onChange={classCodeChangeHandler}
-            placeholder="반 정보를 입력해 주세요"
-          />
-        </div>
-        <h5>핸드폰 번호</h5>
-        <div>
-          <input
-            type="text"
-            id="phoneNum"
-            value={phoneNum}
-            onChange={phoneNumChangeHandler}
-            placeholder="연락처를 입력해 주세요"
-          />
-        </div>
-        <h5>팀장 여부</h5>
-        <div>
-          <select defaultValue={teamLeader} onChange={teamLeaderChangeHandler}>
-            <option key="default" value="null">
-              팀장 여부 선택
-            </option>
-            <option key="teamLeader" value="true">
-              팀장
-            </option>
-            <option key="teamMember" value="false">
-              팀원
-            </option>
-          </select>
-          {/* <input
-            type="text"
-            id="teamLeader"
-            value={teamLeader}
-            onChange={teamLeaderChangeHandler}
-            placeholder="팀장 여부를 선택해 주세요"
-          /> */}
-        </div>
-        <div>
-          <h5>프로필 이미지</h5>
-          <input
-            type="file"
-            accept="image/jpg,impge/png,image/jpeg,image/gif"
-            name="profile_img"
-            id="file"
-            ref={fileRef}
-            onChange={handleFileOnChange}
-          ></input>
-          {file && <img src={previewUrl} alt="preview" />}
-        </div>
-        <button disabled={!formIsVaild}>
-          {student ? "정보 수정" : "정보 등록"}
-        </button>
-      </form>
-    </div>
-  );
-};
+      <div className={styles.firstPageBox}>
+        <div className={styles.overlay}>
+          <form onSubmit={onSubmitHandler}>
+            <Grid container spacing={2}>
+              <Grid item xs={4} className={styles.imagePosition}>
+                <div>
+                  <div className={styles.imagePosition}>
+                    <div className={styles.imagePlace}>
+                      <div className={styles.cutImage}>
+                        <img
+                          className={styles.imageBox}
+                          src={previewUrl}
+                          alt="preview"
+                          onClick={() => {
+                            fileRef.current.click()
+                          }}
+                        />
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/jpg,impge/png,image/jpeg,image/gif"
+                        name="profile_img"
+                        id="file"
+                        ref={fileRef}
+                        style={{ display: "none" }}
+                        onChange={handleFileOnChange}
+                      ></input>
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      className={`${styles.tgl} ${styles.tglskewed}`}
+                      id="cb5"
+                      type="checkbox"
+                      checked={teamLeader}
+                      onChange={teamLeaderChangeHandler}
+                    />
+                    <label
+                      className={styles.tglbtn}
+                      data-tg-off="팀원"
+                      data-tg-on="팀장"
+                      for="cb5"
+                    ></label>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={8}>
+                {/* <div className={styles.createTitle}>
+                  <span>{student ? "학생 정보 수정" : "학생 정보 등록"}</span>
+                </div> */}
+                <span> &nbsp;&nbsp;이름</span>
+                <div>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    placeholder="이름"
+                    onChange={nameChangeHandler}
+                    className={styles.userInput}
+                  />
+                </div>
+                <div className={styles.spacingLine}>
+                  <span className={styles.userInputSpan}>&nbsp;&nbsp;학번</span>
+                </div>
+                <Grid container spacing={3} className={styles.updown}>
+                  <Grid item xs={9}>
+                    <input
+                      type="text"
+                      id="userCode"
+                      value={userCode}
+                      readOnly={student ? true : false}
+                      onChange={userCodeChangeHandler}
+                      placeholder="학번"
+                      className={styles.userCodeInput}
+                    />
+                  </Grid>
 
-export default StudentForm;
+                  <Grid item xs={3}>
+                    <button
+                      className={
+                        isUserCodeUnique
+                          ? styles.userCodeBtnsFalse
+                          : styles.userCodeBtns
+                      }
+                      onClick={userCodeDupCheckHandler}
+                      type="button"
+                    >
+                      {student
+                        ? "수정 불가"
+                        : isUserCodeUnique
+                        ? "사용 가능"
+                        : "중복 확인"}
+                    </button>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={5}>
+                  <Grid item xs={2}>
+                    <span>&nbsp;&nbsp;&nbsp;반</span>
+                    <input
+                      type="text"
+                      id="classCode"
+                      value={classCode}
+                      onChange={classCodeChangeHandler}
+                      placeholder="반"
+                      className={styles.userInput}
+                    />
+                  </Grid>
+                  <Grid item xs={10}>
+                    <span>&nbsp;&nbsp;팀 코드</span>
+                    <input
+                      type="text"
+                      id="teamCode"
+                      value={teamCode}
+                      onChange={teamCodeChangeHandler}
+                      placeholder="팀 코드"
+                      className={styles.userTeamInput}
+                    />
+                  </Grid>
+                </Grid>
+                <div className={styles.spacingLine}>
+                  <span>&nbsp;&nbsp;핸드폰 번호</span>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    id="phoneNum"
+                    value={phoneNum}
+                    onChange={phoneNumChangeHandler}
+                    placeholder="- 없이 입력하세요"
+                    className={styles.userInput}
+                  />
+                </div>
+                {/* <div>
+                  <input
+                    type="radio"
+                    name="teamLeader"
+                    onChange={teamLeaderChangeHandler}
+                    value="true"
+                  />
+                  {"팀장"}
+                  <input
+                    type="radio"
+                    name="teamLeader"
+                    onChange={teamLeaderChangeHandler}
+                    value="false"
+                  />
+                  {"팀원"}
+                </div> */}
+                <Grid container>
+                  <Grid item xs={12} className={styles.centered}>
+                    <button
+                      disabled={!formIsVaild}
+                      className={
+                        formIsVaild
+                          ? styles.registerBtn
+                          : styles.registerBtnFalse
+                      }
+                    >
+                      {student ? "정보 수정" : "Register"}
+                    </button>
+                  </Grid>
+                  <Grid item xs={6} className={styles.centered}>
+                    <button className={styles.resetBtn}> Reset </button>
+                  </Grid>
+                  <Grid item xs={6} className={styles.centered}>
+                    <button className={styles.backBtn}> Back </button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default StudentForm
