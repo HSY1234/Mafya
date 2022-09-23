@@ -1,7 +1,12 @@
+import axios from "axios";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { API_URL } from "../../common/api";
+import { login } from "./loginAPI";
 import styles from "./loginPage.module.css";
 
 const LoginPage = () => {
+  const history = useHistory();
   const [userCode, setUserCode] = useState("");
   const [password, setPassword] = useState("");
   const userCodeHandler = (event) => {
@@ -14,11 +19,34 @@ const LoginPage = () => {
 
   const formIsVaild = userCode && password;
 
-  const loginHandler = (event) => {
+  const loginHandler = async (event) => {
     event.preventDefault();
     const userForm = { userCode, password };
-    // 이후 AXIOS와 이걸로 분기 결정
-    console.log(userForm);
+    axios
+      .post(API_URL + "student/login/", userForm, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((res) => {
+        if (res.data.resultCode === 0) {
+          window.localStorage.setItem("userCode", userCode);
+          const token = res.data.accessToken;
+          if (res.data.isManager === "Y") {
+            window.localStorage.setItem("isManager", res.data.isManager);
+            axios.defaults.headers.common[`accessToken`] = token;
+            history.push("/admin");
+          } else {
+            window.localStorage.setItem("teamCode", res.data.teamCode);
+            axios.defaults.headers.common[`accessToken`] = token;
+            history.push("/student");
+          }
+        } else {
+          alert("로그인 에러");
+        }
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div>
