@@ -12,10 +12,16 @@ const TeamMember = () => {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const teamCode = localStorage.getItem("teamCode");
-    axios.get(API_URL + `attendance/team/${teamCode}`).then((res) => {
-      const data = res.data;
-      setTeam(data);
-    });
+    axios
+      .get(API_URL + `attendance/team/${teamCode}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        const data = res.data;
+        setTeam(data);
+      });
 
     setIsLoading(false);
   }, []);
@@ -33,7 +39,7 @@ const TeamMember = () => {
           </thead>
           <tbody>
             {team.map((student) => {
-              return <TeamMemberRow student={student} />;
+              return <TeamMemberRow key={student.id} student={student} />;
             })}
           </tbody>
         </table>
