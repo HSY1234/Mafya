@@ -44,7 +44,11 @@ const MainPage = () => {
   const history = useHistory();
   const deleteHandler = (studentId) => {
     axios
-      .delete(API_URL + `student/${studentId}`)
+      .delete(API_URL + `student/${studentId}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         const newStudents = [...students];
         const index = students.findIndex((stduent) => stduent.id === studentId);
@@ -103,7 +107,11 @@ const MainPage = () => {
   const fetchStudents = (page) => {
     let tmpPage = page - 1;
     axios
-      .get(API_URL + `student?page=${tmpPage}&size=5`)
+      .get(API_URL + `student?page=${tmpPage}&size=5`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setStudents(res.data.userList);
         setFilterStudents(res.data.userList.content);
@@ -120,9 +128,9 @@ const MainPage = () => {
     setActivePage(pageNumber);
   };
 
-  // useEffect(() => {
-  //   fetchStudents(activePage);
-  // }, [activePage]);
+  useEffect(() => {
+    fetchStudents(activePage);
+  }, [activePage]);
   useEffect(() => {
     fetchStudents(activePage);
     // axios
@@ -139,14 +147,16 @@ const MainPage = () => {
     //   });
     setIsLoading(true);
     axios
-      .get(API_URL + "student/attend")
+      .get(API_URL + "student/attend", {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
-        if (res.data.resultCode === "0") {
-          setAttList(res.data.attList);
-          setNotAttList(res.data.notAttList);
-          setFilterAttList(res.data.attList);
-          setFilterNotAttList(res.data.notAttList);
-        }
+        setAttList(res.data.attList);
+        setNotAttList(res.data.notAttList);
+        setFilterAttList(res.data.attList);
+        setFilterNotAttList(res.data.notAttList);
       })
       .catch((err) => {
         alert("출석 정보를 불러오지 못했습니다.");

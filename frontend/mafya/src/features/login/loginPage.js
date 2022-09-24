@@ -30,6 +30,7 @@ const LoginPage = () => {
         if (res.data.resultCode === 0) {
           window.localStorage.setItem("userCode", userCode);
           const token = res.data.accessToken;
+          window.localStorage.setItem("token", token);
           if (res.data.isManager === "Y") {
             window.localStorage.setItem("isManager", res.data.isManager);
             axios.defaults.headers.common[`accessToken`] = token;
