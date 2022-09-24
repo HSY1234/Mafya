@@ -1,6 +1,8 @@
 package com.a205.mafya.db.repository;
 
 import com.a205.mafya.db.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     //[Park SeHyeon Add]
     List<User> findAllByClassCode(String classCode);
+
+    Page<User> findAllByClassCode(String classCode, Pageable pageable);
 
     List<User> findAllByClassCodeAndAbsentGreaterThanEqual(String classCode, int absent);
 

@@ -201,9 +201,8 @@ public class UserController {
 
     // 학생 리스트 불러오기 (페이지네이션)
     @GetMapping ("")
-
     public ResponseEntity<?> GetStudentList(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable) throws Exception{
-        System.out.println(">>> processPaging : " + pageable);
+        System.out.println(">>> GetStudentList : " + pageable);
         tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
         UserListRes ULR = UserListRes.builder()
                 .userList(userService.findUserAll(pageable))
@@ -227,4 +226,18 @@ public class UserController {
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
 
+    //[Park SeHyoen Add]
+    @GetMapping("classCode/{classCode}")
+    public ResponseEntity<?> GetStudentListByClassCode(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable, @PathVariable String classCode) throws Exception{
+        System.out.println(">>> GetStudentListByClassCode : " + pageable + "   classCode : " + classCode);
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        UserListRes ULR = UserListRes.builder()
+                .userList(userService.findUserAllByClassCode(pageable, classCode))
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
+
+        return new ResponseEntity<>(ULR, HttpStatus.OK);
+    }
+    //[Park SeHyeon End]
 }

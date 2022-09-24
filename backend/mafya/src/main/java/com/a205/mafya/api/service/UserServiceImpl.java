@@ -155,17 +155,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.findAll(pageable).map(
             user -> { return (UserToUserInfo(user)); }
         );
-//        if(userList.isEmpty()){
-//            throw new NoSuchElementException("No Student exist");
-//        }
-//
-//        List<UserInfo> uirList = new ArrayList<>();
-//        for( User user : userList) {
-//
-//            uirList.add(UserToUserInfo(user));
-//        }
-//
-//        return uirList;
     }
 
     @Override
@@ -173,6 +162,13 @@ public class UserServiceImpl implements UserService{
         if(userRepository.findByUserCode(userCode).isPresent()){
             throw new UserCodeOverlapException("userCode already exist");
         }
+    }
+
+    @Override
+    public Page<UserInfo> findUserAllByClassCode(Pageable pageable, String classCode) throws Exception {
+        return userRepository.findAllByClassCode(classCode, pageable).map(
+                user -> { return (UserToUserInfo(user)); }
+        );
     }
 
     public UserInfo UserToUserInfo(User user) {
