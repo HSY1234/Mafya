@@ -1,7 +1,10 @@
 package com.a205.mafya.api.controller;
 
+import com.a205.mafya.api.response.AttendanceSituationRes;
 import com.a205.mafya.api.response.AttendanceTeamRes;
+import com.a205.mafya.api.response.CalendarDataRes;
 import com.a205.mafya.api.service.AttendanceService;
+import com.a205.mafya.db.dto.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController
@@ -47,5 +49,30 @@ public class AttendanceController {
     public ResponseEntity<?> processInitTrady() {
         attendanceService.processTradyInitScheduler();
         return (new ResponseEntity<Void>(HttpStatus.OK));
+    }
+
+    @GetMapping("/calendar/{userCode}")
+    public ResponseEntity<?> getCalendar(@PathVariable String userCode) {
+        List<CalendarDataRes> userInfoList = attendanceService.getCalendarData(userCode);
+        return (new ResponseEntity<List<CalendarDataRes>>(userInfoList, HttpStatus.OK));
+    }
+
+    @GetMapping("/situation/{userCode}")
+    public ResponseEntity<?> getSituation(@PathVariable String userCode) {
+        AttendanceSituationRes attendanceSituationResList = attendanceService.getSituationData(userCode);
+        return (new ResponseEntity<AttendanceSituationRes>(attendanceSituationResList, HttpStatus.OK));
+    }
+
+    @GetMapping("/danger/{classCode}")
+    public ResponseEntity<?> getDanger(@PathVariable String classCode) {
+        List<UserInfo> userInfoList = attendanceService.getDangerList(classCode);
+        return (new ResponseEntity<List<UserInfo>>(userInfoList, HttpStatus.OK));
+    }
+
+    @GetMapping("/class/{classCode}")
+    public ResponseEntity<?> getClassStatus(@PathVariable String classCode) {
+        List<UserInfo> userInfoList = attendanceService.getDangerClassInfo(classCode);
+
+        return (new ResponseEntity<List<UserInfo>>(userInfoList, HttpStatus.OK));
     }
 }

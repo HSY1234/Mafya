@@ -1,6 +1,9 @@
 package com.a205.mafya.api.service;
 
+import com.a205.mafya.api.response.AttendanceSituationRes;
 import com.a205.mafya.api.response.AttendanceTeamRes;
+import com.a205.mafya.api.response.CalendarDataRes;
+import com.a205.mafya.db.dto.UserInfo;
 
 import java.util.List;
 
@@ -20,6 +23,8 @@ public interface AttendanceService {
 
     static final int TRANSFORM_ABSENT = 4;
 
+    static final int DANGER = 3;
+
     int record(String userCode);
 
     List<AttendanceTeamRes> getTeamInfo(String teamCode);
@@ -29,4 +34,12 @@ public interface AttendanceService {
     public void processTradyInitScheduler();
 
     void processTradyScheduler();
+
+    List<CalendarDataRes> getCalendarData(String userCode);
+
+    AttendanceSituationRes getSituationData(String userCode);
+
+    List<UserInfo> getDangerList(String classCode);
+
+    List<UserInfo> getDangerClassInfo(String classCode);
 }

@@ -1,7 +1,10 @@
 package com.a205.mafya.api.service;
 
+import com.a205.mafya.api.response.AttendanceSituationRes;
 import com.a205.mafya.api.response.AttendanceTeamRes;
+import com.a205.mafya.api.response.CalendarDataRes;
 import com.a205.mafya.db.dto.Date;
+import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.Attendance;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.AttendanceRepository;
@@ -260,5 +263,86 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
             userRepository.save(userList.get(i));
         }
+    }
+
+    @Override
+    public List<CalendarDataRes> getCalendarData(String userCode) {    //월 별로 가져오는 것이 아닌 전체를 가져옴
+        List<CalendarDataRes> calendarDataResList = new LinkedList<>();
+        Optional<User> user = userRepository.findByUserCode(userCode);
+
+        if (!user.isPresent())  return (calendarDataResList);
+
+        List<Attendance> attendances = attendanceRepository.findAllByUser(user.get());
+        for (int i = 0; i < attendances.size(); i++) {
+            CalendarDataRes calendarDataRes = new CalendarDataRes();
+
+            calendarDataRes.setDate(attendances.get(i).getYear() + "-" + attendances.get(i).getMonth() + "-" + attendances.get(i).getDay());
+            calendarDataRes.setType(attendances.get(i).getType());
+            calendarDataRes.setEnterTime(attendances.get(i).getEnterTime());
+            calendarDataRes.setExitTime(attendances.get(i).getExitTime());
+
+            calendarDataResList.add(calendarDataRes);
+        }
+
+        return (calendarDataResList);
+    }
+
+    @Override
+    public AttendanceSituationRes getSituationData(String userCode) {
+        //여기에 교육지원금과 월별 출석 수 정보 넣어서 보내줄까 생각 중. 한다면 월별 출석 수는 DB에 따로 만들어 참고해야할 듯
+        Optional<User> user = userRepository.findByUserCode(userCode);
+        AttendanceSituationRes attendanceSituationRes = new AttendanceSituationRes();
+
+        if (!user.isPresent())  return (attendanceSituationRes);
+
+        attendanceSituationRes.setAbsent(user.get().getAbsent());
+        attendanceSituationRes.setTrady(user.get().getTardy());
+
+        return (attendanceSituationRes);
+    }
+
+    private UserInfo convertUserInfo(User user) {
+        UserInfo userInfo = UserInfo.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .userCode(user.getUserCode())
+                .status(user.getStatus())
+                .teamCode(user.getTeamCode())
+                .classCode(user.getClassCode())
+                .phoneNum(user.getPhoneNum())
+                .teamLeader(user.isTeamLeader())
+                .absent(user.getAbsent())
+                .trady(user.getTardy())
+                .build();
+        return (userInfo);
+    }
+
+    @Override
+    public List<UserInfo> getDangerList(String classCode) {
+        List<User> userList = userRepository.findAllByClassCodeAndAbsentGreaterThanEqual(classCode, DANGER);
+        List<UserInfo> userInfoList = new LinkedList<>();
+
+        for (int i = 0; i < userList.size(); i++)
+            userInfoList.add(convertUserInfo(userList.get(i)));
+
+        return (userInfoList);
+    }
+
+    @Override
+    public List<UserInfo> getDangerClassInfo(String classCode) {
+        List<UserInfo> userInfoList = new LinkedList<>();
+
+        List<User> userList = userRepository.findAllByClassCode(classCode);
+        for (User user : userList) {
+            System.out.println(">>> " + user);
+            Date date = getDate();
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user, date.getDay(), date.getMonth(), date.getYear());
+
+            if (attendance.isPresent()) continue;   //이미 출석함
+
+            userInfoList.add(convertUserInfo(user));
+        }
+
+        return (userInfoList);
     }
 }

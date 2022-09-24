@@ -11,4 +11,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByClassCodeAndStatus(String classCode, int status);
     List<User> findAllByTeamCode(String teamCode);
+
+    //[Park SeHyeon Add]
+    List<User> findAllByClassCode(String classCode);
+
+    List<User> findAllByClassCodeAndAbsentGreaterThanEqual(String classCode, int absent);
+
+    //[Park SeHyeon End]
 }

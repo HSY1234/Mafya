@@ -185,6 +185,10 @@ public class UserServiceImpl implements UserService{
                 .classCode(user.getClassCode())
                 .phoneNum(user.getPhoneNum())
                 .teamLeader(user.isTeamLeader())
+                //[Park SeHyeon Add]
+                .absent(user.getAbsent())
+                .trady(user.getTardy())
+                //[Park SeHyeon End]
                 .build();
         return uir;
     }

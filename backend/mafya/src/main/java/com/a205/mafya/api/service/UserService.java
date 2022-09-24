@@ -18,7 +18,9 @@ public interface UserService {
     public List<UserInfo> findAttendUsersByClassCode(String classCode) throws Exception;
     public List<UserInfo> findUserAllByTeamCode(String teamCode) throws Exception;
     public Page<UserInfo> findUserAll(Pageable pageable) throws Exception;
-
     public void checkUserCodeOverlap(String userCode) throws Exception;
+
+    //[Park SeHyeon Add]
+    //[Park SeHyeon End]
 
 }
