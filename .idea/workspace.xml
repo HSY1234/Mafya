@@ -137,19 +137,6 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="mafya" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="mafya" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MafyaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="mafya.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.a205.mafya.MafyaApplication" />
@@ -183,7 +170,8 @@
       <workItem from="1663765575109" duration="96000" />
       <workItem from="1663803313803" duration="1090000" />
       <workItem from="1663878144513" duration="15552000" />
-      <workItem from="1663941557752" duration="821000" />
+      <workItem from="1663941557752" duration="2024000" />
+      <workItem from="1664027292655" duration="124000" />
     </task>
     <servers />
   </component>

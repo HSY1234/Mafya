@@ -32,7 +32,7 @@ public class TokenProvider {
     private String secret;
 
     // access토큰 유효시간 1분
-    private Long accessTokenValidityInMilliseconds=1*60*1000L;
+    private Long accessTokenValidityInMilliseconds=60*60*1000L;
     // refresh토큰 유효시간 2주
     private Long refreshTokenValidityInMilliseconds=14*24*60*60*1000L;
 
