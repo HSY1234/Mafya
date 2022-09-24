@@ -10,8 +10,18 @@ import "./App.module.css";
 import PublicRoute from "./common/router/PublicRouter";
 import PrivateRoute from "./common/router/PrivateRouter";
 import AdminRoute from "./common/router/AdminRouter";
+import { useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "./common/api";
 
 function App() {
+  useEffect(() => {
+    axios.get(API_URL + "token/reissue").then((res) => {
+      const token = res.data.accessToken;
+      axios.defaults.headers.common["accessToken"] = token;
+    });
+  }, []);
+
   return (
     <div>
       <BrowserRouter>
