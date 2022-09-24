@@ -120,9 +120,9 @@ const MainPage = () => {
     setActivePage(pageNumber);
   };
 
-  useEffect(() => {
-    fetchStudents(activePage);
-  }, [activePage]);
+  // useEffect(() => {
+  //   fetchStudents(activePage);
+  // }, [activePage]);
   useEffect(() => {
     fetchStudents(activePage);
     // axios
@@ -141,10 +141,12 @@ const MainPage = () => {
     axios
       .get(API_URL + "student/attend")
       .then((res) => {
-        setAttList(res.data.attList);
-        setNotAttList(res.data.notAttList);
-        setFilterAttList(res.data.attList);
-        setFilterNotAttList(res.data.notAttList);
+        if (res.data.resultCode === "0") {
+          setAttList(res.data.attList);
+          setNotAttList(res.data.notAttList);
+          setFilterAttList(res.data.attList);
+          setFilterNotAttList(res.data.notAttList);
+        }
       })
       .catch((err) => {
         alert("출석 정보를 불러오지 못했습니다.");

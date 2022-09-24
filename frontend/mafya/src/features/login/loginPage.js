@@ -33,6 +33,7 @@ const LoginPage = () => {
           if (res.data.isManager === "Y") {
             window.localStorage.setItem("isManager", res.data.isManager);
             axios.defaults.headers.common[`accessToken`] = token;
+            // axios.defaults.withCredentials = true;
             history.push("/admin");
           } else {
             window.localStorage.setItem("teamCode", res.data.teamCode);
