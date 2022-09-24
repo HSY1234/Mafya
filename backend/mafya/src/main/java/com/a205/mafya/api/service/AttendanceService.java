@@ -8,7 +8,6 @@ public interface AttendanceService {
     static final int ENTERTIME = 9;  //오전 9시
     static final int EXITTIME = 18; //오후 6시
 
-    static final int ABSENT = -99;
     static final int NO_USER = -1;
     static final int ENTRANCE = 0;
     static final int TRADY = 10;
@@ -17,7 +16,7 @@ public interface AttendanceService {
     static final int ENTRANCE_AND_EARLYLEAVE = 2;
     static final int ENTRANCE_AND_NORMALEXIT = 3;
     static final int RE_REQUEST = 4;
-
+    static final int ABSENT = 99;
 
     int record(String userCode);
 
