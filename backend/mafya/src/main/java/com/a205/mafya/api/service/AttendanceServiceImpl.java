@@ -297,6 +297,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         attendanceSituationRes.setAbsent(user.get().getAbsent());
         attendanceSituationRes.setTrady(user.get().getTardy());
+        attendanceSituationRes.setTotalDay(-1);
+        attendanceSituationRes.setTotalAttend(-1);
+        attendanceSituationRes.setTrady(-1);
 
         return (attendanceSituationRes);
     }

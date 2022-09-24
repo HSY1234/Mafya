@@ -57,8 +57,8 @@ public class AttendanceController {
         return (new ResponseEntity<List<CalendarDataRes>>(userInfoList, HttpStatus.OK));
     }
 
-    @GetMapping("/situation/{userCode}")
-    public ResponseEntity<?> getSituation(@PathVariable String userCode) {
+    @GetMapping("/situation/{userCode}/{month}")
+    public ResponseEntity<?> getSituation(@PathVariable String userCode, @PathVariable String month) {
         AttendanceSituationRes attendanceSituationResList = attendanceService.getSituationData(userCode);
         return (new ResponseEntity<AttendanceSituationRes>(attendanceSituationResList, HttpStatus.OK));
     }
