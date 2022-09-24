@@ -7,7 +7,11 @@ const AdminHeader = () => {
   const history = useHistory();
   const logoutHandler = (event) => {
     axios
-      .get(API_URL + "student/logout/")
+      .get(API_URL + "student/logout/", {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         delete axios.defaults.headers.common[`accessToken`];
         window.localStorage.clear();
