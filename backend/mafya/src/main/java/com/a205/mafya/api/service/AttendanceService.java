@@ -18,7 +18,15 @@ public interface AttendanceService {
     static final int RE_REQUEST = 4;
     static final int ABSENT = 99;
 
+    static final int TRANSFORM_ABSENT = 4;
+
     int record(String userCode);
 
     List<AttendanceTeamRes> getTeamInfo(String teamCode);
+
+    void processAbsentScheduler();
+
+    public void processTradyInitScheduler();
+
+    void processTradyScheduler();
 }

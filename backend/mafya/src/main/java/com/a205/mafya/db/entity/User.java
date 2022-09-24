@@ -47,11 +47,15 @@ public class User extends BaseEntity {
     @Column(name = "absent", nullable = false)
     private int absent;
 
+    @Column(name = "tardy", nullable = false)
+    private int tardy;
+
     @Override
     public void prePersist() {
         super.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         super.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         this.absent = 0;
+        this.tardy = 0;
     }
     //[Park SeHyeon end]
 
