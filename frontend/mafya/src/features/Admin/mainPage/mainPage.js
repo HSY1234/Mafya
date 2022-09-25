@@ -57,8 +57,7 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setStudents(res.data.userList);
-
+        setStudents(res.data.userList.content);
         setTotalPages(res.data.userList.totalPages);
         setItemsCountPerPage(res.data.userList.size);
         setTotalItemsCount(res.data.userList.totalElements);
