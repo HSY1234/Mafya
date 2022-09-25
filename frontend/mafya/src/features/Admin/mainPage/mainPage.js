@@ -7,39 +7,22 @@ import { API_URL } from "../../../common/api";
 import AdminHeader from "../header/adminHeader";
 import ReadonlyRow from "./ReadOnlyRow";
 import styles from "./mainPage.module.css";
-import AttendStudents from "./attendStudents";
-import NotAttendStudents from "./notAttendStudents";
+import AttendStudents from "./dangerList";
+import NotAttendStudents from "./studentList";
 import Pagination from "react-js-pagination";
 import "./mainPage.css";
+import DangerList from "./dangerList";
+import StudentList from "./studentList";
 
 const MainPage = () => {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [attList, setAttList] = useState([]);
-  const [notAttList, setNotAttList] = useState([]);
-  const [classSearch, setClassSearch] = useState("");
-  const [teamSearch, setTeamSearch] = useState("");
-  const [filterStudents, setFilterStudents] = useState([]);
-  const [filterAttList, setFilterAttList] = useState([]);
-  const [notAttdatas, setNotAttDatas] = useState([]);
-  const [scrollOptions, setScrollOptions] = useState({
-    childLength: 5,
-    fullHeight: 0,
-  });
-
-  const [filterNotAttList, setFilterNotAttList] = useState([]);
+  const [dangerList, setDangerList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
   const [totalItemsCount, setTotalItemsCount] = useState(null);
-
-  useEffect(() => {
-    setNotAttDatas(filterNotAttList.slice(0, scrollOptions.childLength));
-  }, [filterNotAttList, scrollOptions.childLength]);
-  // useEffect(()=>{
-  //   setFilterAttList(attList)
-  //   setFilterNotAttList(notAttList)
-  // }, [attList, notAttList])
 
   const history = useHistory();
   const deleteHandler = (studentId) => {
@@ -54,45 +37,6 @@ const MainPage = () => {
         const index = students.findIndex((stduent) => stduent.id === studentId);
         newStudents.splice(index, 1);
         setStudents(newStudents);
-        const newIndex = filterStudents.findIndex(
-          (stduent) => stduent.id === studentId
-        );
-        const newFilterStudents = [...filterStudents];
-        if (newIndex !== -1) {
-          newFilterStudents.splice(newIndex, 1);
-          setFilterStudents(newFilterStudents);
-        }
-        const newAttList = [...attList];
-        const attIndex = attList.findIndex(
-          (stduent) => stduent.id === studentId
-        );
-        if (attIndex == -1) {
-          const newNotAttList = [...notAttList];
-          const notAttIndex = notAttList.findIndex(
-            (stduent) => stduent.id === studentId
-          );
-          newNotAttList.splice(notAttIndex, 1);
-          const newNotFilterAttList = [...filterNotAttList];
-          const notfilterAttIndex = filterNotAttList.findIndex(
-            (stduent) => stduent.id === studentId
-          );
-          if (notfilterAttIndex !== -1) {
-            newNotFilterAttList.splice(notfilterAttIndex, 1);
-            setFilterNotAttList(newNotFilterAttList);
-          }
-          setNotAttList(newNotAttList);
-        } else {
-          const newFilterAttList = [...filterAttList];
-          const filterAttIndex = filterAttList.findIndex(
-            (stduent) => stduent.id === studentId
-          );
-          if (filterAttIndex !== -1) {
-            newFilterAttList.splice(filterAttIndex, 1);
-            setFilterAttList(newFilterAttList);
-          }
-          newAttList.splice(attIndex, 1);
-          setAttList(newAttList);
-        }
         alert("학생 정보 제거");
       })
       .catch((err) => {
@@ -113,14 +57,43 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setStudents(res.data.userList);
-        setFilterStudents(res.data.userList.content);
+        setStudents(res.data.userList.content);
         setTotalPages(res.data.userList.totalPages);
         setItemsCountPerPage(res.data.userList.size);
         setTotalItemsCount(res.data.userList.totalElements);
       })
       .catch((err) => {
         alert("학생 정보를 불러오지 못했습니다.");
+      });
+  };
+
+  const fetchDangerList = (classCode) => {
+    axios
+      .get(API_URL + `attendance/danger/${classCode}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setDangerList(res.data);
+      })
+      .catch((err) => {
+        alert("위험 리스트 정보를 불러오지 못했습니다.");
+      });
+  };
+
+  const fetchStudentList = (classCode) => {
+    axios
+      .get(API_URL + `attendance/class/${classCode}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setStudentList(res.data);
+      })
+      .catch((err) => {
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
       });
   };
 
@@ -133,122 +106,20 @@ const MainPage = () => {
   }, [activePage]);
   useEffect(() => {
     fetchStudents(activePage);
-    // axios
-    //   .get(API_URL + `student?page=${activePage}&size=5`)
-    //   .then((res) => {
-    //     setStudents(res.data.userList);
-    //     setFilterStudents(res.data.userList.content);
-    //     setTotalPages(res.data.userList.totalPages);
-    //     setItemsCountPerPage(res.data.userList.size);
-    //     setTotalItemsCount(res.data.userList.totalElements);
-    //   })
-    //   .catch((err) => {
-    //     alert("학생 정보를 불러오지 못했습니다.");
-    //   });
     setIsLoading(true);
-    axios
-      .get(API_URL + "student/attend", {
-        headers: {
-          accessToken: window.localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        setAttList(res.data.attList);
-        setNotAttList(res.data.notAttList);
-        setFilterAttList(res.data.attList);
-        setFilterNotAttList(res.data.notAttList);
-      })
-      .catch((err) => {
-        alert("출석 정보를 불러오지 못했습니다.");
-      });
+    const classCode = window.localStorage.getItem("classCode");
+    fetchDangerList(classCode);
+    setIsLoading(true);
+    fetchStudentList(classCode);
     setIsLoading(false);
   }, []);
 
-  const searchClassHandler = (event) => {
-    event.preventDefault();
-    if (classSearch == null || classSearch.trim() === "") {
-      setFilterAttList(attList);
-      setFilterNotAttList(notAttList);
-      setFilterStudents(students);
-    } else {
-      const filterList = students.filter((student) =>
-        student.classCode.includes(classSearch)
-      );
-      const fiterAtt = attList.filter((student) =>
-        student.classCode.includes(classSearch)
-      );
-      const filterNotAtt = notAttList.filter((student) =>
-        student.classCode.includes(classSearch)
-      );
-      setFilterStudents(filterList);
-      setFilterAttList(fiterAtt);
-      setFilterNotAttList(filterNotAtt);
-    }
-    setClassSearch("");
-  };
-
-  const searchTeamHandler = (event) => {
-    event.preventDefault();
-    if (teamSearch == null || teamSearch.trim() === "") {
-      setFilterAttList(attList);
-      setFilterNotAttList(notAttList);
-      setFilterStudents(students);
-    } else {
-      const filterList = students.filter((student) =>
-        student.teamCode.includes(teamSearch)
-      );
-      const fiterAtt = attList.filter((student) =>
-        student.teamCode.includes(teamSearch)
-      );
-      const filterNotAtt = notAttList.filter((student) =>
-        student.teamCode.includes(teamSearch)
-      );
-      setFilterStudents(filterList);
-      setFilterAttList(fiterAtt);
-      setFilterNotAttList(filterNotAtt);
-    }
-    setTeamSearch("");
-  };
-  const classSearchHandler = (event) => {
-    event.preventDefault();
-    setClassSearch(event.target.value);
-  };
-
-  const teamSearchHandler = (event) => {
-    event.preventDefault();
-    setTeamSearch(event.target.value);
-  };
-
-  return !isLoading && filterStudents.length ? (
+  return !isLoading && students.length ? (
     <div>
       <AdminHeader />
-      <AttendStudents attList={filterAttList} />
-      <NotAttendStudents
-        notAttList={filterNotAttList}
-        notAttDatas={notAttdatas}
-        scrollOptions={scrollOptions}
-        setScrollOptions={setScrollOptions}
-      />
-
+      <DangerList dangerList={dangerList} />
+      <StudentList studentList={studentList} />
       <div>
-        <form onSubmit={searchClassHandler}>
-          <input
-            type="text"
-            value={classSearch}
-            placeholder="반을 입력하세요"
-            onChange={classSearchHandler}
-          ></input>
-          <button type="submit">검색</button>
-        </form>
-        <form onSubmit={searchTeamHandler}>
-          <input
-            type="text"
-            value={teamSearch}
-            placeholder="팀 코드를 입력하세요"
-            onChange={teamSearchHandler}
-          ></input>
-          <button type="submit">검색</button>
-        </form>
         <h3>학생 명단</h3>
         <table className={styles.table}>
           <thead>
@@ -263,7 +134,7 @@ const MainPage = () => {
             </tr>
           </thead>
           <tbody>
-            {filterStudents.map((student) => {
+            {students.map((student) => {
               return (
                 <ReadonlyRow
                   student={student}
@@ -290,26 +161,8 @@ const MainPage = () => {
   ) : (
     <div>
       <AdminHeader />
-      <AttendStudents attList={filterAttList} />
-      <NotAttendStudents notAttList={filterNotAttList} />
-      <form onSubmit={searchClassHandler}>
-        <input
-          type="text"
-          value={classSearch}
-          placeholder="반을 입력하세요"
-          onChange={classSearchHandler}
-        ></input>
-        <button type="submit">검색</button>
-      </form>
-      <form onSubmit={searchTeamHandler}>
-        <input
-          type="text"
-          value={teamSearch}
-          placeholder="반을 입력하세요"
-          onChange={teamSearchHandler}
-        ></input>
-        <button type="submit">검색</button>
-      </form>
+      <DangerList dangerList={dangerList} />
+      <StudentList studentList={studentList} />
       <span>학생 정보가 없습니다.</span>
     </div>
   );

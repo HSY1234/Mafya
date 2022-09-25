@@ -1,6 +1,6 @@
-const NotAttendStudents = ({ notAttList }) => {
-  const content = notAttList.length ? (
-    notAttList.map((student) => (
+const DangerList = ({ dangerList }) => {
+  const content = dangerList.length ? (
+    dangerList.map((student) => (
       <li key={student.id}>
         <p>{student.name}</p>
         <p>{student.phoneNum}</p>
@@ -11,10 +11,10 @@ const NotAttendStudents = ({ notAttList }) => {
   );
   return (
     <div>
-      <h3>결석</h3>
+      <h3>결석 위험군</h3>
       <ul>{content}</ul>
     </div>
   );
 };
 
-export default NotAttendStudents;
+export default DangerList;
