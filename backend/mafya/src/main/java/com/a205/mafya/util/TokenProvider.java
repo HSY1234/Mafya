@@ -31,10 +31,11 @@ public class TokenProvider {
     @Value("${jwt.secret}")
     private String secret;
 
-    // access토큰 유효시간 1분
+    // access토큰 유효시간 1시간
     private Long accessTokenValidityInMilliseconds=60*60*1000L;
     // refresh토큰 유효시간 2주
     private Long refreshTokenValidityInMilliseconds=14*24*60*60*1000L;
+
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct

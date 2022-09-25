@@ -1,5 +1,6 @@
 package com.a205.mafya.api.controller;
 
+import com.a205.mafya.api.filter.exception.TokenException;
 import com.a205.mafya.api.request.LoginReq;
 import com.a205.mafya.api.response.LoginRes;
 import com.a205.mafya.api.response.TokenExpRes;
@@ -40,7 +41,7 @@ public class TokenController {
 
     // 로그인
     @GetMapping("reissue")
-    public ResponseEntity<?> reissue(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req, HttpServletResponse resp){
+    public ResponseEntity<?> reissue(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req, HttpServletResponse resp) throws TokenException {
 
         // http only cookie에서 refresh token을 받아옵니다.
         String refreshToken = tokenProvider.resolveRefreshToken((req));
@@ -70,12 +71,16 @@ public class TokenController {
             cookieProvider.addTokenToCookie(resp, "refreshToken", newRefreshToken);
 
             log.debug("accessToken, refreshToken 재발급 완료");
+        // 유효하지 않은 토큰
+        } else if(tokenProvider.validateToken(accessToken).equals("expired") && tokenProvider.validateToken(refreshToken).equals("expired")) {
 
-        } else {
-            ter.changeMsg("Your Tokens are invalid, so update denied");
-            ter.changeTokenStatus("invalid");
+            throw new TokenException("access/refresh tokens expired, update tokens denied",2,"expiredAR",refreshToken);
+        }
+        else {
 
-            log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            log.debug("업데이트 가능한 토큰이 아닙니다, uri: {}", requestURI);
+            throw new TokenException("invalid tokens, update tokens denied",3,"invalid",refreshToken);
+
         }
 
         return new ResponseEntity<>(ter, HttpStatus.OK);
