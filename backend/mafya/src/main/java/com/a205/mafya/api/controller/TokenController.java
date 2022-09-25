@@ -41,7 +41,7 @@ public class TokenController {
 
     // 로그인
     @GetMapping("reissue")
-    public ResponseEntity<?> reissue(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req, HttpServletResponse resp) throws TokenException {
+    public ResponseEntity<?> reissue(HttpServletRequest req, HttpServletResponse resp) throws TokenException {
 
         // http only cookie에서 refresh token을 받아옵니다.
         String refreshToken = tokenProvider.resolveRefreshToken((req));
