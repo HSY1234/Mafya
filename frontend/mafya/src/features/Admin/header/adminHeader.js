@@ -2,11 +2,12 @@ import classes from "./adminHeader.module.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../../common/api";
+import axios1 from "../../../common/api/axios";
 
 const AdminHeader = () => {
   const history = useHistory();
   const logoutHandler = (event) => {
-    axios
+    axios1
       .get(API_URL + "student/logout/", {
         headers: {
           accessToken: window.localStorage.getItem("token"),

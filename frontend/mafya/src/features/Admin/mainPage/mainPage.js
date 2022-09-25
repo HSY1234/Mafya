@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { useState } from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -13,6 +11,8 @@ import Pagination from "react-js-pagination";
 import "./mainPage.css";
 import DangerList from "./dangerList";
 import StudentList from "./studentList";
+import axios from "axios";
+import axios1 from "../../../common/api/axios";
 
 const MainPage = () => {
   const [students, setStudents] = useState([]);
@@ -26,7 +26,7 @@ const MainPage = () => {
 
   const history = useHistory();
   const deleteHandler = (studentId) => {
-    axios
+    axios1
       .delete(API_URL + `student/${studentId}`, {
         headers: {
           accessToken: window.localStorage.getItem("token"),
@@ -50,7 +50,7 @@ const MainPage = () => {
 
   const fetchStudents = (page) => {
     let tmpPage = page - 1;
-    axios
+    axios1
       .get(API_URL + `student?page=${tmpPage}&size=5`, {
         headers: {
           accessToken: window.localStorage.getItem("token"),
@@ -68,7 +68,7 @@ const MainPage = () => {
   };
 
   const fetchDangerList = (classCode) => {
-    axios
+    axios1
       .get(API_URL + `attendance/danger/${classCode}`, {
         headers: {
           accessToken: window.localStorage.getItem("token"),
@@ -83,7 +83,7 @@ const MainPage = () => {
   };
 
   const fetchStudentList = (classCode) => {
-    axios
+    axios1
       .get(API_URL + `attendance/class/${classCode}`, {
         headers: {
           accessToken: window.localStorage.getItem("token"),

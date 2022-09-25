@@ -1,6 +1,9 @@
 import axios from "axios";
 import { API_URL } from "../api";
 
+const axios1 = axios.create({
+  baseUrl: "",
+});
 let isTokenRefreshing = false;
 let refreshSubscribers = [];
 let newAccessToken = "";
@@ -13,7 +16,7 @@ const addRefreshSubscriber = (callback) => {
   refreshSubscribers.push(callback);
 };
 
-axios.interceptors.response.use(
+axios1.interceptors.response.use(
   (response) => {
     // const nowTime = moment(new Date()).format()
     // const loginDate = localStorage.getItem('expireDate')
@@ -62,7 +65,7 @@ axios.interceptors.response.use(
             ...originalRequest.headers,
             accessToken: accessToken,
           };
-          resolve(axios(originalRequest));
+          resolve(axios1(originalRequest));
         });
       });
       return retryOriginalRequest;
@@ -71,3 +74,5 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default axios1;
