@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { API_URL } from "../api";
 
 let isTokenRefreshing = false;
@@ -52,6 +52,8 @@ axios.interceptors.response.use(
           })
           .catch((err) => {
             console.log("reissue 마무리");
+            localStorage.clear();
+            window.location.href = "/";
           });
       }
       const retryOriginalRequest = new Promise((resolve) => {
