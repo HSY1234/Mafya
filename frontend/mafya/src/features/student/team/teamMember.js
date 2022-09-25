@@ -10,6 +10,7 @@ const TeamMember = () => {
 
   const [team, setTeam] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const teamCode = localStorage.getItem("teamCode");
     axios
