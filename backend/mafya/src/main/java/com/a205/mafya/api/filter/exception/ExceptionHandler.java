@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
 
@@ -76,39 +77,45 @@ public class ExceptionHandler {
 
     // jwt 토큰이 유효하지 않을때
     @org.springframework.web.bind.annotation.ExceptionHandler(TokenException.class)
-    public ResponseEntity<TokenExpRes> TokenException(TokenException e, HttpServletResponse res) {
+    public ResponseEntity<String> TokenException(TokenException e, HttpServletResponse resp) throws IOException {
         // log
         log.error("TokenException", e);
         log.error("Message : "+e.getMessage());
         log.error("Token Status : "+e.getTokenStatus());
 
-        // ResponseEntity
-        TokenExpRes ter = TokenExpRes.builder()
-                // 1 : 유효하지 않은 접근
-                .resultCode(e.getResultCode())
-                .tokenStatus(e.getTokenStatus())
-                .build();
+//        // ResponseEntity
+//        TokenExpRes ter = TokenExpRes.builder()
+//                // 1 : 유효하지 않은 접근
+//                .resultCode(e.getResultCode())
+//                .tokenStatus(e.getTokenStatus())
+//                .build();
 
         // accessToken은 만료이고 refreshToken은 유효한 경우
-        if(e.getTokenStatus().equals("expired")){
-            // 기존 refresh토큰은 유효하므로 이것으로 새로운 access, refresh 토큰을 발급한다.
-            String userCode = tokenProvider.getUserPk(e.getOldRefreshToken());
-            String newAccessToken = tokenProvider.createToken(userCode,'a');
-            String newRefreshToken = tokenProvider.createToken(userCode, 'r');
-            // accessToken이 만료되었기 때문에 accessToken와 refreshToken을 업데이트 해줌.
-            // 응답에 새로 발급한 access token을 넣어준다.
-            ter.changeMsg(e.getMessage());
-            ter.changeAccessToken(newAccessToken);
-            // refreshToken은 HttpOnly cookie로 보낸다.
-            cookieProvider.addTokenToCookie(res, "refreshToken", newRefreshToken);
+        if(e.getTokenStatus().equals("expiredAccess")){
 
-            log.debug("accessToken, refreshToken 재발급 완료");
+            resp.sendError(HttpStatus.REQUEST_TIMEOUT.value(),"expired access token and valid refresh token");
+//            // 기존 refresh토큰은 유효하므로 이것으로 새로운 access, refresh 토큰을 발급한다.
+//            String userCode = tokenProvider.getUserPk(e.getOldRefreshToken());
+//            String newAccessToken = tokenProvider.createToken(userCode,'a');
+//            String newRefreshToken = tokenProvider.createToken(userCode, 'r');
+//            // accessToken이 만료되었기 때문에 accessToken와 refreshToken을 업데이트 해줌.
+//            // 응답에 새로 발급한 access token을 넣어준다.
+//            ter.changeMsg(e.getMessage());
+//            ter.changeAccessToken(newAccessToken);
+//            // refreshToken은 HttpOnly cookie로 보낸다.
+//            cookieProvider.addTokenToCookie(res, "refreshToken", newRefreshToken);
+//
+//            log.debug("accessToken, refreshToken 재발급 완료");
             // token이 유효하지 않은 경우
-        }else if(e.getTokenStatus().equals("invalid")){
-            ter.changeMsg(e.getMessage());
+        }else if(e.getTokenStatus().equals("expiredAR")){
+
+            resp.sendError(HttpStatus.NOT_ACCEPTABLE.value(),"expired access token and expired refresh token");
+//            ter.changeMsg(e.getMessage());
+        }else{
+            resp.sendError(HttpStatus.FORBIDDEN.value(),"invalid tokens");
         }
 
-        return new ResponseEntity<>(ter, HttpStatus.OK);
+        return new ResponseEntity<String>("token error", HttpStatus.OK);
     }
 
 }
