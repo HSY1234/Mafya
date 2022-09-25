@@ -107,9 +107,9 @@ public class UserController {
     // 로그아웃
     @GetMapping("logout")
     public ResponseEntity<?> logout(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req, HttpServletResponse resp) throws TokenException {
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ////////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ////////////////////////////////////
 
         // refresh 토큰 제거
         cookieProvider.addTokenToCookie(resp,"refreshToken","logout");
@@ -135,9 +135,9 @@ public class UserController {
     // 학생 정보 지우기
     @DeleteMapping ("{id}")
     public ResponseEntity<?> DeleteStudent(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable int id) throws Exception{
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        //////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        //////////////////////////////////
 
 
         userService.deleteUser(id);
@@ -154,9 +154,9 @@ public class UserController {
     @PutMapping ("{id}")
     public ResponseEntity<?> UpdateStudent(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable int id, @RequestBody ModifyUserReq userReq) throws Exception{
 
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ///////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ///////////////////////////////////
 
 
         userService.modifyUser(id, userReq);
@@ -173,9 +173,9 @@ public class UserController {
     @GetMapping ("id/{id}")
     public ResponseEntity<?> GetStudentInfoById(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req,@PathVariable int id) throws Exception{
 
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ///////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ///////////////////////////////////
 
 
         UserOneRes UOR = UserOneRes.builder()
@@ -190,9 +190,9 @@ public class UserController {
     // 학생 정보 불러오기 By userCode
     @GetMapping ("userCode/{userCode}")
     public ResponseEntity<?> GetStudentInfoByUserCode(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable String userCode) throws Exception{
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        //////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        //////////////////////////////////
 
         UserOneRes UOR = UserOneRes.builder()
                 .userInfo(userService.findUserByUserCode(userCode))
@@ -207,9 +207,9 @@ public class UserController {
     @GetMapping ("attend")
     public ResponseEntity<?> GetAttendList(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req) throws Exception{
 
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ///////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ///////////////////////////////////
 
 
         List<UserInfo>[] attList =  userService.findAttendList();
@@ -229,9 +229,9 @@ public class UserController {
 
         System.out.println(">>> processPaging : " + pageable);
 
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ///////////////////////////////////
+        //////jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ///////////////////////////////////
 
 
         UserListRes ULR = UserListRes.builder()
@@ -248,9 +248,9 @@ public class UserController {
     public ResponseEntity<?> UserCodeOverLapCheck(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable String userCode) throws Exception{
         userService.checkUserCodeOverlap(userCode);
 
-//        //////jwt 적용 코드 /////////////////
-//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
-//        ///////////////////////////////////
+        ////// jwt 적용 코드 /////////////////
+        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+        ///////////////////////////////////
 
         BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
