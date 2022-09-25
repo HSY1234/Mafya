@@ -4,6 +4,7 @@ import TeamMemberRow from "./teamMemberRow.";
 import styles from "./teamMember.module.css";
 import axios from "axios";
 import { API_URL } from "../../../common/api";
+import axios1 from "../../../common/api/axios";
 
 const TeamMember = () => {
   localStorage.getItem("teamCode");
@@ -13,7 +14,7 @@ const TeamMember = () => {
 
   useEffect(() => {
     const teamCode = localStorage.getItem("teamCode");
-    axios
+    axios1
       .get(API_URL + `attendance/team/${teamCode}`, {
         headers: {
           accessToken: window.localStorage.getItem("token"),

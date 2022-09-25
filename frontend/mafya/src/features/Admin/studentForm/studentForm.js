@@ -7,6 +7,7 @@ import AdminHeader from "../header/adminHeader";
 import styles from "./studentForm.module.css";
 
 import Grid from "@material-ui/core/Grid";
+import axios1 from "../../../common/api/axios";
 
 const StudentForm = () => {
   const location = useLocation();
@@ -186,7 +187,7 @@ const StudentForm = () => {
     };
 
     if (!student) {
-      axios
+      axios1
         .post(API_URL + "student/", tmpStudentInfo, {
           headers: {
             "Content-Type": "application/json",
@@ -203,7 +204,7 @@ const StudentForm = () => {
       let formData = new FormData();
       formData.set("file", file);
       formData.set("userCode", userCode);
-      axios
+      axios1
         .post(API_URL + `img/register/${userCode}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -219,7 +220,7 @@ const StudentForm = () => {
           alert("학생 정보 등록 실패");
         });
     } else {
-      axios
+      axios1
         .put(API_URL + `student/${student.id}`, tmpStudentInfo, {
           headers: {
             "Content-Type": "application/json",
@@ -237,7 +238,7 @@ const StudentForm = () => {
       let formData = new FormData();
       formData.set("file", file);
       formData.set("userCode", userCode);
-      axios
+      axios1
         .post(API_URL + `img/register/${userCode}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",

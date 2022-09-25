@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { API_URL } from "../../../common/api";
+import axios1 from "../../../common/api/axios";
 import styles from "./attendInformation.module.css";
 const AttendInformation = (props) => {
   const [information, setInformation] = useState({});
@@ -10,8 +11,12 @@ const AttendInformation = (props) => {
   useEffect(() => {
     const userCode = localStorage.getItem("userCode");
 
-    axios
-      .get(API_URL + `attendance/situation/${userCode}/${props.month}`)
+    axios1
+      .get(API_URL + `attendance/situation/${userCode}/${props.month}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setInformation(res.data);
       });
