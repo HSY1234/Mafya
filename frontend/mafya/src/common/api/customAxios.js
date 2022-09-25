@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
+import { API_URL } from "../api";
 
 let isTokenRefreshing = false;
 let refreshSubscribers = [];
@@ -14,7 +15,6 @@ const addRefreshSubscriber = (callback) => {
 
 axios.interceptors.response.use(
   (response) => {
-    console.log(response);
     // const nowTime = moment(new Date()).format()
     // const loginDate = localStorage.getItem('expireDate')
     // console.log(moment.duration((nowTime).diff(loginDate).asMilliseconds()))
@@ -26,6 +26,7 @@ axios.interceptors.response.use(
       response: { data },
     } = error;
     console.log(config, data);
+    console.log(error);
     const code = data.status;
     const originalRequest = config;
 
@@ -36,11 +37,11 @@ axios.interceptors.response.use(
         console.log("reissue 전");
         const token = localStorage.getItem("token");
         axios
-          .get(API_URL + "/token/reissue", { withCredentials: true })
+          .get(API_URL + "token/reissue", { withCredentials: true })
           .then((response) => {
             console.log("reissue 정상");
             localStorage.setItem("user", response.data.accessToken);
-            newAccessToken = response.dataaccessToken;
+            newAccessToken = response.data.accessToken;
             isTokenRefreshing = false;
             originalRequest.headers = {
               ...originalRequest.headers,
