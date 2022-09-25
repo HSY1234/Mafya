@@ -34,12 +34,11 @@ const LoginPage = () => {
           if (res.data.isManager === "Y") {
             window.localStorage.setItem("isManager", res.data.isManager);
             window.localStorage.setItem("classCode", res.data.classCode);
-            axios.defaults.headers.common[`accessToken`] = token;
-            // axios.defaults.withCredentials = true;
+
             history.push("/admin");
           } else {
             window.localStorage.setItem("teamCode", res.data.teamCode);
-            axios.defaults.headers.common[`accessToken`] = token;
+
             history.push("/student");
           }
         } else {
