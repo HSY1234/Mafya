@@ -24,52 +24,45 @@ axios.interceptors.response.use(
       response: { data },
     } = error;
     console.log(config, data);
-    const code = data.statue;
+    const code = data.status;
     const originalRequest = config;
 
-  //   if (code === 1013) {
-  //     // if (error.response.data.message === "") {
-  //     if (!isTokenRefreshing) {
-  //       isTokenRefreshing = true;
-  //       console.log("reissue 전");
-  //       const user = JSON.parse(localStorage.getItem("user"));
-  //       let accessToken = user ? user.accessToken : null;
-  //       // let refreshToken = user ? user.refreshToken : null
-  //       axios
-  //         .post(
-  //           API_URL + "reissue",
-  //           { accessToken: accessToken },
-  //           { withCredentials: true }
-  //         )
-  //         .then((response) => {
-  //           console.log("reissue 정상");
-  //           localStorage.setItem("user", JSON.stringify(response.data.data));
-  //           newAccessToken = response.data.data.accessToken;
-  //           isTokenRefreshing = false;
-  //           originalRequest.headers = {
-  //             ...originalRequest.headers,
-  //             "X-Auth-Token": newAccessToken,
-  //           };
-  //           // return axios(originalRequest)
-  //           onTokenRefreshed(newAccessToken);
-  //         })
-  //         .catch((err) => {
-  //           console.log("reissue 마무리");
-  //           window.location.href = "/";
-  //         });
-  //     }
-  //     const retryOriginalRequest = new Promise((resolve) => {
-  //       addRefreshSubscriber((accessToken) => {
-  //         originalRequest.headers = {
-  //           ...originalRequest.headers,
-  //           "X-Auth-Token": accessToken,
-  //         };
-  //         resolve(axios(originalRequest));
-  //       });
-  //     });
-  //     return retryOriginalRequest;
-  //     // }
-  //   }
-  //   return Promise.reject(error);
-  // }
+    if (code === 408) {
+      // if (error.response.data.message === "") {
+      if (!isTokenRefreshing) {
+        isTokenRefreshing = true;
+        console.log("reissue 전");
+        const token = localStorage.getItem("token");
+        axios
+          .get(API_URL + "/token/reissue", { withCredentials: true })
+          .then((response) => {
+            console.log("reissue 정상");
+            localStorage.setItem("user", response.data.accessToken);
+            newAccessToken = response.dataaccessToken;
+            isTokenRefreshing = false;
+            originalRequest.headers = {
+              ...originalRequest.headers,
+              accessToken: newAccessToken,
+            };
+            // return axios(originalRequest)
+            onTokenRefreshed(newAccessToken);
+          })
+          .catch((err) => {
+            console.log("reissue 마무리");
+          });
+      }
+      const retryOriginalRequest = new Promise((resolve) => {
+        addRefreshSubscriber((accessToken) => {
+          originalRequest.headers = {
+            ...originalRequest.headers,
+            accessToken: accessToken,
+          };
+          resolve(axios(originalRequest));
+        });
+      });
+      return retryOriginalRequest;
+      // }
+    }
+    return Promise.reject(error);
+  }
 );
