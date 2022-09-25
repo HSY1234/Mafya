@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,4 +26,9 @@ public class UserInfo {
 
     private boolean teamLeader;
 
+    //[Park SeHyeon Add]
+    private int absent;
+
+    private int trady;
+    //[Park SeHyeon end];
 }

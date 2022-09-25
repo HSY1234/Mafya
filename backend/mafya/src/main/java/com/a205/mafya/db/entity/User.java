@@ -5,6 +5,8 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 
 @Getter
@@ -40,6 +42,22 @@ public class User extends BaseEntity {
 
     @Column(name = "team_leader")
     private boolean teamLeader;
+
+    //[Park SeHyeon Add]x
+    @Column(name = "absent", nullable = false)
+    private int absent;
+
+    @Column(name = "tardy", nullable = false)
+    private int tardy;
+
+    @Override
+    public void prePersist() {
+        super.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        super.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        this.absent = 0;
+        this.tardy = 0;
+    }
+    //[Park SeHyeon end]
 
     public void modifyInfo(ModifyUserReq userReq){
         this.name = userReq.getName();
