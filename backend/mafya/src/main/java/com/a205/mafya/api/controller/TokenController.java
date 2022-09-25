@@ -54,8 +54,7 @@ public class TokenController {
                 .build();
 
         // 유효한 토큰인지 확인합니다.
-        if (tokenProvider.validateToken(accessToken).equals("valid") && tokenProvider.validateToken(refreshToken).equals("valid")
-        || tokenProvider.validateToken(accessToken).equals("expired") && tokenProvider.validateToken(refreshToken).equals("valid")) {
+        if (tokenProvider.validateToken(refreshToken).equals("valid")) {
             log.debug("access 토큰이 만료되고 refresh 토큰은 유효하여 access/refresh 토큰을 모두 재발급합니다, uri: {}", requestURI);
 
             // 기존 refresh토큰은 유효하므로 이것으로 새로운 access, refresh 토큰을 발급한다.
@@ -72,9 +71,8 @@ public class TokenController {
 
             log.debug("accessToken, refreshToken 재발급 완료");
         // 유효하지 않은 토큰
-        } else if(tokenProvider.validateToken(accessToken).equals("expired") && tokenProvider.validateToken(refreshToken).equals("expired")) {
-
-            throw new TokenException("access/refresh tokens expired, update tokens denied",2,"expiredAR",refreshToken);
+        } else if(tokenProvider.validateToken(refreshToken).equals("expired")) {
+            throw new TokenException("refresh tokens expired, update token denied",2,"expiredAR",refreshToken);
         }
         else {
 
