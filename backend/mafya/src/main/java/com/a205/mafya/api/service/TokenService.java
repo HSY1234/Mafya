@@ -17,11 +17,11 @@ public class TokenService {
             return;
         }else if(tokenProvider.validateToken(accessToken).equals("expired") &&
                 tokenProvider.validateToken(refreshToken).equals("valid")){
-            throw new TokenException("access token expired, refresh token valid",1,"expired",refreshToken);
+            throw new TokenException("access token expired, refresh token valid",1,"expiredAccess",refreshToken);
         }
         else if(tokenProvider.validateToken(accessToken).equals("expired") &&
                 tokenProvider.validateToken(refreshToken).equals("expired")){
-            throw new TokenException("access token expired, refresh token expired",2,"invalid",refreshToken);
+            throw new TokenException("access token expired, refresh token expired",2,"expiredAR",refreshToken);
         }else {
             throw new TokenException("invalid tokens",3,"invalid",refreshToken);
         }
