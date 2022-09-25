@@ -1,34 +1,44 @@
+import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { API_URL } from "../../../common/api";
 import styles from "./attendInformation.module.css";
-const AttendInformation = () => {
+const AttendInformation = (props) => {
   const [information, setInformation] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setInformation({ attend: 15, notAttend: 3, late: 2, out: 1 });
+    const userCode = localStorage.getItem("userCode");
+
+    axios
+      .get(API_URL + `attendance/situation/${userCode}/${props.month}`)
+      .then((res) => {
+        setInformation(res.data);
+      });
     setIsLoading(false);
   }, []);
 
   return (
     !isLoading && (
       <div>
-        <h3>월별 출결 현황</h3>
+        <h3>{props.month}월 출결 현황</h3>
         <table className={styles.table}>
           <thead>
             <tr>
               <th>출석</th>
               <th>결석</th>
               <th>지각</th>
-              <th>외출</th>
+              <th>교육 지원금</th>
+              <th>교육 일수</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{information.attend}</td>
-              <td>{information.notAttend}</td>
-              <td>{information.late}</td>
-              <td>{information.out}</td>
+              <td>{information.totalAttend}</td>
+              <td>{information.absent}</td>
+              <td>{information.trady}</td>
+              <td>{information.money}</td>
+              <td>{information.totalDay}</td>
             </tr>
           </tbody>
         </table>

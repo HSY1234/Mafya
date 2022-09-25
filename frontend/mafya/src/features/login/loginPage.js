@@ -33,6 +33,7 @@ const LoginPage = () => {
           window.localStorage.setItem("token", token);
           if (res.data.isManager === "Y") {
             window.localStorage.setItem("isManager", res.data.isManager);
+            window.localStorage.setItem("classCode", res.data.classCode);
             axios.defaults.headers.common[`accessToken`] = token;
             // axios.defaults.withCredentials = true;
             history.push("/admin");
