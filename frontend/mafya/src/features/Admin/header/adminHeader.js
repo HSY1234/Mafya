@@ -13,7 +13,6 @@ const AdminHeader = () => {
         },
       })
       .then((res) => {
-        delete axios.defaults.headers.common[`accessToken`];
         window.localStorage.clear();
         history.push("/");
       })
