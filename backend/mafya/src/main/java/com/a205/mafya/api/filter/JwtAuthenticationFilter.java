@@ -51,9 +51,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // SecurityContext 에 Authentication 객체를 저장합니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-        } else if (token != null && (tokenProvider.validateToken(token).equals("malformed") || tokenProvider.validateToken(token).equals("unsupported") || tokenProvider.validateToken(token).equals("illegal"))) {
-            httpServletResponse.sendError(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),"유효하지 않은 토큰입니다.");
-        }else {
+        } else {
             log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
