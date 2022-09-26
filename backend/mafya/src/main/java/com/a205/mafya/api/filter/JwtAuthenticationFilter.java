@@ -5,6 +5,7 @@ import com.a205.mafya.util.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -33,10 +34,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) request;
 
         // 헤더에서 JWT 를 받아옵니다.
         String token = tokenProvider.resolveRefreshToken((HttpServletRequest) request);
         String requestURI = httpServletRequest.getRequestURI();
+
+        cookieProvider.addTokenToCookie(httpServletResponse,"refreshToken",token);
 
         // 유효한 토큰인지 확인합니다.
 //        if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
@@ -47,7 +51,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // SecurityContext 에 Authentication 객체를 저장합니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-        } else {
+        } else if (token != null && (tokenProvider.validateToken(token).equals("malformed") || tokenProvider.validateToken(token).equals("unsupported") || tokenProvider.validateToken(token).equals("illegal"))) {
+            httpServletResponse.sendError(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),"유효하지 않은 토큰입니다.");
+        }else {
             log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
