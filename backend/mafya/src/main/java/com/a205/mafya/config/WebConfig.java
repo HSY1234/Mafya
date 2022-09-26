@@ -18,11 +18,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3000);
     }
 
-//    @Bean
-//    public ServletWebServerFactory tomcatCustomizer() {
-//                TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-//                tomcat.addContextCustomizers(context -> context.setCookieProcessor(new LegacyCookieProcessor()));
-//            return tomcat;
-//    }
+    // local의 주소를 서버의 tomcat이 인식 못하는 문제 해결
+    // java.lang.IllegalArgumentException: An invalid domain [http://localhost:3000] was specified for this cookie
+    @Bean
+    public ServletWebServerFactory tomcatCustomizer() {
+                TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+                tomcat.addContextCustomizers(context -> context.setCookieProcessor(new LegacyCookieProcessor()));
+            return tomcat;
+    }
 
 }
