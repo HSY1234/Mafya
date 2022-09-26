@@ -39,11 +39,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 헤더에서 JWT 를 받아옵니다.
         String token = tokenProvider.resolveRefreshToken((HttpServletRequest) request);
         String requestURI = httpServletRequest.getRequestURI();
-
-
-            cookieProvider.addTokenToCookie(httpServletResponse, "refreshToken", "test&test");
         
-
         // 유효한 토큰인지 확인합니다.
 //        if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
         if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
