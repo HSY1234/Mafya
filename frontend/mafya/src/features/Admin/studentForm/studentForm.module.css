@@ -80,7 +80,7 @@
 .cutImage {
   border-radius: 15px;
   background-image: url("../../../pngs/profile.png");
-  background-size: 90% 90%;
+  background-size: 90% 80%;
   background-position-y: 3.5rem;
   background-position-x: center;
   background-repeat: no-repeat;
@@ -107,7 +107,7 @@
   border-radius: 0.5rem;
   width: 90%;
   padding: 0 1rem;
-  border: solid 2px rgba(0, 0, 0, 0.616);
+  border: solid 2px rgba(0, 0, 0, 0.167);
   outline: none;
   background: rgba(255, 255, 255, 0.5);
 }
@@ -124,7 +124,7 @@
   border-radius: 0.5rem;
   width: 90%;
   padding: 0 1rem;
-  border: solid 2px rgba(0, 0, 0, 0.616);
+  border: solid 2px rgba(0, 0, 0, 0.167);
   outline: none;
   background: rgba(255, 255, 255, 0.5);
 }
@@ -160,34 +160,22 @@
   border-radius: 0.5rem;
   width: 88%;
   padding: 0 1rem;
-  border: solid 2px rgba(0, 0, 0, 0.616);
+  border: solid 2px rgba(0, 0, 0, 0.167);
   outline: none;
   background: rgba(255, 255, 255, 0.5);
 }
 
 .userTeamInput:focus {
-  background: rgb(105, 94, 239);
-  background: linear-gradient(
-    90deg,
-    rgba(105, 94, 239, 0.4) 0%,
-    rgba(114, 220, 233, 0.4) 87%
-  );
+  background: rgba(255, 255, 255, 0.892);
+  border: solid 2px rgba(0, 0, 0, 0.563);
 }
 .userCodeInput:focus {
-  background: rgb(105, 94, 239);
-  background: linear-gradient(
-    90deg,
-    rgba(105, 94, 239, 0.4) 0%,
-    rgba(114, 220, 233, 0.4) 87%
-  );
+  background: rgba(255, 255, 255, 0.892);
+  border: solid 2px rgba(0, 0, 0, 0.563);
 }
 .userInput:focus {
-  background: rgb(105, 94, 239);
-  background: linear-gradient(
-    90deg,
-    rgba(105, 94, 239, 0.4) 0%,
-    rgba(114, 220, 233, 0.4) 87%
-  );
+  background: rgba(255, 255, 255, 0.892);
+  border: solid 2px rgba(0, 0, 0, 0.563);
 }
 .centered {
   display: flex;
@@ -212,7 +200,7 @@
 }
 .registerBtnFalse {
   width: 96%;
-  border: solid 1px #505a66;
+  border: solid 2px rgba(0, 0, 0, 0.167);
   color: #505a66;
   border-radius: 0.5rem;
 
