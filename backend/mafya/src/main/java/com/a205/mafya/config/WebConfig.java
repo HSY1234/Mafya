@@ -18,11 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3000);
     }
 
-    @Bean
-    public ServletWebServerFactory tomcatCustomizer() {
-                TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-                tomcat.addContextCustomizers(context -> context.setCookieProcessor(new LegacyCookieProcessor()));
-            return tomcat;
-    }
+//    @Bean
+//    public ServletWebServerFactory tomcatCustomizer() {
+//                TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+//                tomcat.addContextCustomizers(context -> context.setCookieProcessor(new LegacyCookieProcessor()));
+//            return tomcat;
+//    }
 
 }
