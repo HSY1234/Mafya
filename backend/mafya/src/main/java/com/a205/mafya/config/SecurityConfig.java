@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
                 //permitALl()
-//                .anyRequest().permitAll()
+                .anyRequest().permitAll()
 
 
 //                .antMatchers(HttpMethod.POST, "/student").permitAll()
@@ -70,7 +70,6 @@ public class SecurityConfig {
 //                .antMatchers("/manager/**").authenticated()
 //                .anyRequest().authenticated()
 
-                .antMatchers("/test").authenticated()
 
 
 
