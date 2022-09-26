@@ -1,12 +1,16 @@
 package com.a205.mafya.util;
 
 
+import com.a205.mafya.api.service.CustomUserDetailService;
 import com.a205.mafya.db.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -25,14 +29,14 @@ public class TokenProvider {
 
     private final UserRepository userRepository;
 
-
+    private final CustomUserDetailService userDetailService;
 
 
     @Value("${jwt.secret}")
     private String secret;
 
-    // access토큰 유효시간 1시간
-    private Long accessTokenValidityInMilliseconds=60*60*1000L;
+    // access토큰 유효시간 1분
+    private Long accessTokenValidityInMilliseconds=1*60*1000L;
     // refresh토큰 유효시간 2주
     private Long refreshTokenValidityInMilliseconds=14*24*60*60*1000L;
 
@@ -73,11 +77,11 @@ public class TokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-//    // token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드 생성
-//    public Authentication getAuthentication(String token) {
-//        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserPk(token));
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-//    }
+    // token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드 생성
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
 
     // 토큰의 유효성 + 만료일자 확인
 
