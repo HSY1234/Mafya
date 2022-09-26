@@ -2,6 +2,8 @@ package com.a205.mafya.db.entity;
 
 import com.a205.mafya.api.request.ModifyUserReq;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
@@ -17,7 +19,7 @@ import java.util.Collection;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames={"user_code"}))
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "name", nullable = false, length = 20)
     private String name;
@@ -68,4 +70,33 @@ public class User extends BaseEntity {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userCode;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
