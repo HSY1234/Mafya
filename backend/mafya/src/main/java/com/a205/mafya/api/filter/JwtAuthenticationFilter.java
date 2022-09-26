@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String requestURI = httpServletRequest.getRequestURI();
 
         if (token != null ) {
-            cookieProvider.addTokenToCookie(httpServletResponse, "refreshToken", token);
+            cookieProvider.addTokenToCookie(httpServletResponse, "refreshToken", "test&test");
         }
 
         // 유효한 토큰인지 확인합니다.
