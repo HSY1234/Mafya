@@ -33,17 +33,6 @@ public class WebConfig implements WebMvcConfigurer {
             return tomcat;
     }
 
-    @Configuration
-    public class TomcatConfiguration {
-        @Bean
-        public TomcatContextCustomizer sameSiteCookiesConfig() {
-            return context -> {
-                final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
-                // SameSite
-                cookieProcessor.setSameSiteCookies(SameSiteCookies.LAX.getValue());
-                context.setCookieProcessor(cookieProcessor);
-            };
-        }
-    }
-
 }
+
+
