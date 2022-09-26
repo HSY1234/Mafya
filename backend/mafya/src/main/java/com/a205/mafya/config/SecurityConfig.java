@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
                 //permitAll, permitAll이 authenticated보다 먼저와야한다.
-//                .anyRequest().permitAll()
+                .anyRequest().permitAll()
 
 
 //                .antMatchers(HttpMethod.POST, "/student").permitAll()
