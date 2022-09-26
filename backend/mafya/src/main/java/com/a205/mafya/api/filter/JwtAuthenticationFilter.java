@@ -40,7 +40,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = tokenProvider.resolveRefreshToken((HttpServletRequest) request);
         String requestURI = httpServletRequest.getRequestURI();
 
-        cookieProvider.addTokenToCookie(httpServletResponse,"refreshToken",token);
+        if (token != null ) {
+            cookieProvider.addTokenToCookie(httpServletResponse, "refreshToken", token);
+        }
 
         // 유효한 토큰인지 확인합니다.
 //        if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
