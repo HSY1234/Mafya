@@ -54,6 +54,7 @@ public class SecurityConfig {
 
                 //permitAll, permitAll이 authenticated보다 먼저와야한다.
                 .antMatchers("/**").permitAll()
+                .antMatchers("/").permitAll()
 
 
 //                .antMatchers(HttpMethod.POST, "/student").permitAll()
