@@ -70,6 +70,8 @@ public class SecurityConfig {
 //                .antMatchers("/manager/**").authenticated()
 //                .anyRequest().authenticated()
 
+                .antMatchers("/test/**").authenticated()
+
 
 
 
