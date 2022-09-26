@@ -87,9 +87,6 @@ public class UserController {
             throw new NoSuchElementException("no user exist");
         }
 
-//        if(!password.equals(loginReq.getPassword())){
-//            throw new WrongPasswordException("Wrong password");
-//        }
 
         // accessToken은 responseEntity로 보내기
         LoginRes LR = LoginRes.builder()

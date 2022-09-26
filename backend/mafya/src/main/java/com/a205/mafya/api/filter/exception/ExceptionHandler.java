@@ -112,7 +112,7 @@ public class ExceptionHandler {
             resp.sendError(HttpStatus.NOT_ACCEPTABLE.value(),"expired access token and expired refresh token");
 //            ter.changeMsg(e.getMessage());
         }else{
-            resp.sendError(HttpStatus.FORBIDDEN.value(),"invalid tokens");
+            resp.sendError(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),"invalid tokens");
         }
 
         return new ResponseEntity<String>("token error", HttpStatus.OK);
