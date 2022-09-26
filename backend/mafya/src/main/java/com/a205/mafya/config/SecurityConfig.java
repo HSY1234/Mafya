@@ -52,7 +52,8 @@ public class SecurityConfig {
                 // Preflight request의 예비요청이 security에 의해 막히는 것을 방지하기 위함
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-
+                //permitALl()
+//                .anyRequest().permitAll()
 
 
 //                .antMatchers(HttpMethod.POST, "/student").permitAll()
@@ -70,9 +71,6 @@ public class SecurityConfig {
 //                .anyRequest().authenticated()
 
                 .antMatchers("/test/**").authenticated()
-
-                //ant가 any보다 먼저 와야한다.
-                .anyRequest().permitAll()
 
 
 
