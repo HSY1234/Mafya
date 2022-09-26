@@ -41,9 +41,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-//                .headers().frameOptions().disable()
+                .headers().frameOptions().disable()
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
-//                .and()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 // 인증 범위를 설정
