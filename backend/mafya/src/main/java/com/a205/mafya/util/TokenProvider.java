@@ -48,8 +48,8 @@ public class TokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userCode, char type) {
-        Claims claims = Jwts.claims().setSubject(userCode); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
+    public String createToken(Authentication authentication, char type) {
+        Claims claims = Jwts.claims().setSubject(authentication.getName()); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
         Date now = new Date();
         Long expTime = 0L;
         switch (type){

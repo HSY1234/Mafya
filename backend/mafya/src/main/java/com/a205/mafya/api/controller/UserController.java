@@ -61,8 +61,8 @@ public class UserController {
         log.info("security 통과 완료");
 
         // jwt 생성
-        String accessToken = tokenProvider.createToken(loginReq.getUserCode(), 'a');
-        String refreshToken = tokenProvider.createToken(loginReq.getUserCode(), 'r');
+        String accessToken = authService.login(loginReq, 'a');
+        String refreshToken = authService.login(loginReq, 'r');
 
         // 매니저인지 확인
         Optional<User> user = userRepository.findByUserCode(loginReq.getUserCode());
