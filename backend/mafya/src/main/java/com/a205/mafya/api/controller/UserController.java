@@ -58,6 +58,8 @@ public class UserController {
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpServletResponse resp){
 
+        log.info("security 통과 완료");
+
         // jwt 생성
         String accessToken = tokenProvider.createToken(loginReq.getUserCode(), 'a');
         String refreshToken = tokenProvider.createToken(loginReq.getUserCode(), 'r');
