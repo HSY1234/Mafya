@@ -1,10 +1,12 @@
 package com.a205.mafya.util;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +21,20 @@ public class CookieProvider {
         cookie.setHttpOnly(true);
 //        cookie.setDomain("http://localhost:3000");
         resp.addCookie(cookie);
+        addSameSite(resp, "none");
+    }
+    
+    private void addSameSite(HttpServletResponse response, String sameSite) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        for(String header : headers) {
+            if(firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; Secure; %s", header, "SameSite=" + sameSite));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; Secure; %s", header, "SameSite=" + sameSite));
+        }
+
     }
 }
