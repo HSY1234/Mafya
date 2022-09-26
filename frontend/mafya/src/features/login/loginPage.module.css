@@ -269,8 +269,8 @@ input:not(:placeholder-shown) {
   background: #0af;
   width: 5000px;
   height: 5000px;
-  margin-left: -2700px;
-  margin-top: 1000px;
+  margin-left: -2400px;
+  margin-top: 850px;
   transform-origin: 50% 48%;
   border-radius: 99%;
   animation: drift 3000ms infinite linear;
@@ -284,10 +284,10 @@ input:not(:placeholder-shown) {
   background: #0af;
   width: 5000px;
   height: 5000px;
-  margin-left: -2700px;
-  margin-top: 1100px;
+  margin-left: -2600px;
+  margin-top: 850px;
   transform-origin: 50% 48%;
-  border-radius: 99%;
+  border-radius: 88%;
   animation: drift 5000ms infinite linear;
 }
 
@@ -297,10 +297,10 @@ input:not(:placeholder-shown) {
   left: 50%;
   width: 5000px;
   height: 5000px;
-  margin-left: -2700px;
-  margin-top: 1100px;
+  margin-left: -2600px;
+  margin-top: 850px;
   transform-origin: 50% 48%;
-  border-radius: 43%;
+  border-radius: 60%;
   animation: drift 7000ms infinite linear;
   opacity: 0.1;
   background: yellow;
