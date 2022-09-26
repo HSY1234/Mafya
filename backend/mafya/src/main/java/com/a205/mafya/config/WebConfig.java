@@ -13,9 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
-                .maxAge(3000);
+                .maxAge(3000)
+        ;
     }
 
     // local의 주소를 서버의 tomcat이 인식 못하는 문제 해결
