@@ -66,8 +66,9 @@ public class SecurityConfig {
 
 
                 //authenticated
-                .antMatchers("/student/**").authenticated()
-                .antMatchers("/manager/**").authenticated()
+//                .antMatchers("/student/**").authenticated()
+//                .antMatchers("/manager/**").authenticated()
+                .anyRequest().authenticated()
 
 
 

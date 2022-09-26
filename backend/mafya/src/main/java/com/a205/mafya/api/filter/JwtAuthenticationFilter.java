@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         // 유효한 토큰인지 확인합니다.
 //        if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
-        if (token != null ) {
+        if (token != null && (tokenProvider.validateToken(token).equals("valid") || tokenProvider.validateToken(token).equals("expired"))) {
             // 일단 리프레시가 유효하거나 만료하거나 하면 둘 다 받아주고 둘의 분기처리는 controller안에 token service로 한다.
             // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옵니다.
             Authentication authentication = tokenProvider.getAuthentication(token);
