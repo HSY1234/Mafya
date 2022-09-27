@@ -13,16 +13,36 @@ import DangerList from "./dangerList";
 import StudentList from "./studentList";
 import axios from "axios";
 import axios1 from "../../../common/api/axios";
+import CustomPagination from "./customPagination";
+import CustomModal from "../../../common/modal/modal";
 
 const MainPage = () => {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dangerList, setDangerList] = useState([]);
   const [studentList, setStudentList] = useState([]);
-  const [activePage, setActivePage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
-  const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
-  const [totalItemsCount, setTotalItemsCount] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
+  const offset = (page - 1) * limit;
+  const [checkItems, setCheckItems] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [messeges, setMesseges] = useState("");
+  const messegesHandler = (event) => {
+    const tmpMessges = event.target.value;
+    setMesseges(tmpMessges);
+  };
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+  // const [activePage, setActivePage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(null);
+  // const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
+  // const [totalItemsCount, setTotalItemsCount] = useState(null);
   const [search, setSearch] = useState("");
 
   const history = useHistory();
@@ -66,24 +86,24 @@ const MainPage = () => {
     history.push({ pathname: "/admin/form", state: stduent });
   };
 
-  const fetchStudents = (page) => {
-    let tmpPage = page - 1;
-    axios1
-      .get(API_URL + `student?page=${tmpPage}&size=5`, {
-        headers: {
-          accessToken: window.localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        setStudents(res.data.userList.content);
-        setTotalPages(res.data.userList.totalPages);
-        setItemsCountPerPage(res.data.userList.size);
-        setTotalItemsCount(res.data.userList.totalElements);
-      })
-      .catch((err) => {
-        alert("학생 정보를 불러오지 못했습니다.");
-      });
-  };
+  // const fetchStudents = (page) => {
+  //   let tmpPage = page - 1;
+  //   axios1
+  //     .get(API_URL + `student?page=${tmpPage}&size=5`, {
+  //       headers: {
+  //         accessToken: window.localStorage.getItem("token"),
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setStudents(res.data.userList.content);
+  //       setTotalPages(res.data.userList.totalPages);
+  //       setItemsCountPerPage(res.data.userList.size);
+  //       setTotalItemsCount(res.data.userList.totalElements);
+  //     })
+  //     .catch((err) => {
+  //       alert("학생 정보를 불러오지 못했습니다.");
+  //     });
+  // };
 
   const fetchDangerList = (classCode) => {
     axios1
@@ -109,26 +129,29 @@ const MainPage = () => {
       })
       .then((res) => {
         setStudentList(res.data);
+        setStudents(res.data);
+        setTotal(res.data.length);
       })
       .catch((err) => {
         alert("학생 리스트 정보를 불러오지 못했습니다.");
       });
   };
 
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
-  };
+  // const handlePageChange = (pageNumber) => {
+  //   setActivePage(pageNumber);
+  // };
 
+  // useEffect(() => {
+  //   fetchStudents(activePage);
+  // }, [activePage]);
   useEffect(() => {
-    fetchStudents(activePage);
-  }, [activePage]);
-  useEffect(() => {
-    fetchStudents(activePage);
+    // fetchStudents(activePage);
     setIsLoading(true);
     const classCode = window.localStorage.getItem("classCode");
     fetchDangerList(classCode);
     setIsLoading(true);
     fetchStudentList(classCode);
+
     setIsLoading(false);
   }, []);
 
@@ -141,11 +164,105 @@ const MainPage = () => {
     return;
   };
 
+  const handleSingleCheck = (checked, id) => {
+    if (checked) {
+      setCheckItems((prev) => [...prev, id]);
+    } else {
+      setCheckItems(checkItems.filter((el) => el !== id));
+    }
+  };
+
+  const handleAllCheck = (checked) => {
+    if (checked) {
+      const idArray = [];
+      studentList.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
+    } else {
+      setCheckItems([]);
+    }
+  };
+
+  const mmsHandler = (event) => {
+    event.preventDefault();
+    setModalOpen(true);
+  };
+
+  const mmsTransferHandler = (event) => {
+    event.preventDefault();
+    const formData = { checkItems, messeges };
+    console.log(formData);
+    setModalOpen(false);
+    setMesseges("");
+  };
+
   return !isLoading && students.length ? (
     <div>
       <AdminHeader />
+      <CustomModal
+        open={modalOpen}
+        close={closeModal}
+        ids={checkItems}
+        header="Modal heading"
+      >
+        <form onSubmit={mmsTransferHandler}>
+          전송할 메시지를 입력하세요!
+          <div>
+            <input
+              type="textarea"
+              value={messeges}
+              onChange={messegesHandler}
+            />
+          </div>
+          <div>
+            <button type="submit" className="close">
+              전송
+            </button>
+          </div>
+        </form>
+      </CustomModal>
       <DangerList dangerList={dangerList} />
-      <StudentList studentList={studentList} />
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  onChange={(e) => handleAllCheck(e.target.checked)}
+                  checked={
+                    checkItems.length === studentList.length ? true : false
+                  }
+                />
+              </th>
+              <th>이름</th>
+              <th>전화번호</th>
+            </tr>
+          </thead>
+          <tbody>
+            {studentList?.map((data, key) => (
+              <tr key={key}>
+                <td>
+                  <input
+                    type="checkbox"
+                    name={`select-${data.id}`}
+                    onChange={(e) =>
+                      handleSingleCheck(e.target.checked, data.id)
+                    }
+                    checked={checkItems.includes(data.id) ? true : false}
+                  />
+                </td>
+                <td>{data.name}</td>
+                <td>{data.phoneNum}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <form onSubmit={mmsHandler}>
+          <button type="submit">MMS 전송</button>
+        </form>
+      </div>
+
       <div>
         <h3>학생 명단</h3>
         <form onSubmit={searchHandler}>
@@ -165,9 +282,10 @@ const MainPage = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map((student) => {
+            {students.slice(offset, offset + limit).map((student) => {
               return (
                 <ReadonlyRow
+                  key={student.id}
                   student={student}
                   deleteHandler={deleteHandler}
                   updateHandler={updateHandler}
@@ -176,8 +294,14 @@ const MainPage = () => {
             })}
           </tbody>
         </table>
-        <div>
-          <Pagination
+        <CustomPagination
+          total={total}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+        {/* <div>
+           <Pagination
             activePage={activePage}
             itemsCountPerPage={itemsCountPerPage}
             totalItemsCount={totalItemsCount}
@@ -185,8 +309,8 @@ const MainPage = () => {
             prevPageText="<"
             nextPageText=">"
             onChange={handlePageChange}
-          />
-        </div>
+          /> 
+        </div> */}
       </div>
     </div>
   ) : (
