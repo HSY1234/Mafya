@@ -11,4 +11,6 @@ import java.util.Optional;
         Optional<Attendance> findByUserAndDayAndMonthAndYear(User user, String day, String month, String year);
 
         List<Attendance> findAllByUser(User user);
+
+        List<Attendance> findAllByUserAndMonth(User user, String month);
     }

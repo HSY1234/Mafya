@@ -25,6 +25,8 @@ public interface AttendanceService {
 
     static final int DANGER = 3;
 
+    static final int SALARY = 1000000;
+
     int record(String userCode);
 
     List<AttendanceTeamRes> getTeamInfo(String teamCode);
@@ -37,7 +39,7 @@ public interface AttendanceService {
 
     List<CalendarDataRes> getCalendarData(String userCode);
 
-    AttendanceSituationRes getSituationData(String userCode);
+    AttendanceSituationRes getSituationData(String userCode, String month);
 
     List<UserInfo> getDangerList(String classCode);
 

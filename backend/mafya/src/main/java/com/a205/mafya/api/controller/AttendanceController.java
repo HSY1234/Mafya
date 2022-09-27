@@ -59,7 +59,7 @@ public class AttendanceController {
 
     @GetMapping("/situation/{userCode}/{month}")
     public ResponseEntity<?> getSituation(@PathVariable String userCode, @PathVariable String month) {
-        AttendanceSituationRes attendanceSituationResList = attendanceService.getSituationData(userCode);
+        AttendanceSituationRes attendanceSituationResList = attendanceService.getSituationData(userCode, month);
         return (new ResponseEntity<AttendanceSituationRes>(attendanceSituationResList, HttpStatus.OK));
     }
 
