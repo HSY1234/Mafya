@@ -20,4 +20,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByClassCodeAndAbsentGreaterThanEqual(String classCode, int absent);
 
+    List<User> findAllByName(String name);
 }

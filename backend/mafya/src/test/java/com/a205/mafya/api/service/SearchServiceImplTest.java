@@ -24,7 +24,7 @@ class SearchServiceImplTest {
     @Test
     void test2() {
 //        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        String content = "2반";
+        String content = "박세현 홍제민";
         SearchReq searchReq = new SearchReq(content, false, false);
 
         List<UserInfo> userInfoList = searchService.doIntegratedSearch(searchReq);

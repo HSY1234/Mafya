@@ -50,6 +50,16 @@ public class SearchServiceImpl implements SearchService {
         return (date);
     }
 
+    public Date makeDate(int day, int month) {
+        Date date = new Date();
+
+        date.setYear("2022");
+        date.setMonth(month < 10 ? "0" + month : month + "");
+        date.setDay(day < 10 ? "0" + day : day + "");
+
+        return (date);
+    }
+
     /**
      *
      * @param content
@@ -135,7 +145,21 @@ public class SearchServiceImpl implements SearchService {
         return (userInfoList);
     }
 
-        //결석을 하더라도 팀코드랑 반이 있는지 확인해봐야함
+    List<UserInfo> addNameUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+        for (int i = 0; i < userList.size(); i++) {
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
+
+            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임
+                System.out.println(">>> " + userList.get(i) + "   [ERROR3]");
+                continue;
+            }
+
+            userInfoList.add(convertUserInfo(userList.get(i)));
+        }
+
+        return (userInfoList);
+    }
+
     @Transactional
     List<UserInfo> getAbsentUserInfo(SearchReq searchReq) {
         List<UserInfo> userInfoList = new LinkedList<>();
@@ -147,16 +171,16 @@ public class SearchServiceImpl implements SearchService {
         int dateConfig = 0;
 
         String words[] = searchReq.getContent().split(" ");
+        Arrays.fill(refClass, false);
 
         for (String word : words) {     //단어 분석
             if ("결석".equals(word))   continue;
             else if (word.contains("/")) {
-                Date date = new Date();
                 StringTokenizer st = new StringTokenizer(word,"/");
+                int month = Integer.parseInt(st.nextToken());
+                int day = Integer.parseInt(st.nextToken());
 
-                date.setYear("2022");
-                date.setMonth(st.nextToken());
-                date.setDay(st.nextToken());
+                Date date = makeDate(day, month);
                 dates.add(date);
                 dateConfig++;
             }
@@ -182,7 +206,9 @@ public class SearchServiceImpl implements SearchService {
 
             if (refClass[code]) continue;       //팀이 앞서 찾아온 반에 속해 있을 시 건너 뜀
 
-            userList = addUserListByTeamCode(userList, teamCode.get(i));
+            String team = teamCode.get(i).toUpperCase();
+
+            userList = addUserListByTeamCode(userList, team);
         }
 
         //3페이즈 (검색된 유저 리스트로 결석 인원 체크)
@@ -221,16 +247,16 @@ public class SearchServiceImpl implements SearchService {
         int dateConfig = 0;
 
         String words[] = searchReq.getContent().split(" ");
+        Arrays.fill(refClass, false);
 
         for (String word : words) {     //단어 분석
             if ("지각".equals(word))   continue;
             else if (word.contains("/")) {
-                Date date = new Date();
                 StringTokenizer st = new StringTokenizer(word,"/");
+                int month = Integer.parseInt(st.nextToken());
+                int day = Integer.parseInt(st.nextToken());
 
-                date.setYear("2022");
-                date.setMonth(st.nextToken());
-                date.setDay(st.nextToken());
+                Date date = makeDate(day, month);
                 dates.add(date);
                 dateConfig++;
             }
@@ -252,7 +278,9 @@ public class SearchServiceImpl implements SearchService {
 
             if (refClass[code]) continue;       //팀이 앞서 찾아온 반에 속해 있을 시 건너 뜀
 
-            userList = addUserListByTeamCode(userList, teamCode.get(i));
+            String team = teamCode.get(i).toUpperCase();
+
+            userList = addUserListByTeamCode(userList, team);
         }
 
         //3페이즈 (검색된 유저 리스트로 결석 인원 체크)
@@ -292,15 +320,15 @@ public class SearchServiceImpl implements SearchService {
         int dateConfig = 0;
 
         String words[] = searchReq.getContent().split(" ");
+        Arrays.fill(refClass, false);
 
         for (String word : words) {     //단어 분석
             if (word.contains("/")) {
-                Date date = new Date();
                 StringTokenizer st = new StringTokenizer(word,"/");
+                int month = Integer.parseInt(st.nextToken());
+                int day = Integer.parseInt(st.nextToken());
 
-                date.setYear("2022");
-                date.setMonth(st.nextToken());
-                date.setDay(st.nextToken());
+                Date date = makeDate(day, month);
                 dates.add(date);
                 dateConfig++;
             }
@@ -312,6 +340,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         System.out.println(">>> teamCode :" + teamCode + "   classCode : " + classCode + "    Dates : " + dates + "    dateConfig : " + dateConfig);
+        System.out.println(getDate());
 
         //2페이즈 (유저 리스트 가져오기)
         for (int i = 0; i < classCode.size(); i++) {
@@ -322,7 +351,9 @@ public class SearchServiceImpl implements SearchService {
 
             if (refClass[code]) continue;       //팀이 앞서 찾아온 반에 속해 있을 시 건너 뜀
 
-            userList = addUserListByTeamCode(userList, teamCode.get(i));
+            String team = teamCode.get(i).toUpperCase();
+
+            userList = addUserListByTeamCode(userList, team);
         }
 
         //3페이즈 (검색된 유저 리스트로 결석 인원 체크)
@@ -350,6 +381,65 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    @Transactional
+    List<UserInfo> getNameCodeUserInfo(SearchReq searchReq) {
+        List<UserInfo> userInfoList = new LinkedList<>();
+        List<User> userList = new LinkedList<>();
+        List<String> names = new LinkedList<>();
+        Boolean refClass[] = new Boolean[10];
+        List<Date> dates = new LinkedList<>();
+        int dateConfig = 0;
+
+        String words[] = searchReq.getContent().split(" ");
+        Arrays.fill(refClass, false);
+
+        for (String word : words) {     //단어 분석
+            if (word.contains("/")) {
+                StringTokenizer st = new StringTokenizer(word,"/");
+                int month = Integer.parseInt(st.nextToken());
+                int day = Integer.parseInt(st.nextToken());
+
+                Date date = makeDate(day, month);
+                dates.add(date);
+                dateConfig++;
+            }
+            else
+                names.add(word);
+        }
+
+        //2페이즈 (유저 리스트 가져오기)
+        for (int i = 0; i < names.size(); i++) {
+            List<User> tmp = userRepository.findAllByName(names.get(i));
+
+            for (int j = 0; j < tmp.size(); j++)
+                userList.add(tmp.get(j));
+        }
+
+        //3페이즈 (검색된 유저 리스트로 결석 인원 체크)
+        if (dateConfig > 0) {   //지정한 날짜가 있으면
+            for (int i = 0; i < dateConfig; i++) {
+                System.out.println(dates.get(i));
+                userInfoList = addNameUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+            }
+        }
+        else  //default 오늘 하루
+            userInfoList = addNameUserInfoListByUserAndDate(userInfoList, userList, getDate());
+
+        //4페이즈 (정렬)
+        if (searchReq.getAbsentOrder()) {
+            Collections.sort(userInfoList, comparatorAbsent);
+            return (userInfoList);
+        }
+        else if (searchReq.getTradyOrder()) {
+            Collections.sort(userInfoList, comparatorTrady);
+            return (userInfoList);
+        }
+        else{
+            Collections.sort(userInfoList, comparatorDefault);
+            return (userInfoList);
+        }
+    }
+
     @Override
     public List<UserInfo> doIntegratedSearch(SearchReq searchReq) {
         int flag = analyzeContent(searchReq.getContent());
@@ -358,7 +448,8 @@ public class SearchServiceImpl implements SearchService {
         else if (flag == ABSENT) return (getAbsentUserInfo(searchReq));
         else if (flag == TRADY) return (getTradyUserInfo(searchReq));
         else if (flag == CLASS_AND_TEAM_CODE) return (getTeamAndClassCodeUserInfo(searchReq));
-        else return (null);
+        else return (getNameCodeUserInfo(searchReq));
+//        else return (null);
     }
 
     Comparator<UserInfo> comparatorAbsent = new Comparator<UserInfo>() {
