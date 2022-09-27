@@ -37,6 +37,8 @@ const TeamMember = () => {
             <tr>
               <th>이름</th>
               <th>휴대폰 번호</th>
+              <th>상태</th>
+              <th>MMS 전송</th>
             </tr>
           </thead>
           <tbody>
