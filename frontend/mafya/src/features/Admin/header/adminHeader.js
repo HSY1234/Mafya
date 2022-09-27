@@ -38,10 +38,10 @@ const AdminHeader = () => {
           Logout
         </span>
         <Link to="/enter" className={classes.navbar__item}>
-          입실
+          프로님 버전
         </Link>
         <Link to="/exit" className={classes.navbar__item}>
-          퇴실
+          컨설턴트님 버전
         </Link>
         {/* <span className={classes.navbar__item}>Logout</span> */}
       </ul>
