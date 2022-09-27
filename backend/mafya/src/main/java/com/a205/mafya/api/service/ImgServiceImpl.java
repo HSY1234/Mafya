@@ -124,7 +124,7 @@ public class ImgServiceImpl implements ImgService {
             else {
                 Optional<User> user = userRepository.findByUserCode(userCode);
 
-                if (!user.isPresent())  result.put("name", "Unknown");
+                if (!user.isPresent())  result.put("name", "디비 검색안됌. AI서버가 알려준 학번으로 검색했는데 검색 안됌. 암튼 내 잘못 아님");
                 else                    result.put("name", user.get().getName());
                 result.put("status", "0");  //얼굴 인식 됨
                 result.put("userCode", userCode);
