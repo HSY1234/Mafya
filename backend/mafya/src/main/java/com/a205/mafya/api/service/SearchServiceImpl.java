@@ -8,7 +8,6 @@ import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.AttendanceRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -167,6 +166,8 @@ public class SearchServiceImpl implements SearchService {
         }
         else  //default 오늘 하루
             userInfoList = addAbsentUserInfoListByUserAndDate(userInfoList, userList, getDate());
+
+        //4페이즈 (정렬)
 
         return (userInfoList);
     }
