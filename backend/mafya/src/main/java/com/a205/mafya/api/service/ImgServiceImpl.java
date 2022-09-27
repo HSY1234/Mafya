@@ -178,8 +178,8 @@ public class ImgServiceImpl implements ImgService {
     public Map<String, String> processFace2(MultipartFile img) {
         Map<String, String> result = new HashMap<>();
 
-        boolean status = uploadCamImg(img, "face.jpg");
-        if (status) {   //cam.jpg 업로드 성공
+        System.out.println(">>>>>>>test1");
+
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders header = new HttpHeaders();
@@ -191,14 +191,23 @@ public class ImgServiceImpl implements ImgService {
             HttpEntity<?> entity = new HttpEntity<>(body, header);
 
             UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
+        System.out.println(">>>>>>>test2");
 
             ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+
+        System.out.println(">>>>>>>test3: " + response);
+
             String userCode = response.getBody();
 
+        System.out.println(">>>>>>>test4:" + userCode);
+
+
             if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
+                System.out.println(">>>>>>>test5-1");
                 result.put("status", "1");  //얼굴 인식 안 됨
             }
             else {
+                System.out.println(">>>>>>>test5-2");
                 Optional<User> user = userRepository.findByUserCode(userCode);
 
                 if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
@@ -206,11 +215,6 @@ public class ImgServiceImpl implements ImgService {
                 result.put("status", "0");  //얼굴 인식 됨
                 result.put("userCode", userCode);
             }
-        }
-        else {
-            result.put("status", "2");  //cam.jpg 업로드 실패
-        }
-
         return (result);
     }
 }

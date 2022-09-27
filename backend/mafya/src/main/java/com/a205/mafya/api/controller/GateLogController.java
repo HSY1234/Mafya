@@ -28,6 +28,7 @@ public class GateLogController {
      * 2: 정상 입실 후 조퇴
      * 3: 정상 퇴실
      * 4: 입실 후 다시 입실 요청(요청 안 받고, 지각 시간 이후부터 다시 체크 가능)
+     * 99: 지각 누적 3번으로 결석 처리
      */
     @GetMapping(value = "/{userCode}")
     public ResponseEntity<?> inputLog(@PathVariable String userCode) {
