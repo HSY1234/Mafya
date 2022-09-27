@@ -153,7 +153,7 @@ public class ImgServiceImpl implements ImgService {
         HttpEntity<?> entity = new HttpEntity<>(body, header);
 
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(maskURL).build();
-        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
 
         String maskStatus = response.getBody();
 
