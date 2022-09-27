@@ -63,10 +63,10 @@ public class MmsServiceImpl implements MmsService{
 
         for (int i=0; i< users.size();i++){
             MessageDTO temp = new MessageDTO();
-            temp.setTo(senderPhoneNum);
+            temp.setTo(users.get(i).getPhoneNum());
             temp.setContent(mmsReq.getMessages());
             try {
-                sendSms(temp,users.get(i).getPhoneNum());
+                sendSms(temp);
             }
             catch (Exception e){
                 System.out.println(e);
@@ -104,7 +104,7 @@ public class MmsServiceImpl implements MmsService{
         return encodeBase64String;
     }
 
-    public SmsResponseDTO sendSms(MessageDTO messageDto,String phone) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public SmsResponseDTO sendSms(MessageDTO messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Long time = System.currentTimeMillis();
 
         HttpHeaders headers = new HttpHeaders();
@@ -120,7 +120,7 @@ public class MmsServiceImpl implements MmsService{
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
-                .from(phone)
+                .from(senderPhoneNum)
                 .content(messageDto.getContent())
                 .messages(messages)
                 .build();
