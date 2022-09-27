@@ -5,7 +5,7 @@ import com.a205.mafya.db.entity.Manager;
 import com.a205.mafya.db.repository.ManagerRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +14,8 @@ public class ManagerServiceimpl implements ManagerService{
     @Autowired
     ManagerRepository managerRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -24,7 +24,7 @@ public class ManagerServiceimpl implements ManagerService{
                 .name(managerReq.getName())
                 .managerCode(managerReq.getManagerCode())
                 .classCode(managerReq.getClassCode())
-                .password(passwordEncoder.encode(managerReq.getPassword()))
+                .password(managerReq.getPassword())
                 .build();
 
         managerRepository.save(manager);

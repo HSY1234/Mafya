@@ -1,16 +1,16 @@
 package com.a205.mafya.util;
 
 
-import com.a205.mafya.api.service.CustomUserDetailService;
+//import com.a205.mafya.api.service.CustomUserDetailService;
 import com.a205.mafya.db.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -29,7 +29,7 @@ public class TokenProvider {
 
     private final UserRepository userRepository;
 
-    private final CustomUserDetailService userDetailService;
+//    private final CustomUserDetailService userDetailService;
 
 
     @Value("${jwt.secret}")
@@ -48,8 +48,8 @@ public class TokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(Authentication authentication, char type) {
-        Claims claims = Jwts.claims().setSubject(authentication.getName()); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
+    public String createToken(String userCode, char type) {
+        Claims claims = Jwts.claims().setSubject(userCode); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
         Date now = new Date();
         Long expTime = 0L;
         switch (type){
@@ -77,11 +77,11 @@ public class TokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드 생성
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
+//    // token에 담겨있는 정보를 이용해 Authentication 객체를 리턴하는 메소드 생성
+//    public Authentication getAuthentication(String token) {
+//        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserPk(token));
+//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+//    }
 
     // 토큰의 유효성 + 만료일자 확인
 
