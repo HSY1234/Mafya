@@ -295,7 +295,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional
     public AttendanceSituationRes getSituationData(String userCode, String month) {
-        //여기에 교육지원금과 월별 출석 수 정보 넣어서 보내줄까 생각 중. 한다면 월별 출석 수는 DB에 따로 만들어 참고해야할 듯
         Optional<User> user = userRepository.findByUserCode(userCode);
         Optional<RefMonth> refMonth = refMonthRepository.findByDay(Integer.parseInt(month));
         AttendanceSituationRes attendanceSituationRes = new AttendanceSituationRes();

@@ -38,9 +38,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit5 Test Class" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -91,7 +91,7 @@
       <recent name="com.a205.mafya.api.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.MafyaApplication">
+  <component name="RunManager" selected="Gradle.SearchServiceImplTest.test2">
     <configuration name="AttendanceServiceImplTest.test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -138,6 +138,29 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="SearchServiceImplTest.test2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend/mafya" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.a205.mafya.api.service.SearchServiceImplTest.test2&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="MafyaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="mafya.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.a205.mafya.MafyaApplication" />
@@ -153,8 +176,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.MafyaApplication" />
+        <item itemvalue="Gradle.SearchServiceImplTest.test2" />
         <item itemvalue="Gradle.AttendanceServiceImplTest.test" />
+        <item itemvalue="Spring Boot.MafyaApplication" />
         <item itemvalue="Gradle.MafyaApplicationTests.contextLoads" />
       </list>
     </recent_temporary>
@@ -176,7 +200,7 @@
       <workItem from="1664038579190" duration="2835000" />
       <workItem from="1664041725087" duration="17627000" />
       <workItem from="1664196206501" duration="557000" />
-      <workItem from="1664241723426" duration="11686000" />
+      <workItem from="1664241723426" duration="30780000" />
     </task>
     <servers />
   </component>
@@ -193,5 +217,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/mafya/src/test/java/com/a205/mafya/api/service/SearchServiceImplTest.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
