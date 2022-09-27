@@ -341,7 +341,7 @@ function EnterCamera() {
 
                 Swal.fire({
                   icon: "success",
-                  title: `${res.data.name}님 조기퇴실하셨습니다.`,
+                  title: `${res.data.name}님 지각하셨습니다.`,
                   showConfirmButton: false,
                   timer: 2500,
                 });
