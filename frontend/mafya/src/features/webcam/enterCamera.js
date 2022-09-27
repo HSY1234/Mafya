@@ -72,22 +72,6 @@ function EnterCamera() {
                 setUserCode(null);
               }, 3000);
             });
-          } else if (attendRespone.data === 10) {
-            new Audio(abnormalenter).play();
-            Swal.fire({
-              icon: "success",
-              title: `${maskRes.data.name}님 조퇴입니다.`,
-              showConfirmButton: false,
-              timer: 3000,
-            });
-            // console.log(attendRespone.data); 이걸로 분기
-            return new Promise((resolve) => {
-              setTimeout(() => {
-                setHumanDetacting(false);
-                setFaceDetacting(false);
-                setUserCode(null);
-              }, 3000);
-            });
           } else if (attendRespone.data === 4) {
             new Audio(twoenter).play();
             Swal.fire({
@@ -339,6 +323,21 @@ function EnterCamera() {
                 });
               } else if (gateResponse.data === 2 || gateResponse.data === 11) {
                 new Audio(abnormalexit).play();
+
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.data.name}님 조기퇴실하셨습니다.`,
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
+
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    setHumanDetacting(false);
+                  }, 2500);
+                });
+              } else if (gateResponse.data === 10) {
+                new Audio(abnormalenter).play();
 
                 Swal.fire({
                   icon: "success",
