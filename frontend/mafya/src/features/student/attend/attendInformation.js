@@ -37,19 +37,26 @@ const AttendInformation = (props) => {
   return (
     !isLoading && (
       <div>
-        <h3>{props.month}월 출결 현황</h3>
+        <div className={styles.attendTitle}>{props.month}월 출결 현황</div>
         <div className={styles.attendOverlay}>
           <div className={styles.leftSide}>
             <div className={styles.userNameBox}>
               <p>
                 <span className={styles.userName}>홍제민</span> 님
+                <div className={styles.logoutBtnBox}>
+                  <button className={styles.logoutBtn}>
+                    <span class="material-symbols-outlined">logout</span>
+                  </button>
+                </div>
               </p>
             </div>
             <div>
               <div className={styles.percentageBox}>
-                <p className={styles.percentageP}>NN%</p>
+                <p className={styles.percentageP}>
+                  {(information.totalAttend / information.totalDay) * 100}%
+                </p>
               </div>
-              <div style={{ width: "170px", height: "170px" }}>
+              <div className={styles.percentageChart}>
                 <svg viewBox="0 0 200 200">
                   <circle
                     cx="100"
@@ -74,39 +81,42 @@ const AttendInformation = (props) => {
                     fill="none"
                     stroke="white"
                     strokeWidth="20"
-                    strokeDasharray={`${2 * Math.PI * 90 * 0.6} ${
-                      2 * Math.PI * 90 * 0.4
+                    strokeDasharray={`${
+                      2 *
+                      Math.PI *
+                      90 *
+                      (information.totalAttend / information.totalDay)
+                    } ${
+                      2 *
+                      Math.PI *
+                      90 *
+                      (1 - information.totalAttend / information.totalDay)
                     }`}
                     strokeDashoffset={2 * Math.PI * 90 * 0.25}
                   />
                 </svg>
               </div>
             </div>
-            <div className={styles.logoutBtnBox}>
-              <button className={styles.logoutBtn}>
-                <span class="material-symbols-outlined">power_rounded</span>
-              </button>
-            </div>
           </div>
           <div className={styles.rightSide}>
             <div className={styles.attendOneFloor}>
-              <div>
+              <div className={styles.rightSideInfoBox}>
                 <p>출석수</p>
-                <div>{information.totalAttend}</div>
+                <div className={styles.numBox}>{information.totalAttend}</div>
               </div>
-              <div>
+              <div className={styles.rightSideInfoBox}>
                 <p>교육 일수</p>
-                <div>{information.totalDay}</div>
+                <div className={styles.numBox}>{information.totalDay}</div>
               </div>
             </div>
             <div className={styles.attendTwoFloor}>
-              <div>
+              <div className={styles.rightSideInfoBox}>
                 <p>지각</p>
-                <div>{information.trady}</div>
+                <div className={styles.numBox}>{information.trady}</div>
               </div>
-              <div>
+              <div className={styles.rightSideInfoBox}>
                 <p>결석</p>
-                <div>{information.absent}</div>
+                <div className={styles.numBox}>{information.absent}</div>
               </div>
             </div>
           </div>
