@@ -27,7 +27,7 @@ const MainPage = () => {
   const offset = (page - 1) * limit;
   const [checkItems, setCheckItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [messeges, setMesseges] = useState("");
+  const [messages, setMessages] = useState("");
   const [isAbsent, setIsAbsent] = useState(false);
   const [isTrady, setIsTrady] = useState(false);
   const [search, setSearch] = useState("");
@@ -35,7 +35,7 @@ const MainPage = () => {
 
   const messegesHandler = (event) => {
     const tmpMessges = event.target.value;
-    setMesseges(tmpMessges);
+    setMessages(tmpMessges);
   };
 
   const openModal = () => {
@@ -43,7 +43,7 @@ const MainPage = () => {
   };
   const closeModal = () => {
     setModalOpen(false);
-    setMesseges("");
+    setMessages("");
   };
   // const [activePage, setActivePage] = useState(1);
   // const [totalPages, setTotalPages] = useState(null);
@@ -248,10 +248,19 @@ const MainPage = () => {
 
   const mmsTransferHandler = (event) => {
     event.preventDefault();
-    const formData = { checkItems, messeges };
-    console.log(formData);
-    setModalOpen(false);
-    setMesseges("");
+    const formData = { ids: checkItems, messages };
+    axios1
+      .post(API_URL + "mms", formData, {
+        headers: { accessToken: window.localStorage.getItem("token") },
+      })
+      .then((res) => {
+        alert("성공");
+        setModalOpen(false);
+        setMessages("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -269,7 +278,7 @@ const MainPage = () => {
             <div>
               <input
                 type="textarea"
-                value={messeges}
+                value={messages}
                 onChange={messegesHandler}
               />
             </div>
