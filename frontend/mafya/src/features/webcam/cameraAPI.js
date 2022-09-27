@@ -3,7 +3,7 @@ import { API_URL } from "../../common/api";
 
 export const detectFace = async (formData) => {
   try {
-    const response = axios.post(API_URL + "img/face/", formData, {
+    const response = await axios.post(API_URL + "img/face/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     console.log(response);
@@ -15,7 +15,7 @@ export const detectFace = async (formData) => {
 
 export const gateLog = async (userCode) => {
   try {
-    const response = axios.get(API_URL + `gatelog/${userCode}/`);
+    const response = await axios.get(API_URL + `gatelog/${userCode}/`);
 
     return response;
   } catch (error) {
@@ -25,7 +25,7 @@ export const gateLog = async (userCode) => {
 
 export const detectMasking = async (formData) => {
   try {
-    const response = axios.post(API_URL + "img/mask/", formData, {
+    const response = await axios.post(API_URL + "img/mask/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
