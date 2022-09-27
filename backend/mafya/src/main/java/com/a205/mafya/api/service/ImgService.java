@@ -19,4 +19,5 @@ public interface ImgService {
 
 //    public boolean uploadCamImg(MultipartFile img);
 
+    public Map<String, String> processFace2(MultipartFile img);
 }

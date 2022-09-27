@@ -5,11 +5,10 @@ import com.a205.mafya.db.entity.UserImg;
 import com.a205.mafya.db.repository.UserImgRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
@@ -175,4 +174,43 @@ public class ImgServiceImpl implements ImgService {
     }
 
 
+    @Override
+    public Map<String, String> processFace2(MultipartFile img) {
+        Map<String, String> result = new HashMap<>();
+
+        boolean status = uploadCamImg(img, "face.jpg");
+        if (status) {   //cam.jpg 업로드 성공
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", img);
+
+            HttpEntity<?> entity = new HttpEntity<>(body, header);
+
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
+
+            ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+            String userCode = response.getBody();
+
+            if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
+                result.put("status", "1");  //얼굴 인식 안 됨
+            }
+            else {
+                Optional<User> user = userRepository.findByUserCode(userCode);
+
+                if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
+                else                    result.put("name", user.get().getName());
+                result.put("status", "0");  //얼굴 인식 됨
+                result.put("userCode", userCode);
+            }
+        }
+        else {
+            result.put("status", "2");  //cam.jpg 업로드 실패
+        }
+
+        return (result);
+    }
 }

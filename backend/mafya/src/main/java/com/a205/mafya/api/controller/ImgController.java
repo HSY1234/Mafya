@@ -46,7 +46,7 @@ public class ImgController {
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> recognizeFace(@RequestPart(value = "file") MultipartFile multipartFile) {
-        Map<String, String> result = imgService.processFace(multipartFile);
+        Map<String, String> result = imgService.processFace2(multipartFile);
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
