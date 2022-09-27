@@ -23,6 +23,7 @@ const MainPage = () => {
   const [totalPages, setTotalPages] = useState(null);
   const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
   const [totalItemsCount, setTotalItemsCount] = useState(null);
+  const [search, setSearch] = useState("");
 
   const history = useHistory();
   const deleteHandler = (studentId) => {
@@ -37,6 +38,23 @@ const MainPage = () => {
         const index = students.findIndex((stduent) => stduent.id === studentId);
         newStudents.splice(index, 1);
         setStudents(newStudents);
+        const newDangerList = [...dangerList];
+        const dangerIndex = dangerList.findIndex(
+          (stduent) => stduent.id === studentId
+        );
+        if (dangerIndex !== -1) {
+          newDangerList.splice(dangerIndex, 1);
+          setDangerList(newDangerList);
+        }
+        const newStudentList = [...studentList];
+        const studentListIndex = studentList.findIndex(
+          (stduent) => stduent.id === studentId
+        );
+        if (studentListIndex !== -1) {
+          newStudentList.splice(studentListIndex, 1);
+          setStudentList(newStudentList);
+        }
+
         alert("학생 정보 제거");
       })
       .catch((err) => {
@@ -114,6 +132,15 @@ const MainPage = () => {
     setIsLoading(false);
   }, []);
 
+  const searchChangeHandler = (event) => {
+    const tmpSearch = event.target.value;
+    setSearch(tmpSearch);
+  };
+
+  const searchHandler = () => {
+    return;
+  };
+
   return !isLoading && students.length ? (
     <div>
       <AdminHeader />
@@ -121,6 +148,10 @@ const MainPage = () => {
       <StudentList studentList={studentList} />
       <div>
         <h3>학생 명단</h3>
+        <form onSubmit={searchHandler}>
+          <input type="text" onChange={searchChangeHandler} />
+          <button type="submit">검색</button>
+        </form>
         <table className={styles.table}>
           <thead>
             <tr>
