@@ -18,12 +18,17 @@ const TeamMemberRow = ({ student }) => {
       return "결석";
     }
   };
+
+  const MmsHandler = () => {
+    return;
+  };
   return (
     <tr>
       <td>{student.name}</td>
 
       <td>{student.phoneNum}</td>
       <td>{status(student.attendanceStatus)}</td>
+      <button onClick={MmsHandler}>전송</button>
 
       {/* 향후에 MMS 기능 넣으면 끝 */}
       {/* 
