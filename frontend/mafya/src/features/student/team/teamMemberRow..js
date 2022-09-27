@@ -1,45 +1,67 @@
+import { StylesContext } from "@material-ui/styles"
+import styles from "./teamMember.module.css"
+
 const TeamMemberRow = ({ student }) => {
   const status = (attendanceStatus) => {
     if (attendanceStatus === 0) {
-      return "입실";
+      return "입실"
     } else if (attendanceStatus === 10) {
-      return "지각";
+      return "지각"
     } else if (attendanceStatus === 11) {
-      return "조퇴";
+      return "조퇴"
     } else if (attendanceStatus === 12) {
-      return "지각";
+      return "지각"
     } else if (attendanceStatus === 2) {
-      return "조퇴";
+      return "조퇴"
     } else if (attendanceStatus === 3) {
-      return "퇴실";
+      return "퇴실"
     } else if (attendanceStatus === 4) {
-      return "오류";
+      return "오류"
     } else {
-      return "결석";
+      return "결석"
     }
-  };
+  }
 
   const MmsHandler = () => {
-    return;
-  };
+    return
+  }
   return (
-    <tr>
-      <td>{student.name}</td>
+    <div
+      className={
+        student.attendanceStatus === 0
+          ? styles.teamBoxAttend
+          : styles.teamBoxAbscent
+      }
+    >
+      <div className={styles.teamInner}>
+        <div className={styles.teamName}>
+          <span>{student.name}</span>
+        </div>
+        <div className={styles.teamStatus}>
+          <span>{status(student.attendanceStatus)}</span>
+        </div>
+        <button
+          className={
+            student.attendanceStatus === 0
+              ? styles.msgBtnFalse
+              : styles.msgBtnTrue
+          }
+          onClick={MmsHandler}
+        >
+          <span class="material-symbols-outlined">mail</span>
+        </button>
 
-      <td>{student.phoneNum}</td>
-      <td>{status(student.attendanceStatus)}</td>
-      <button onClick={MmsHandler}>전송</button>
-
-      {/* 향후에 MMS 기능 넣으면 끝 */}
-      {/* 
+        {/* 향후에 MMS 기능 넣으면 끝 */}
+        {/* 
       <td>
         <button type="button" onClick={(event) => updateHandler(student)}>
           Edit
         </button>
       
       </td> */}
-    </tr>
-  );
-};
+      </div>
+    </div>
+  )
+}
 
-export default TeamMemberRow;
+export default TeamMemberRow

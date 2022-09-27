@@ -15,7 +15,7 @@ const StudentMainPage = () => {
   return (
     month && (
       <div className={styles.wholePage}>
-        <StudentHeader />
+        {/* <StudentHeader /> */}
         <div className={styles.inner}>
           <div className={styles.statusBox}>
             <div className={styles.attendInfoBox}>
