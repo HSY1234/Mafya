@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -168,8 +165,18 @@ public class SearchServiceImpl implements SearchService {
             userInfoList = addAbsentUserInfoListByUserAndDate(userInfoList, userList, getDate());
 
         //4페이즈 (정렬)
-
-        return (userInfoList);
+        if (searchReq.getAbsentOrder()) {
+            Collections.sort(userInfoList, comparatorAbsent);
+            return (userInfoList);
+        }
+        else if (searchReq.getTradyOrder()) {
+            Collections.sort(userInfoList, comparatorTrady);
+            return (userInfoList);
+        }
+        else{
+            Collections.sort(userInfoList, comparatorDefault);
+            return (userInfoList);
+        }
     }
 
     @Override
@@ -180,4 +187,25 @@ public class SearchServiceImpl implements SearchService {
         else if (flag == ABSENT) return (getAbsentUserInfo(searchReq));
         else return (null);
     }
+
+    Comparator<UserInfo> comparatorAbsent = new Comparator<UserInfo>() {
+        @Override
+        public int compare(UserInfo a, UserInfo b) {
+            return (b.getAbsent() - a.getAbsent());
+        }
+    };
+
+    Comparator<UserInfo> comparatorTrady = new Comparator<UserInfo>() {
+        @Override
+        public int compare(UserInfo a, UserInfo b) {
+            return (b.getTrady() - a.getTrady());
+        }
+    };
+
+    Comparator<UserInfo> comparatorDefault = new Comparator<UserInfo>() {
+        @Override
+        public int compare(UserInfo a, UserInfo b) {
+            return (a.getId() - b.getId());
+        }
+    };
 }
