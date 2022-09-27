@@ -22,6 +22,12 @@
 } */
 
 /* layout */
+.attendTitle {
+  font-size: 2rem;
+  font-weight: bolder;
+  margin: 1rem 5rem;
+  color: rgba(0, 0, 0, 0.701);
+}
 .attendOverlay {
   margin: auto;
   width: 75%;
@@ -48,6 +54,11 @@
 .userName {
   font-size: 1.5rem;
 }
+.percentageChart {
+  width: 170px;
+  height: 170px;
+  margin-top: 2rem;
+}
 .percentageBox {
   position: absolute;
   margin-top: 1.4rem;
@@ -57,24 +68,43 @@
   font-size: 2.5rem;
 }
 .logoutBtnBox {
+  position: absolute;
   justify-content: center;
+  margin-top: -2.2rem;
+  margin-left: 8.7rem;
 }
 .logoutBtn {
-  width: 4rem;
+  width: 3rem;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(220, 20, 60, 0.75);
   border-radius: 0.5rem;
-  background: rgba(220, 20, 60, 0.75);
-  height: 2rem;
+  background: transparent;
+  height: 1.5rem;
   margin: 0.5rem 0;
   padding: 0%;
   font-family: "Pretendard";
   font-size: 0.5rem;
   vertical-align: baseline;
 }
-
+.logoutBtn:hover {
+  cursor: pointer;
+  scale: 1.2;
+}
 .rightSide {
   width: 100%;
+  margin-top: 2rem;
+  margin-left: 1rem;
+  text-align: center;
+}
+.rightSideInfoBox {
+  width: 5rem;
+}
+.rightSideInfoBox p {
+  margin-bottom: 0.5rem;
+  font-size: 0.88rem;
+}
+.numBox {
+  font-size: 3rem;
 }
 .attendOneFloor {
   display: flex;
