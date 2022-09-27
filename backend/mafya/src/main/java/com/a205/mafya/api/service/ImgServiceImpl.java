@@ -177,12 +177,12 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public Map<String, String> processFace2(MultipartFile img) {
-        ByteArrayResource imgResource = null;
-        try {
-            imgResource = new ByteArrayResource(img.getBytes());
-        } catch (Exception e) {
-            System.out.println("암튼 에러임 : " + e);
-        }
+//        ByteArrayResource imgResource = null;
+//        try {
+//            imgResource = new ByteArrayResource(img.getBytes());
+//        } catch (Exception e) {
+//            System.out.println("암튼 에러임 : " + e);
+//        }
 
         Map<String, String> result = new HashMap<>();
 
@@ -194,7 +194,7 @@ public class ImgServiceImpl implements ImgService {
             header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("file", imgResource);
+            body.add("file", img.getResource());
 
             HttpEntity<?> entity = new HttpEntity<>(body, header);
 
