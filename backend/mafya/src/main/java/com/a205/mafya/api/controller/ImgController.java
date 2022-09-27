@@ -46,7 +46,7 @@ public class ImgController {
 
     @PostMapping(value = "/face", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> recognizeFace(@RequestPart(value = "file") MultipartFile multipartFile) {
-        Map<String, String> result = imgService.processFace2(multipartFile);
+        Map<String, String> result = imgService.processFace(multipartFile);
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
@@ -57,18 +57,4 @@ public class ImgController {
 
         return (new ResponseEntity<Map<String, String>>(result, HttpStatus.OK));
     }
-
-//    @PostMapping(value = "/uploadCam", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-//    public ResponseEntity<?> uploadCamImg(@RequestPart(value = "file") MultipartFile multipartFile) {
-//        LocalTime now = LocalTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시 mm분 ss초");
-//        String formatedNow = now.format(formatter);
-//        System.out.println("[uploadCam] " + formatedNow + ": " + multipartFile.getContentType() + " " + multipartFile.getOriginalFilename() + " " + multipartFile.getSize());
-//
-//        boolean result =imgService.uploadCamImg(multipartFile);
-//
-//        if (result) return (new ResponseEntity<String>(SUCCESS, HttpStatus.OK));
-//        else        return (new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR));
-//    }
-
 }

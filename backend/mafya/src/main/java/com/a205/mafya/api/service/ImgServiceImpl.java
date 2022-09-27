@@ -107,31 +107,29 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public Map<String, String> processFace(MultipartFile img) {
         Map<String, String> result = new HashMap<>();
+        RestTemplate restTemplate = new RestTemplate();
 
-        boolean status = uploadCamImg(img, "face.jpg");
-        if (status) {   //cam.jpg 업로드 성공
-            RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            HttpHeaders header = new HttpHeaders();
-            HttpEntity<?> entity = new HttpEntity<>(header);
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
-            ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
-            String userCode = response.getBody();
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", img.getResource());
 
-            if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
-                result.put("status", "1");  //얼굴 인식 안 됨
-            }
-            else {
-                Optional<User> user = userRepository.findByUserCode(userCode);
+        HttpEntity<?> entity = new HttpEntity<>(body, header);
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
+        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+        String userCode = response.getBody();
 
-                if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
-                else                    result.put("name", user.get().getName());
-                result.put("status", "0");  //얼굴 인식 됨
-                result.put("userCode", userCode);
-            }
+        if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
+            result.put("status", "1");  //얼굴 인식 안 됨
         }
         else {
-            result.put("status", "2");  //cam.jpg 업로드 실패
+            Optional<User> user = userRepository.findByUserCode(userCode);
+
+            if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
+            else                    result.put("name", user.get().getName());
+            result.put("status", "0");  //얼굴 인식 됨
+            result.put("userCode", userCode);
         }
 
         return (result);
@@ -140,8 +138,6 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public Map<String, String> processMask(MultipartFile img, String userCode) {
         Map<String, String> result = new HashMap<>();
-
-
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
@@ -159,7 +155,7 @@ public class ImgServiceImpl implements ImgService {
 
         Optional<User> user = userRepository.findByUserCode(userCode);
 
-        if (!user.isPresent())  result.put("name", "Unknown");
+        if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
         else                    result.put("name", user.get().getName());
 
         System.out.println(">>> " + user.get().getName());
@@ -173,58 +169,6 @@ public class ImgServiceImpl implements ImgService {
         else   //"mask"
             result.put("status", "0");  //마스크 인식 됨
 
-
-
-        return (result);
-    }
-
-
-    @Override
-    public Map<String, String> processFace2(MultipartFile img) {
-//        ByteArrayResource imgResource = null;
-//        try {
-//            imgResource = new ByteArrayResource(img.getBytes());
-//        } catch (Exception e) {
-//            System.out.println("암튼 에러임 : " + e);
-//        }
-
-        Map<String, String> result = new HashMap<>();
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", img.getResource());
-
-        HttpEntity<?> entity = new HttpEntity<>(body, header);
-
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(faceURL).build();
-
-
-        ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
-
-
-
-        String userCode = response.getBody();
-
-
-
-
-        if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
-            System.out.println(">>>>>>>test5-1");
-            result.put("status", "1");  //얼굴 인식 안 됨
-        }
-        else {
-            System.out.println(">>>>>>>test5-2");
-            Optional<User> user = userRepository.findByUserCode(userCode);
-
-            if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
-            else                    result.put("name", user.get().getName());
-            result.put("status", "0");  //얼굴 인식 됨
-            result.put("userCode", userCode);
-        }
         return (result);
     }
 }

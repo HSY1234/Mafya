@@ -16,8 +16,4 @@ public interface ImgService {
     public Map<String, String> processFace(MultipartFile img);
 
     public Map<String, String> processMask(MultipartFile img, String userCode);
-
-//    public boolean uploadCamImg(MultipartFile img);
-
-    public Map<String, String> processFace2(MultipartFile img);
 }
