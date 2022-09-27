@@ -6,8 +6,10 @@ import com.a205.mafya.api.response.CalendarDataRes;
 import com.a205.mafya.db.dto.Date;
 import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.Attendance;
+import com.a205.mafya.db.entity.RefMonth;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.db.repository.AttendanceRepository;
+import com.a205.mafya.db.repository.RefMonthRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +31,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RefMonthRepository refMonthRepository;
 
     private String getTime() {
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
@@ -288,18 +293,39 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public AttendanceSituationRes getSituationData(String userCode) {
+    @Transactional
+    public AttendanceSituationRes getSituationData(String userCode, String month) {
         //여기에 교육지원금과 월별 출석 수 정보 넣어서 보내줄까 생각 중. 한다면 월별 출석 수는 DB에 따로 만들어 참고해야할 듯
         Optional<User> user = userRepository.findByUserCode(userCode);
+        Optional<RefMonth> refMonth = refMonthRepository.findByDay(Integer.parseInt(month));
         AttendanceSituationRes attendanceSituationRes = new AttendanceSituationRes();
 
-        if (!user.isPresent())  return (attendanceSituationRes);
+        if (!user.isPresent() || !refMonth.isPresent())  return (attendanceSituationRes);
 
-        attendanceSituationRes.setAbsent(user.get().getAbsent());
-        attendanceSituationRes.setTrady(user.get().getTardy());
-        attendanceSituationRes.setTotalDay(-1);
-        attendanceSituationRes.setTotalAttend(-1);
-        attendanceSituationRes.setTrady(-1);
+        List<Attendance> attendanceList = attendanceRepository.findAllByUserAndMonth(user.get(), month);
+        int trady = 0, absent = 0, totalDay, totalAttend, money;
+
+        for (int i = 0; i < attendanceList.size(); i++) {
+            int type = attendanceList.get(i).getType();
+
+            if (type == TRADY_AND_EARLYLEAVE || type == TRADY_AND_NORMALEXIT || type == ENTRANCE_AND_EARLYLEAVE)  trady++;   //11, 12, 2
+            else if (type == ABSENT) absent++;
+        }
+
+        if (trady >= 3) {
+            absent += (trady / 3);
+            trady = trady - ((trady / 3) * 3);
+        }
+
+        totalDay = refMonth.get().getDay();
+        totalAttend = totalDay - absent;
+        money = (totalAttend / totalDay) * SALARY;
+
+        attendanceSituationRes.setAbsent(absent);
+        attendanceSituationRes.setTrady(trady);
+        attendanceSituationRes.setTotalDay(totalDay);
+        attendanceSituationRes.setTotalAttend(totalAttend);
+        attendanceSituationRes.setMoney(money);
 
         return (attendanceSituationRes);
     }
@@ -337,7 +363,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         List<User> userList = userRepository.findAllByClassCode(classCode);
         for (User user : userList) {
-            System.out.println(">>> " + user);
             Date date = getDate();
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(user, date.getDay(), date.getMonth(), date.getYear());
 
