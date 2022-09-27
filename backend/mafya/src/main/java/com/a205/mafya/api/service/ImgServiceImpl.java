@@ -5,6 +5,7 @@ import com.a205.mafya.db.entity.UserImg;
 import com.a205.mafya.db.repository.UserImgRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -176,6 +177,13 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public Map<String, String> processFace2(MultipartFile img) {
+        ByteArrayResource imgResource = null;
+        try {
+            imgResource = new ByteArrayResource(img.getBytes());
+        } catch (Exception e) {
+            System.out.println("암튼 에러임 : " + e);
+        }
+
         Map<String, String> result = new HashMap<>();
 
         System.out.println(">>>>>>>test1");
@@ -186,7 +194,7 @@ public class ImgServiceImpl implements ImgService {
             header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("file", img);
+            body.add("file", imgResource);
 
             HttpEntity<?> entity = new HttpEntity<>(body, header);
 
