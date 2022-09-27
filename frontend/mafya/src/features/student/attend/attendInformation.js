@@ -1,10 +1,11 @@
-import axios from "axios"
-import { useEffect } from "react"
-import { useState } from "react"
-import { API_URL } from "../../../common/api"
-import axios1 from "../../../common/api/axios"
-import styles from "./attendInformation.module.css"
-import styled from "@emotion/styled"
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
+import { API_URL } from "../../../common/api";
+import axios1 from "../../../common/api/axios";
+import styles from "./attendInformation.module.css";
+import styled from "@emotion/styled";
+import { useHistory } from "react-router-dom";
 
 const AnimatedCircle = styled.circle`
   animation: circle-fill-animation 2s ease;
@@ -14,13 +15,30 @@ const AnimatedCircle = styled.circle`
       stroke-dasharray: 0 ${2 * Math.PI * 90};
     }
   }
-`
+`;
 const AttendInformation = (props) => {
-  const [information, setInformation] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
+  const [information, setInformation] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
+
+  const logoutHandler = (event) => {
+    axios1
+      .get(API_URL + "student/logout/", {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        window.localStorage.clear();
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    const userCode = localStorage.getItem("userCode")
+    const userCode = localStorage.getItem("userCode");
 
     axios1
       .get(API_URL + `attendance/situation/${userCode}/${props.month}`, {
@@ -29,10 +47,10 @@ const AttendInformation = (props) => {
         },
       })
       .then((res) => {
-        setInformation(res.data)
-      })
-    setIsLoading(false)
-  }, [])
+        setInformation(res.data);
+      });
+    setIsLoading(false);
+  }, []);
 
   return (
     !isLoading && (
@@ -44,8 +62,8 @@ const AttendInformation = (props) => {
               <p>
                 <span className={styles.userName}>홍제민</span> 님
                 <div className={styles.logoutBtnBox}>
-                  <button className={styles.logoutBtn}>
-                    <span class="material-symbols-outlined">logout</span>
+                  <button className={styles.logoutBtn} onClick={logoutHandler}>
+                    <span className="material-symbols-outlined">logout</span>
                   </button>
                 </div>
               </p>
@@ -143,7 +161,7 @@ const AttendInformation = (props) => {
         </table> */}
       </div>
     )
-  )
-}
+  );
+};
 
-export default AttendInformation
+export default AttendInformation;
