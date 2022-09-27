@@ -89,7 +89,11 @@ const StudentForm = () => {
       return;
     }
     axios
-      .get(API_URL + `student/checkId/${tempUserCode}`)
+      .get(API_URL + `student/checkId/${tempUserCode}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         if (res.data.resultCode === 0) {
           alert("사용 가능한 학번입니다.");
