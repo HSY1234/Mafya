@@ -6,15 +6,17 @@ import StudentHeader from "./header/studentHeader";
 import TeamMember from "./team/teamMember";
 import styles from "./studentMainPage.module.css";
 import CustomModal from "../../common/modal/modal";
+import axios1 from "../../common/api/axios";
+import { API_URL } from "../../common/api";
 
 const StudentMainPage = () => {
   const [month, setMonth] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [messeges, setMesseges] = useState("");
+  const [messages, setMessages] = useState("");
   const [ids, setIds] = useState(null);
   const messegesHandler = (event) => {
     const tmpMessges = event.target.value;
-    setMesseges(tmpMessges);
+    setMessages(tmpMessges);
   };
 
   const openModal = (event) => {
@@ -22,7 +24,7 @@ const StudentMainPage = () => {
   };
   const closeModal = () => {
     setModalOpen(false);
-    setMesseges("");
+    setMessages("");
   };
 
   const mmsHandler = (event) => {
@@ -31,11 +33,21 @@ const StudentMainPage = () => {
 
   const mmsTransferHandler = (event) => {
     event.preventDefault();
-    const formData = { ids: [ids], messeges };
+    const formData = { ids: [ids], messages };
     console.log(formData);
-    setModalOpen(false);
-    setMesseges("");
-    setIds(null);
+    axios1
+      .post(API_URL + "mms", formData, {
+        headers: { accessToken: window.localStorage.getItem("token") },
+      })
+      .then((res) => {
+        alert("성공");
+        setModalOpen(false);
+        setMessages("");
+        setIds(null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -52,7 +64,7 @@ const StudentMainPage = () => {
             <div>
               <input
                 type="textarea"
-                value={messeges}
+                value={messages}
                 onChange={messegesHandler}
               />
             </div>
