@@ -118,13 +118,13 @@ public class ImgServiceImpl implements ImgService {
             ResponseEntity<String> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
             String userCode = response.getBody();
 
-            if ("Unknown".equals(userCode)) {
+            if ("Unknown".equals(userCode) || "no face".equals(userCode)) {
                 result.put("status", "1");  //얼굴 인식 안 됨
             }
             else {
                 Optional<User> user = userRepository.findByUserCode(userCode);
 
-                if (!user.isPresent())  result.put("name", "[" + userCode + "] 디비 검색안됌. AI서버가 알려준 학번으로 검색했는데 검색 안됌. 암튼 내 잘못 아님");
+                if (!user.isPresent())  result.put("name", "[" + userCode + "] DB 검색 불가.");
                 else                    result.put("name", user.get().getName());
                 result.put("status", "0");  //얼굴 인식 됨
                 result.put("userCode", userCode);
