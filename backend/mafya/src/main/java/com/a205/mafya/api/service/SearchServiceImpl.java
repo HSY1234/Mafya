@@ -104,6 +104,23 @@ public class SearchServiceImpl implements SearchService {
         return (userInfoList);
     }
 
+    List<UserInfo> addTradyUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+        for (int i = 0; i < userList.size(); i++) {
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
+
+            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임
+                System.out.println(">>> " + userList.get(i) + "   [ERROR]");
+                continue;
+            }
+
+            if (attendance.get().getType() == 10 || attendance.get().getType() == 11 || attendance.get().getType() == 12 || attendance.get().getType() == 2) {
+                userInfoList.add(convertUserInfo(userList.get(i)));
+            }
+        }
+
+        return (userInfoList);
+    }
+
     //결석을 하더라도 팀코드랑 반이 있는지 확인해봐야함
     @Transactional
     List<UserInfo> getAbsentUserInfo(SearchReq searchReq) {
@@ -179,12 +196,83 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    @Transactional
+    List<UserInfo> getTradyUserInfo(SearchReq searchReq) {
+        List<UserInfo> userInfoList = new LinkedList<>();
+        List<User> userList = new LinkedList<>();
+        List<String> teamCode = new LinkedList<>();
+        List<String> classCode = new LinkedList<>();
+        Boolean refClass[] = new Boolean[10];
+        List<Date> dates = new LinkedList<>();
+        int dateConfig = 0;
+
+        String words[] = searchReq.getContent().split(" ");
+
+        for (String word : words) {     //단어 분석
+            if ("지각".equals(word))   continue;
+            else if (word.contains("/")) {
+                Date date = new Date();
+                StringTokenizer st = new StringTokenizer(word,"/");
+
+                date.setYear("2022");
+                date.setMonth(st.nextToken());
+                date.setDay(st.nextToken());
+                dates.add(date);
+                dateConfig++;
+            }
+            else if (word.matches("^[0-9].*")) {
+                classCode.add(word.substring(0, 1));
+                refClass[Integer.parseInt(word.substring(0, 1))] = true;
+            }
+            else if (word.matches("^[a-zA-Z].*"))  teamCode.add(word);
+        }
+
+        System.out.println(">>> teamCode :" + teamCode + "   classCode : " + classCode + "    Dates : " + dates + "    dateConfig : " + dateConfig);
+
+        //2페이즈 (유저 리스트 가져오기)
+        for (int i = 0; i < classCode.size(); i++) {
+            userList = addUserListByClassCode(userList, classCode.get(i));
+        }
+        for (int i = 0; i < teamCode.size(); i++) {
+            int code = teamCode.get(i).charAt(1) - '0';
+
+            if (refClass[code]) continue;       //팀이 앞서 찾아온 반에 속해 있을 시 건너 뜀
+
+            userList = addUserListByTeamCode(userList, teamCode.get(i));
+        }
+
+        //3페이즈 (검색된 유저 리스트로 결석 인원 체크)
+        if (dateConfig > 0) {   //지정한 날짜가 있으면
+            for (int i = 0; i < dateConfig; i++) {
+                System.out.println(dates.get(i));
+                userInfoList = addTradyUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+            }
+        }
+        else  //default 오늘 하루
+            userInfoList = addTradyUserInfoListByUserAndDate(userInfoList, userList, getDate());
+
+        //4페이즈 (정렬)
+        if (searchReq.getAbsentOrder()) {
+            Collections.sort(userInfoList, comparatorAbsent);
+            return (userInfoList);
+        }
+        else if (searchReq.getTradyOrder()) {
+            Collections.sort(userInfoList, comparatorTrady);
+            return (userInfoList);
+        }
+        else{
+            Collections.sort(userInfoList, comparatorDefault);
+            return (userInfoList);
+        }
+    }
+
     @Override
     public List<UserInfo> doIntegratedSearch(SearchReq searchReq) {
         int flag = analyzeContent(searchReq.getContent());
 
         if (flag == ERROR)  return (new LinkedList<>());
         else if (flag == ABSENT) return (getAbsentUserInfo(searchReq));
+        else if (flag == TRADY) return (getTradyUserInfo(searchReq));
         else return (null);
     }
 
