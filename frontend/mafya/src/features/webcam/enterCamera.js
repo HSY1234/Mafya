@@ -8,15 +8,22 @@ import axios from "axios";
 import { API_URL } from "../../common/api";
 import styles from "./webcam.module.css";
 import { detectFace, detectMasking, gateLog } from "./cameraAPI";
-import humanDetactMp3 from "./humandetect.m4a";
-import attendMp3 from "./attend.m4a";
-import maskMp3 from "./mask.m4a";
 
+import notenroll from "./female/enter/notenroll.mp3";
+import putmask from "./female/enter/putmask.mp3";
+import normalenter from "./female/enter/normalenter.mp3";
+import abnormalenter from "./female/enter/abnormalenter.mp3";
+import twoenter from "./female/enter/twoenter.mp3";
+import correctmask from "./female/enter/correctmask.mp3";
+import abnormalexit from "./female/exit/abnormalexit.mp3";
+import normalexit from "./female/exit/normalexit.mp3";
+import notenroll1 from "./female/exit/notenroll1.mp3";
 const Swal = require("sweetalert2");
 
 function EnterCamera() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [timerId, setTimerId] = useState(null);
   const [humanDetacting, setHumanDetacting] = useState(false);
   const [faceDetacting, setFaceDetacting] = useState(false);
@@ -48,23 +55,59 @@ function EnterCamera() {
         formData.set("userCode", userCode);
         const maskRes = await detectMasking(formData);
         if (maskRes.data.status === "0") {
-          new Audio(attendMp3).play();
-          Swal.fire({
-            icon: "success",
-            title: `${maskRes.data.name}님 출석되었습니다.`,
-            showConfirmButton: false,
-            timer: 3000,
-          });
-          // const attendRespone = gateLog(userCode);
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              setHumanDetacting(false);
-              setFaceDetacting(false);
-              setUserCode(null);
-            }, 3000);
-          });
+          const attendRespone = await gateLog(userCode);
+          if (attendRespone.data === 0) {
+            new Audio(normalenter).play();
+            Swal.fire({
+              icon: "success",
+              title: `${maskRes.data.name}님 출석되었습니다.`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            // console.log(attendRespone.data); 이걸로 분기
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                setHumanDetacting(false);
+                setFaceDetacting(false);
+                setUserCode(null);
+              }, 3000);
+            });
+          } else if (attendRespone.data === 10) {
+            new Audio(abnormalenter).play();
+            Swal.fire({
+              icon: "success",
+              title: `${maskRes.data.name}님 조퇴입니다.`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            // console.log(attendRespone.data); 이걸로 분기
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                setHumanDetacting(false);
+                setFaceDetacting(false);
+                setUserCode(null);
+              }, 3000);
+            });
+          } else if (attendRespone.data === 4) {
+            new Audio(twoenter).play();
+            Swal.fire({
+              icon: "success",
+              title: `${maskRes.data.name}님 두 번 입실하셨습니다.`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            // console.log(attendRespone.data); 이걸로 분기
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                setHumanDetacting(false);
+                setFaceDetacting(false);
+                setUserCode(null);
+              }, 3000);
+            });
+          }
         } else if (maskRes.data.status === "1") {
           // 모달 창
+          new Audio(correctmask).play();
           Swal.fire({
             icon: "error",
             title: "오류",
@@ -79,6 +122,7 @@ function EnterCamera() {
             }, 3000);
           });
         } else if (maskRes.data.status === "2") {
+          new Audio(correctmask).play();
           Swal.fire({
             icon: "error",
             title: "오류",
@@ -93,6 +137,7 @@ function EnterCamera() {
             }, 3000);
           });
         } else {
+          new Audio(correctmask).play();
           Swal.fire({
             icon: "error",
             title: "오류",
@@ -169,7 +214,7 @@ function EnterCamera() {
 
             if (res.data.status === "0") {
               // const gateResponse = await gateLog(res.data.userCode);
-              new Audio(maskMp3).play();
+              new Audio(putmask).play();
               Swal.fire({
                 icon: "success",
                 title: `${res.data.name}님 어서오세요.`,
@@ -183,6 +228,7 @@ function EnterCamera() {
                 }, 6000);
               });
             } else if (res.data.status === "1") {
+              new Audio(notenroll).play();
               Swal.fire({
                 icon: "error",
                 title: "오류",
@@ -197,6 +243,132 @@ function EnterCamera() {
                 }, 2500);
               });
             } else if (res.data.status === "2") {
+              new Audio(notenroll).play();
+              Swal.fire({
+                icon: "error",
+                title: "오류",
+                text: "중앙으로 와주세요",
+                showConfirmButton: false,
+                timer: 2500,
+              });
+              return new Promise((resolve) => {
+                setTimeout(() => {
+                  setHumanDetacting(false);
+                }, 2500);
+              });
+            }
+          }, 2000);
+        });
+      }
+    }
+  };
+
+  const detect1 = async (net) => {
+    // Check data is available
+    if (
+      typeof webcamRef.current !== "undefined" &&
+      webcamRef.current !== null &&
+      webcamRef.current.video.readyState === 4
+    ) {
+      // Get Video Properties
+      const video = webcamRef.current.video;
+      const videoWidth = webcamRef.current.video.videoWidth;
+      const videoHeight = webcamRef.current.video.videoHeight;
+
+      // Set video width
+      webcamRef.current.video.width = videoWidth;
+      webcamRef.current.video.height = videoHeight;
+
+      // Set canvas height and width
+      canvasRef.current.width = videoWidth;
+      canvasRef.current.height = videoHeight;
+
+      // Make Detections
+      const obj = await net.detect(video);
+
+      // Draw mesh
+
+      const ctx = canvasRef.current.getContext("2d");
+
+      console.log(obj);
+      const findHuman = obj
+        ? obj.filter((box) => {
+            return box.class === "person" && box.score >= 0.8;
+          })
+        : null;
+
+      let humanDetact = findHuman
+        ? findHuman.filter((box) => {
+            return (
+              15 <= box.bbox[0] <= 160 &&
+              15 <= box.bbox[1] <= 160 &&
+              box.bbox[2] >= 350 &&
+              box.bbox[3] >= 300
+            );
+          })
+        : [];
+      console.log(humanDetact);
+      if (humanDetact.length > 0) {
+        setHumanDetacting(true);
+        // new Audio(humanDetactMp3).play();
+        return new Promise((resolve) => {
+          setTimeout(async () => {
+            const imageUrl = webcamRef.current.getScreenshot();
+            let imageFile = dataURLtoFile(imageUrl, "test.jpeg");
+            let formData = new FormData();
+            formData.set("file", imageFile);
+            const res = await detectFace(formData);
+
+            if (res.data.status === "0") {
+              let gateResponse = await gateLog(res.data.userCode);
+
+              if (gateResponse.data === 3 || gateResponse.data === 12) {
+                new Audio(normalexit).play();
+
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.data.name}님 퇴실하셨습니다.`,
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
+
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    setHumanDetacting(false);
+                  }, 2500);
+                });
+              } else if (gateResponse.data === 2 || gateResponse.data === 11) {
+                new Audio(abnormalexit).play();
+
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.data.name}님 조기퇴실하셨습니다.`,
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
+
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    setHumanDetacting(false);
+                  }, 2500);
+                });
+              }
+            } else if (res.data.status === "1") {
+              new Audio(notenroll).play();
+              Swal.fire({
+                icon: "error",
+                title: "오류",
+                text: "DB에 등록된 사용자가 아닙니다.",
+                showConfirmButton: false,
+                timer: 2500,
+              });
+              return new Promise((resolve) => {
+                setTimeout(() => {
+                  setHumanDetacting(false);
+                }, 2500);
+              });
+            } else if (res.data.status === "2") {
+              new Audio(notenroll1).play();
               Swal.fire({
                 icon: "error",
                 title: "오류",
@@ -217,16 +389,30 @@ function EnterCamera() {
   };
 
   const defineInterval = (net) => {
-    if (net) {
-      const timeId = setInterval(() => {
-        detect(net);
-      }, 1000);
-      setTimerId(timeId);
-    }
-    if (humanDetacting) {
-      console.log("인간 인식", net);
-      clearInterval(timerId);
-      setTimerId(null);
+    if (currentTime.getHours() < 9) {
+      if (net) {
+        const timeId = setInterval(() => {
+          detect(net);
+        }, 1000);
+        setTimerId(timeId);
+      }
+      if (humanDetacting) {
+        console.log("인간 인식", net);
+        clearInterval(timerId);
+        setTimerId(null);
+      }
+    } else {
+      if (net) {
+        const timeId = setInterval(() => {
+          detect1(net);
+        }, 1000);
+        setTimerId(timeId);
+      }
+      if (humanDetacting) {
+        console.log("인간 인식", net);
+        clearInterval(timerId);
+        setTimerId(null);
+      }
     }
   };
   useEffect(() => {
@@ -250,6 +436,13 @@ function EnterCamera() {
       defineInterval(null);
     }
   }, [humanDetacting, model]);
+
+  useEffect(() => {
+    const currentTimerId = setInterval(() => {
+      setCurrentTime(new Date());
+    });
+    return clearInterval(currentTimerId);
+  }, []);
 
   return (
     <div className={styles.mainPageContainer}>

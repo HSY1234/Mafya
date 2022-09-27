@@ -8,9 +8,10 @@ import axios from "axios";
 import { API_URL } from "../../common/api";
 import styles from "./webcam.module.css";
 import { detectFace, gateLog } from "./cameraAPI";
-import humanDetactMp3 from "./humandetect.m4a";
-import exitMp3 from "./exit.m4a";
-
+import abnormalexit from "./female/exit/abnormalexit.mp3";
+import normalexit from "./female/exit/normalexit.mp3";
+import notenroll1 from "./female/exit/notenroll1.mp3";
+import notenroll from "./female/exit/notenroll.mp3";
 const Swal = require("sweetalert2");
 
 function ExitCamera() {
@@ -94,21 +95,38 @@ function ExitCamera() {
             const res = await detectFace(formData);
 
             if (res.data.status === "0") {
-              // const gateResponse = await gateLog(res.data.userCode);
-              new Audio(exitMp3).play();
-              Swal.fire({
-                icon: "success",
-                title: `${res.data.name}님 퇴실되었습니다.`,
-                showConfirmButton: false,
-                timer: 2500,
-              });
+              const gateResponse = await gateLog(res.data.userCode);
+              if (gateResponse.data === 3 || gateResponse.data === 12) {
+                new Audio(normalexit).play();
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.data.name}님 퇴실하셨습니다.`,
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
 
-              return new Promise((resolve) => {
-                setTimeout(() => {
-                  setHumanDetacting(false);
-                }, 2500);
-              });
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    setHumanDetacting(false);
+                  }, 2500);
+                });
+              } else if (gateResponse.data === 2 || gateResponse.data === 11) {
+                new Audio(abnormalexit).play();
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.data.name}님 조기퇴실하셨습니다.`,
+                  showConfirmButton: false,
+                  timer: 2500,
+                });
+
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    setHumanDetacting(false);
+                  }, 2500);
+                });
+              }
             } else if (res.data.status === "1") {
+              new Audio(notenroll).play();
               Swal.fire({
                 icon: "error",
                 title: "오류",
@@ -122,6 +140,7 @@ function ExitCamera() {
                 }, 2500);
               });
             } else if (res.data.status === "2") {
+              new Audio(notenroll1).play();
               Swal.fire({
                 icon: "error",
                 title: "오류",
