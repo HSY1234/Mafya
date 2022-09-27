@@ -10,9 +10,8 @@ public interface SearchService {
     static final int ERROR = -1;
     static final int ABSENT = 1;
     static final int TRADY = 2;
-    static final int CLASS_CODE = 3;
-    static final int TEAM_CODE = 4;
-    static final int NAME = 5;
+    static final int CLASS_AND_TEAM_CODE = 3;
+    static final int NAME = 4;
 
     List<UserInfo> doIntegratedSearch(SearchReq searchReq);
 }

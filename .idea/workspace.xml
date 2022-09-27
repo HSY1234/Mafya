@@ -200,7 +200,7 @@
       <workItem from="1664038579190" duration="2835000" />
       <workItem from="1664041725087" duration="17627000" />
       <workItem from="1664196206501" duration="557000" />
-      <workItem from="1664241723426" duration="32822000" />
+      <workItem from="1664241723426" duration="34030000" />
     </task>
     <servers />
   </component>
@@ -217,16 +217,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/backend/mafya/src/test/java/com/a205/mafya/api/service/SearchServiceImplTest.java</url>
-          <line>27</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
