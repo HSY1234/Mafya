@@ -54,6 +54,7 @@ const StudentMainPage = () => {
     let today = new Date();
     setMonth(today.getMonth() + 1);
   }, []);
+
   return (
     month && (
       <div className={styles.wholePage}>

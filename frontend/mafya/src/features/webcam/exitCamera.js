@@ -18,6 +18,7 @@ import correctmask from "./male/enter/correctmask.mp3";
 import abnormalexit from "./male/exit/abnormalexit.mp3";
 import normalexit from "./male/exit/normalexit.mp3";
 import notenroll1 from "./male/exit/notenroll1.mp3";
+import absent from "./male/exit/absent.mp3";
 const Swal = require("sweetalert2");
 
 function ExitCamera() {
@@ -247,6 +248,100 @@ function ExitCamera() {
     }
   };
 
+  const lateDetectMask = (userCode, attendRespone) => {
+    setFaceDetacting(true);
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const imageUrl = webcamRef.current.getScreenshot();
+        let imageFile = dataURLtoFile(imageUrl, "test1.jpeg");
+        let formData = new FormData();
+        formData.set("file", imageFile);
+        formData.set("userCode", userCode);
+        const maskRes = await detectMasking(formData);
+        if (maskRes.data.status === "0") {
+          if (attendRespone === 10) {
+            new Audio(abnormalenter).play();
+            Swal.fire({
+              icon: "success",
+              title: `${maskRes.data.name}님 지각입니다.`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            // console.log(attendRespone.data); 이걸로 분기
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                setHumanDetacting(false);
+                setFaceDetacting(false);
+                setUserCode(null);
+              }, 3000);
+            });
+          } else if (attendRespone === 99) {
+            new Audio(absent).play();
+            Swal.fire({
+              icon: "success",
+              title: `${maskRes.data.name}님 지각 누적으로 결석했습니다.`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            // console.log(attendRespone.data); 이걸로 분기
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                setHumanDetacting(false);
+                setFaceDetacting(false);
+                setUserCode(null);
+              }, 3000);
+            });
+          }
+        } else if (maskRes.data.status === "1") {
+          // 모달 창
+          new Audio(correctmask).play();
+          Swal.fire({
+            icon: "error",
+            title: "오류",
+            text: "마스크를 착용하지 않았습니다.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              setHumanDetacting(false);
+              setFaceDetacting(false);
+            }, 3000);
+          });
+        } else if (maskRes.data.status === "2") {
+          new Audio(correctmask).play();
+          Swal.fire({
+            icon: "error",
+            title: "오류",
+            text: "마스크를 착용하지 않았습니다.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              setHumanDetacting(false);
+              setFaceDetacting(false);
+            }, 3000);
+          });
+        } else {
+          new Audio(correctmask).play();
+          Swal.fire({
+            icon: "error",
+            title: "오류",
+            text: "마스크를 착용하지 않았습니다.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              setHumanDetacting(false);
+              setFaceDetacting(false);
+            }, 3000);
+          });
+        }
+      });
+    }, 6000);
+  };
   const detect1 = async (net) => {
     // Check data is available
     if (
@@ -336,20 +431,21 @@ function ExitCamera() {
                     setHumanDetacting(false);
                   }, 2500);
                 });
-              } else if (gateResponse.data === 10) {
-                new Audio(abnormalenter).play();
+              } else if (gateResponse.data === 10 || gateResponse.data === 99) {
+                new Audio(putmask).play();
 
                 Swal.fire({
                   icon: "success",
-                  title: `${res.data.name}님 지각하셨습니다.`,
+                  title: `${res.data.name}님 입실했습니다.`,
                   showConfirmButton: false,
                   timer: 2500,
                 });
 
+                setUserCode(res.data.userCode);
                 return new Promise((resolve) => {
                   setTimeout(() => {
-                    setHumanDetacting(false);
-                  }, 2500);
+                    lateDetectMask(res.data.userCode, gateResponse.data);
+                  }, 6000);
                 });
               }
             } else if (res.data.status === "1") {
