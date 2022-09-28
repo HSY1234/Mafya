@@ -20,6 +20,7 @@
   overflow: hidden;
   transform: translate3d(0, 0, 0);
   font-family: "Pretendard-Regular";
+  cursor: default;
 }
 .wholePage:after {
   z-index: 11;
