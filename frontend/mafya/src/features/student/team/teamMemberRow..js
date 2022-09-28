@@ -1,31 +1,31 @@
-import { StylesContext } from "@material-ui/styles";
-import { useState } from "react";
-import CustomModal from "../../../common/modal/modal";
-import styles from "./teamMember.module.css";
+import { StylesContext } from "@material-ui/styles"
+import { useState } from "react"
+import CustomModal from "../../../common/modal/modal"
+import styles from "./teamMember.module.css"
 
 const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
   const status = (attendanceStatus) => {
     if (attendanceStatus === 0) {
-      return "입실";
+      return "입실"
     } else if (attendanceStatus === 10) {
-      return "지각";
+      return "지각"
     } else if (attendanceStatus === 11) {
-      return "조퇴";
+      return "조퇴"
     } else if (attendanceStatus === 12) {
-      return "지각";
+      return "지각"
     } else if (attendanceStatus === 2) {
-      return "조퇴";
+      return "조퇴"
     } else if (attendanceStatus === 3) {
-      return "퇴실";
+      return "퇴실"
     } else if (attendanceStatus === 4) {
-      return "오류";
+      return "오류"
     } else {
-      return "결석";
+      return "결석"
     }
-  };
+  }
 
   return (
-    <tbody
+    <div
       className={
         student.attendanceStatus === 0
           ? styles.teamBoxAttend
@@ -46,8 +46,8 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
               : styles.msgBtnTrue
           }
           onClick={() => {
-            mmsHandler();
-            setIds(student.id);
+            mmsHandler()
+            setIds(student.id)
           }}
         >
           <span className="material-symbols-outlined">mail</span>
@@ -62,8 +62,8 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
       
       </td> */}
       </div>
-    </tbody>
-  );
-};
+    </div>
+  )
+}
 
-export default TeamMemberRow;
+export default TeamMemberRow
