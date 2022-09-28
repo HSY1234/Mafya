@@ -19,6 +19,7 @@ const AnimatedCircle = styled.circle`
 const AttendInformation = (props) => {
   const [information, setInformation] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState("");
   const history = useHistory();
 
   const logoutHandler = (event) => {
@@ -49,6 +50,7 @@ const AttendInformation = (props) => {
       .then((res) => {
         setInformation(res.data);
       });
+
     setIsLoading(false);
   }, []);
 
