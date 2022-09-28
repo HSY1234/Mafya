@@ -27,7 +27,7 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
   return (
     <div
       className={
-        student.attendanceStatus === 0
+        (student.attendanceStatus === 0) | (student.attendanceStatus === 3)
           ? styles.teamBoxAttend
           : styles.teamBoxAbscent
       }
@@ -41,7 +41,7 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
         </div>
         <button
           className={
-            student.attendanceStatus === 0
+            (student.attendanceStatus === 0) | (student.attendanceStatus === 3)
               ? styles.msgBtnFalse
               : styles.msgBtnTrue
           }
