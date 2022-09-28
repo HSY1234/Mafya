@@ -260,6 +260,21 @@ const StudentForm = () => {
     }
   };
 
+  const backHandler = () => {
+    history.push("/admin");
+  };
+  const resetButtonHandler = (event) => {
+    event.preventDefault();
+    setName("");
+    setUserCode("");
+    setTeamCode("");
+    setClassCode("");
+    setPhoneNum("");
+    setTeamLeader(false);
+    setIsUserCodeUnique(false);
+    setFile(null);
+    setPreviewURL(null);
+  };
   return (
     // <div className={classes.v105_113}>
     //   <div className={classes.v105_123}>
@@ -454,10 +469,19 @@ const StudentForm = () => {
                     </button>
                   </Grid>
                   <Grid item xs={6} className={styles.centered}>
-                    <button className={styles.resetBtn}> Reset </button>
+                    <button
+                      onClick={resetButtonHandler}
+                      className={styles.resetBtn}
+                    >
+                      {" "}
+                      Reset{" "}
+                    </button>
                   </Grid>
                   <Grid item xs={6} className={styles.centered}>
-                    <button className={styles.backBtn}> Back </button>
+                    <button onClick={backHandler} className={styles.backBtn}>
+                      {" "}
+                      Back{" "}
+                    </button>
                   </Grid>
                 </Grid>
               </Grid>
