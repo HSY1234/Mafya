@@ -1,7 +1,7 @@
 import FullCalendar, { preventContextMenu } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import EvenItem from "./evenItem";
 import axios from "axios";
 import { API_URL } from "../../../common/api";
@@ -10,8 +10,10 @@ import axios1 from "../../../common/api/axios";
 const Calender = (props) => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentMonth, setCurrentMonth] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(9);
   // 달 이동 시에 state 변환
+  const calendarRef = useRef();
+
   useEffect(() => {
     const userCode = localStorage.getItem("userCode");
     axios1
@@ -70,7 +72,18 @@ const Calender = (props) => {
       });
     setIsLoading(false);
   }, []);
-
+  // useEffect(() => {
+  //   console.log("안녕하신가");
+  //   if (document.readyState === "complete") {
+  //     document
+  //       .getElementsByClassName("fc-prev-button")[0]
+  //       .removeEventListener("click", onClickPrevButton);
+  //     console.log("hello");
+  //     // document
+  //     //   .getElementsByClassName("fc-prev-button")[0]
+  //     //   .addEventListener("click", onClickPrevButton, { once: true });
+  //   }
+  // }, [currentMonth]);
   // const handleClick = (event) => {
   //   event.preventDefault();
   //   console.log(event.dateStr);
@@ -79,6 +92,7 @@ const Calender = (props) => {
     !isLoading && (
       <div>
         <FullCalendar
+          ref={calendarRef}
           defaultView="dayGridMonth"
           plugins={[dayGridPlugin]}
           weekends={true}
@@ -87,6 +101,37 @@ const Calender = (props) => {
           eventBackgroundColor={"#ffff"}
           eventBorderColor={"#ffff"}
           eventTextColor={"#000"}
+          customButtons={{
+            myCustomPrev: {
+              text: "<",
+              click: function () {
+                calendarRef.current.getApi().prev();
+                console.log("뒤로1:" + currentMonth);
+                setCurrentMonth(currentMonth - 1);
+                console.log("뒤로2:" + currentMonth);
+                console.log("---------------------");
+              },
+            },
+            myCustomNext: {
+              text: ">",
+              click: function () {
+                calendarRef.current.getApi().next();
+                console.log("앞으로1:" + currentMonth);
+                setCurrentMonth(currentMonth + 1);
+                console.log("앞으로2:" + currentMonth);
+                console.log("---------------------");
+              },
+            },
+            myCustomToday: {
+              text: "Today",
+              click: function () {
+                calendarRef.current.getApi().today();
+              },
+            },
+          }}
+          headerToolbar={{
+            right: "myCustomToday myCustomPrev myCustomNext",
+          }}
         />
       </div>
     )
