@@ -1,20 +1,24 @@
+import styles from "./mainPage.module.css"
+
 const DangerList = ({ dangerList }) => {
   const content = dangerList.length ? (
     dangerList.map((student) => (
-      <li key={student.id}>
-        <p>{student.name}</p>
-        <p>{student.phoneNum}</p>
-      </li>
+      <div className={styles.dangerListLine} key={student.id}>
+        <span>{student.name}</span>
+        <span>{student.phoneNum}</span>
+      </div>
     ))
   ) : (
     <span>결석한 학생이 없습니다.</span>
-  );
+  )
   return (
     <div>
       <h3>결석 위험군</h3>
-      <ul>{content}</ul>
+      <div className={styles.dangerListBox}>
+        <div>{content}</div>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default DangerList;
+export default DangerList
