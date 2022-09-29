@@ -11,7 +11,9 @@
   margin: 0%;
   padding: 0%;
 }
-
+.webCamBox {
+  margin: 5rem;
+}
 .webCamArea {
   border-radius: 15px;
   /* position: "absolute";
