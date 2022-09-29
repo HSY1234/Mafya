@@ -1,66 +1,66 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { API_URL } from "../../../common/api";
-import AdminHeader from "../header/adminHeader";
-import ReadonlyRow from "./ReadOnlyRow";
-import styles from "./mainPage.module.css";
-import AttendStudents from "./dangerList";
-import NotAttendStudents from "./studentList";
-import Pagination from "react-js-pagination";
-import "./mainPage.css";
-import DangerList from "./dangerList";
-import StudentList from "./studentList";
-import axios from "axios";
-import axios1 from "../../../common/api/axios";
-import CustomPagination from "./customPagination";
-import CustomModal from "../../../common/modal/modal";
+import { useState } from "react"
+import { useEffect } from "react"
+import { useHistory } from "react-router-dom"
+import { API_URL } from "../../../common/api"
+import AdminHeader from "../header/adminHeader"
+import ReadonlyRow from "./ReadOnlyRow"
+import styles from "./mainPage.module.css"
+import AttendStudents from "./dangerList"
+import NotAttendStudents from "./studentList"
+import Pagination from "react-js-pagination"
+import "./mainPage.css"
+import DangerList from "./dangerList"
+import StudentList from "./studentList"
+import axios from "axios"
+import axios1 from "../../../common/api/axios"
+import CustomPagination from "./customPagination"
+import CustomModal from "../../../common/modal/modal"
 
 const MainPage = () => {
-  const [students, setStudents] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [dangerList, setDangerList] = useState([]);
-  const [studentList, setStudentList] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(null);
-  const offset = (page - 1) * limit;
-  const [checkItems, setCheckItems] = useState([]);
-  const [dangerCheckItems, setDangerCheckItems] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [messages, setMessages] = useState("");
-  const [isAbsent, setIsAbsent] = useState(false);
-  const [isTrady, setIsTrady] = useState(false);
-  const [search, setSearch] = useState("");
-  const [searchLoading, setSearchLoading] = useState(true);
-  const [dangerModalOpen, setDangerModalOpen] = useState(false);
+  const [students, setStudents] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [dangerList, setDangerList] = useState([])
+  const [studentList, setStudentList] = useState([])
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(null)
+  const offset = (page - 1) * limit
+  const [checkItems, setCheckItems] = useState([])
+  const [dangerCheckItems, setDangerCheckItems] = useState([])
+  const [modalOpen, setModalOpen] = useState(false)
+  const [messages, setMessages] = useState("")
+  const [isAbsent, setIsAbsent] = useState(false)
+  const [isTrady, setIsTrady] = useState(false)
+  const [search, setSearch] = useState("")
+  const [searchLoading, setSearchLoading] = useState(true)
+  const [dangerModalOpen, setDangerModalOpen] = useState(false)
 
   const dangerOpenModal = () => {
-    setDangerModalOpen(true);
-  };
+    setDangerModalOpen(true)
+  }
   const dangerCloseModal = () => {
-    setDangerModalOpen(false);
-    setMessages("");
-  };
+    setDangerModalOpen(false)
+    setMessages("")
+  }
 
   const messegesHandler = (event) => {
-    const tmpMessges = event.target.value;
-    setMessages(tmpMessges);
-  };
+    const tmpMessges = event.target.value
+    setMessages(tmpMessges)
+  }
 
   const openModal = () => {
-    setModalOpen(true);
-  };
+    setModalOpen(true)
+  }
   const closeModal = () => {
-    setModalOpen(false);
-    setMessages("");
-  };
+    setModalOpen(false)
+    setMessages("")
+  }
   // const [activePage, setActivePage] = useState(1);
   // const [totalPages, setTotalPages] = useState(null);
   // const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
   // const [totalItemsCount, setTotalItemsCount] = useState(null);
 
-  const history = useHistory();
+  const history = useHistory()
   const deleteHandler = (studentId) => {
     axios1
       .delete(API_URL + `student/${studentId}`, {
@@ -69,37 +69,37 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        const newStudents = [...students];
-        const index = students.findIndex((stduent) => stduent.id === studentId);
-        newStudents.splice(index, 1);
-        setStudents(newStudents);
-        const newDangerList = [...dangerList];
+        const newStudents = [...students]
+        const index = students.findIndex((stduent) => stduent.id === studentId)
+        newStudents.splice(index, 1)
+        setStudents(newStudents)
+        const newDangerList = [...dangerList]
         const dangerIndex = dangerList.findIndex(
           (stduent) => stduent.id === studentId
-        );
+        )
         if (dangerIndex !== -1) {
-          newDangerList.splice(dangerIndex, 1);
-          setDangerList(newDangerList);
+          newDangerList.splice(dangerIndex, 1)
+          setDangerList(newDangerList)
         }
-        const newStudentList = [...studentList];
+        const newStudentList = [...studentList]
         const studentListIndex = studentList.findIndex(
           (stduent) => stduent.id === studentId
-        );
+        )
         if (studentListIndex !== -1) {
-          newStudentList.splice(studentListIndex, 1);
-          setStudentList(newStudentList);
+          newStudentList.splice(studentListIndex, 1)
+          setStudentList(newStudentList)
         }
 
-        alert("학생 정보 제거");
+        alert("학생 정보 제거")
       })
       .catch((err) => {
-        console.log(err.response);
-      });
-  };
+        console.log(err.response)
+      })
+  }
 
   const updateHandler = (stduent) => {
-    history.push({ pathname: "/admin/form", state: stduent });
-  };
+    history.push({ pathname: "/admin/form", state: stduent })
+  }
 
   // const fetchStudents = (page) => {
   //   let tmpPage = page - 1;
@@ -128,12 +128,12 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setDangerList(res.data);
+        setDangerList(res.data)
       })
       .catch((err) => {
-        alert("위험 리스트 정보를 불러오지 못했습니다.");
-      });
-  };
+        alert("위험 리스트 정보를 불러오지 못했습니다.")
+      })
+  }
 
   const fetchStudentList = (classCode) => {
     axios1
@@ -143,15 +143,15 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setStudentList(res.data);
+        setStudentList(res.data)
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.");
-      });
-  };
+        alert("학생 리스트 정보를 불러오지 못했습니다.")
+      })
+  }
 
   const fetchStudents = () => {
-    setSearchLoading(true);
+    setSearchLoading(true)
     axios1
       .post(
         API_URL + "search",
@@ -164,15 +164,15 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data);
-        setTotal(res.data.length);
-        console.log(res.data);
+        setStudents(res.data)
+        setTotal(res.data.length)
+        console.log(res.data)
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.");
-      });
-    setSearchLoading(false);
-  };
+        alert("학생 리스트 정보를 불러오지 못했습니다.")
+      })
+    setSearchLoading(false)
+  }
   // const handlePageChange = (pageNumber) => {
   //   setActivePage(pageNumber);
   // };
@@ -182,24 +182,24 @@ const MainPage = () => {
   // }, [activePage]);
   useEffect(() => {
     // fetchStudents(activePage);
-    setIsLoading(true);
-    const classCode = window.localStorage.getItem("classCode");
-    fetchDangerList(classCode);
-    setSearch(classCode);
-    setIsLoading(true);
-    fetchStudentList(classCode);
+    setIsLoading(true)
+    const classCode = window.localStorage.getItem("classCode")
+    fetchDangerList(classCode)
+    setSearch(classCode)
+    setIsLoading(true)
+    fetchStudentList(classCode)
 
-    setIsLoading(false);
-  }, []);
+    setIsLoading(false)
+  }, [])
 
   const searchChangeHandler = (event) => {
-    const tmpSearch = event.target.value;
-    setSearch(tmpSearch);
-  };
+    const tmpSearch = event.target.value
+    setSearch(tmpSearch)
+  }
 
   const searchHandler = (event) => {
-    event.preventDefault();
-    setSearchLoading(true);
+    event.preventDefault()
+    setSearchLoading(true)
     axios1
       .post(
         API_URL + "search",
@@ -212,47 +212,47 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data);
-        setTotal(res.data.length);
+        setStudents(res.data)
+        setTotal(res.data.length)
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.");
-      });
-    setSearchLoading(false);
+        alert("학생 리스트 정보를 불러오지 못했습니다.")
+      })
+    setSearchLoading(false)
     // fetchStudents();
-  };
+  }
 
   const searchAbsentHandler = (event) => {
-    event.preventDefault();
-    setIsAbsent(!isAbsent);
-    fetchStudents();
-  };
+    event.preventDefault()
+    setIsAbsent(!isAbsent)
+    fetchStudents()
+  }
 
   const searchTardyHandler = (event) => {
-    event.preventDefault();
-    setIsTrady(!isTrady);
-    fetchStudents();
-  };
+    event.preventDefault()
+    setIsTrady(!isTrady)
+    fetchStudents()
+  }
 
   const handleSingleCheck = (checked, id) => {
     if (checkItems.includes(id)) {
-      setCheckItems(checkItems.filter((el) => el !== id));
+      setCheckItems(checkItems.filter((el) => el !== id))
     } else {
-      setCheckItems((prev) => [...prev, id]);
+      setCheckItems((prev) => [...prev, id])
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
     // } else {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
-    console.log(checkItems);
-  };
+    console.log(checkItems)
+  }
 
   const dangerhandleSingleCheck = (checked, id) => {
     if (dangerCheckItems.includes(id)) {
-      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id));
+      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id))
     } else {
-      setDangerCheckItems((prev) => [...prev, id]);
+      setDangerCheckItems((prev) => [...prev, id])
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
@@ -260,61 +260,83 @@ const MainPage = () => {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
     // console.log(checkItems)
-  };
+  }
 
   const handleAllCheck = (checked) => {
-    if (checked) {
-      const idArray = [];
-      studentList.forEach((el) => idArray.push(el.id));
-      setCheckItems(idArray);
+    // if (checked) {
+    //   const idArray = []
+    //   studentList.forEach((el) => idArray.push(el.id))
+    //   setCheckItems(idArray)
+    // } else {
+    //   setCheckItems([])
+    // }
+    if (checkItems.length === studentList.length) {
+      setCheckItems([])
     } else {
-      setCheckItems([]);
+      const idArray = []
+      studentList.forEach((el) => idArray.push(el.id))
+      setCheckItems(idArray)
     }
-  };
-
+  }
+  const dangerHandleAllCheck = (checked) => {
+    // if (checked) {
+    //   const idArray = []
+    //   dangerList.forEach((el) => idArray.push(el.id))
+    //   setDangerCheckItems(idArray)
+    // } else {
+    //   setDangerCheckItems([])
+    // }
+    if (dangerCheckItems.length === dangerList.length) {
+      setDangerCheckItems([])
+    } else {
+      const idArray = []
+      dangerList.forEach((el) => idArray.push(el.id))
+      setDangerCheckItems(idArray)
+    }
+  }
   const mmsHandler = (event) => {
-    event.preventDefault();
-    setModalOpen(true);
-  };
+    event.preventDefault()
+    setModalOpen(true)
+  }
 
   const mmsDangerHandler = (event) => {
-    event.preventDefault();
-    setDangerModalOpen(true);
-  };
+    event.preventDefault()
+    setDangerModalOpen(true)
+  }
 
   const mmsDangerTransferHandler = (event) => {
-    event.preventDefault();
-    const formData = { ids: dangerCheckItems, messages };
+    event.preventDefault()
+    const formData = { ids: dangerCheckItems, messages }
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공");
-        setDangerModalOpen(false);
-        setMessages("");
+        alert("성공")
+        setDangerModalOpen(false)
+        setMessages("")
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   const mmsTransferHandler = (event) => {
-    event.preventDefault();
-    const formData = { ids: checkItems, messages };
+    event.preventDefault()
+    const formData = { ids: checkItems, messages }
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공");
-        setModalOpen(false);
-        setMessages("");
+        alert("성공")
+        setModalOpen(false)
+        setMessages("")
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   return (
     !isLoading && (
@@ -368,23 +390,10 @@ const MainPage = () => {
         <div className={styles.inner}>
           <div className={styles.leftSideBox}>
             <div className={styles.teamStudentBox}>
-              <div>
-                <h3>결석 위험군 명단</h3>
-                <form onSubmit={mmsDangerHandler}>
-                  <button type="submit">MMS 전송</button>
-                </form>
-              </div>
+              <div className={styles.boxTitle}>결석 위험군 명단</div>
 
               <div className={styles.teamStudentList}>
                 <div>
-                  <div className={styles.dropdown}>
-                    <button className={styles.dropbtn}>Dropdown</button>
-                    <div className={styles.dropdownContent}>
-                      <div href="#">Link 1</div>
-                      <div href="#">Link 2</div>
-                      <div href="#">Link 3</div>
-                    </div>
-                  </div>
                   {dangerList?.map((data, key) => (
                     <div
                       className={
@@ -422,6 +431,50 @@ const MainPage = () => {
                   ))}
                 </div>
               </div>
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownContent}>
+                  <div className={styles.dropdownItem}>
+                    <form onSubmit={mmsHandler}>
+                      <button className={styles.sendBtn} type="submit">
+                        <span class="material-symbols-outlined">
+                          outgoing_mail
+                        </span>
+                      </button>
+                    </form>
+                  </div>
+                  <div
+                    onClick={dangerHandleAllCheck}
+                    className={styles.dropdownItem}
+                  >
+                    {/* <input
+                      type="checkbox"
+                      name="select-all"
+                      onChange={(e) => dangerHandleAllCheck(e.target.checked)}
+                      checked={
+                        dangerCheckItems.length === dangerList.length
+                          ? true
+                          : false
+                      }
+                    /> */}
+                    {dangerCheckItems.length === dangerList.length ? (
+                      <div className={styles.checked}>
+                        <span className="material-symbols-outlined">
+                          done_all
+                        </span>
+                      </div>
+                    ) : (
+                      <div className={styles.notChecked}>
+                        <span className="material-symbols-outlined">
+                          done_all
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button className={styles.dropbtn}>
+                  <span class="material-symbols-outlined">send</span>
+                </button>
+              </div>
             </div>
             {/* <div className={styles.dangerInfoBox}>
               {dangerList?.length ? (
@@ -449,23 +502,10 @@ const MainPage = () => {
                     </tr>
                   </thead> */}
             <div className={styles.teamStudentBox}>
-              <div>
-                <h3>금일 명단</h3>
-                <form onSubmit={mmsHandler}>
-                  <button type="submit">MMS 전송</button>
-                </form>
-              </div>
+              <div className={styles.boxTitle}>금일 명단</div>
 
               <div className={styles.teamStudentList}>
                 <div>
-                  <div className={styles.dropdown}>
-                    <button className={styles.dropbtn}>Dropdown</button>
-                    <div className={styles.dropdownContent}>
-                      <div href="#">Link 1</div>
-                      <div href="#">Link 2</div>
-                      <div href="#">Link 3</div>
-                    </div>
-                  </div>
                   {studentList?.map((data, key) => (
                     <div
                       className={
@@ -501,6 +541,46 @@ const MainPage = () => {
                   ))}
                 </div>
               </div>
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownContent}>
+                  <div className={styles.dropdownItem}>
+                    <form onSubmit={mmsHandler}>
+                      <button className={styles.sendBtn} type="submit">
+                        <span className="material-symbols-outlined">
+                          outgoing_mail
+                        </span>
+                      </button>
+                    </form>
+                  </div>
+                  <div onClick={handleAllCheck} className={styles.dropdownItem}>
+                    {/* <input
+                      type="checkbox"
+                      name="select-all"
+                      onChange={(e) => handleAllCheck(e.target.checked)}
+                      checked={
+                        checkItems.length === studentList.length ? true : false
+                      }
+                      id="dangerAllCheckBox"
+                    /> */}
+                    {checkItems.length === studentList.length ? (
+                      <div className={styles.checked}>
+                        <span className="material-symbols-outlined">
+                          done_all
+                        </span>
+                      </div>
+                    ) : (
+                      <div className={styles.notChecked}>
+                        <span className="material-symbols-outlined">
+                          done_all
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button className={styles.dropbtn}>
+                  <span class="material-symbols-outlined">send</span>
+                </button>
+              </div>
             </div>
           </div>
           <div className={styles.rightSideBox}>
@@ -535,7 +615,7 @@ const MainPage = () => {
                             deleteHandler={deleteHandler}
                             updateHandler={updateHandler}
                           />
-                        );
+                        )
                       })}
                     </tbody>
                   </table>
@@ -558,7 +638,7 @@ const MainPage = () => {
         </div>
       </div>
     )
-  );
-};
+  )
+}
 
-export default MainPage;
+export default MainPage
