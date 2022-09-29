@@ -1,11 +1,11 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
-import { API_URL } from "../../../common/api";
-import axios1 from "../../../common/api/axios";
-import styles from "./attendInformation.module.css";
-import styled from "@emotion/styled";
-import { useHistory } from "react-router-dom";
+import axios from "axios"
+import { useEffect } from "react"
+import { useState } from "react"
+import { API_URL } from "../../../common/api"
+import axios1 from "../../../common/api/axios"
+import styles from "./attendInformation.module.css"
+import styled from "@emotion/styled"
+import { useHistory } from "react-router-dom"
 
 const AnimatedCircle = styled.circle`
   animation: circle-fill-animation 2s ease;
@@ -15,12 +15,12 @@ const AnimatedCircle = styled.circle`
       stroke-dasharray: 0 ${2 * Math.PI * 90};
     }
   }
-`;
+`
 const AttendInformation = (props) => {
-  const [information, setInformation] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [name, setName] = useState("");
-  const history = useHistory();
+  const [information, setInformation] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [name, setName] = useState("")
+  const history = useHistory()
 
   const logoutHandler = (event) => {
     axios1
@@ -30,16 +30,16 @@ const AttendInformation = (props) => {
         },
       })
       .then((res) => {
-        window.localStorage.clear();
-        history.push("/");
+        window.localStorage.clear()
+        history.push("/")
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   useEffect(() => {
-    const userCode = localStorage.getItem("userCode");
+    const userCode = localStorage.getItem("userCode")
 
     axios1
       .get(API_URL + `attendance/situation/${userCode}/${props.month}`, {
@@ -48,11 +48,11 @@ const AttendInformation = (props) => {
         },
       })
       .then((res) => {
-        setInformation(res.data);
-      });
+        setInformation(res.data)
+      })
 
-    setIsLoading(false);
-  }, [props.month]);
+    setIsLoading(false)
+  }, [props.month])
 
   return (
     !isLoading && (
@@ -72,12 +72,13 @@ const AttendInformation = (props) => {
             </div>
             <div>
               <div className={styles.percentageBox}>
-                {information.totalDay ? 
-                <p className={styles.percentageP}>
-                  {(information.totalAttend / information.totalDay) * 100}%
-                </p> : <p className={styles.percentageP}>0%</p>
-                
-              }
+                {information.totalDay ? (
+                  <div className={styles.percentageP}>
+                    {(information.totalAttend / information.totalDay) * 100}%
+                  </div>
+                ) : (
+                  <div className={styles.percentageP}>0%</div>
+                )}
               </div>
               <div className={styles.percentageChart}>
                 <svg viewBox="0 0 200 200">
@@ -166,7 +167,7 @@ const AttendInformation = (props) => {
         </table> */}
       </div>
     )
-  );
-};
+  )
+}
 
-export default AttendInformation;
+export default AttendInformation

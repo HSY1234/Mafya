@@ -19,6 +19,7 @@ import abnormalexit from "./female/exit/abnormalexit.mp3"
 import normalexit from "./female/exit/normalexit.mp3"
 import notenroll1 from "./female/exit/notenroll1.mp3"
 import absent from "./female/enter/absent.mp3"
+import { HtmlElementTypeError } from "@testing-library/jest-dom/dist/utils"
 const Swal = require("sweetalert2")
 
 function EnterCamera() {
