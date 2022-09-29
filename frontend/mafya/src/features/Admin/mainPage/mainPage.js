@@ -1,66 +1,71 @@
-import { useState } from "react"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { API_URL } from "../../../common/api"
-import AdminHeader from "../header/adminHeader"
-import ReadonlyRow from "./ReadOnlyRow"
-import styles from "./mainPage.module.css"
-import AttendStudents from "./dangerList"
-import NotAttendStudents from "./studentList"
-import Pagination from "react-js-pagination"
-import "./mainPage.css"
-import DangerList from "./dangerList"
-import StudentList from "./studentList"
-import axios from "axios"
-import axios1 from "../../../common/api/axios"
-import CustomPagination from "./customPagination"
-import CustomModal from "../../../common/modal/modal"
+import { useState } from "react";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { API_URL } from "../../../common/api";
+import AdminHeader from "../header/adminHeader";
+import ReadonlyRow from "./ReadOnlyRow";
+import styles from "./mainPage.module.css";
+import AttendStudents from "./dangerList";
+import NotAttendStudents from "./studentList";
+import Pagination from "react-js-pagination";
+import "./mainPage.css";
+import DangerList from "./dangerList";
+import StudentList from "./studentList";
+import axios from "axios";
+import axios1 from "../../../common/api/axios";
+import CustomPagination from "./customPagination";
+import CustomModal from "../../../common/modal/modal";
 
 const MainPage = () => {
-  const [students, setStudents] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [dangerList, setDangerList] = useState([])
-  const [studentList, setStudentList] = useState([])
-  const [limit, setLimit] = useState(10)
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(null)
-  const offset = (page - 1) * limit
-  const [checkItems, setCheckItems] = useState([])
-  const [dangerCheckItems, setDangerCheckItems] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [messages, setMessages] = useState("")
-  const [isAbsent, setIsAbsent] = useState(false)
-  const [isTrady, setIsTrady] = useState(false)
-  const [search, setSearch] = useState("")
-  const [searchLoading, setSearchLoading] = useState(true)
-  const [dangerModalOpen, setDangerModalOpen] = useState(false)
+  const [students, setStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dangerList, setDangerList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
+  const offset = (page - 1) * limit;
+  const [checkItems, setCheckItems] = useState([]);
+  const [dangerCheckItems, setDangerCheckItems] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [messages, setMessages] = useState("");
+  const [isName, setIsName] = useState(false);
+  const [isUserCode, setIsUserCode] = useState(false);
+  const [isClassCode, setIsClassCode] = useState(false);
+  const [isTeamCode, setIsTeamCode] = useState(false);
+  const [isAbsent, setIsAbsent] = useState(false);
+  const [isTrady, setIsTrady] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [searchLoading, setSearchLoading] = useState(true);
+  const [dangerModalOpen, setDangerModalOpen] = useState(false);
 
   const dangerOpenModal = () => {
-    setDangerModalOpen(true)
-  }
+    setDangerModalOpen(true);
+  };
   const dangerCloseModal = () => {
-    setDangerModalOpen(false)
-    setMessages("")
-  }
+    setDangerModalOpen(false);
+    setMessages("");
+  };
 
   const messegesHandler = (event) => {
-    const tmpMessges = event.target.value
-    setMessages(tmpMessges)
-  }
+    const tmpMessges = event.target.value;
+    setMessages(tmpMessges);
+  };
 
   const openModal = () => {
-    setModalOpen(true)
-  }
+    setModalOpen(true);
+  };
   const closeModal = () => {
-    setModalOpen(false)
-    setMessages("")
-  }
+    setModalOpen(false);
+    setMessages("");
+  };
   // const [activePage, setActivePage] = useState(1);
   // const [totalPages, setTotalPages] = useState(null);
   // const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
   // const [totalItemsCount, setTotalItemsCount] = useState(null);
 
-  const history = useHistory()
+  const history = useHistory();
   const deleteHandler = (studentId) => {
     axios1
       .delete(API_URL + `student/${studentId}`, {
@@ -69,37 +74,37 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        const newStudents = [...students]
-        const index = students.findIndex((stduent) => stduent.id === studentId)
-        newStudents.splice(index, 1)
-        setStudents(newStudents)
-        const newDangerList = [...dangerList]
+        const newStudents = [...students];
+        const index = students.findIndex((stduent) => stduent.id === studentId);
+        newStudents.splice(index, 1);
+        setStudents(newStudents);
+        const newDangerList = [...dangerList];
         const dangerIndex = dangerList.findIndex(
           (stduent) => stduent.id === studentId
-        )
+        );
         if (dangerIndex !== -1) {
-          newDangerList.splice(dangerIndex, 1)
-          setDangerList(newDangerList)
+          newDangerList.splice(dangerIndex, 1);
+          setDangerList(newDangerList);
         }
-        const newStudentList = [...studentList]
+        const newStudentList = [...studentList];
         const studentListIndex = studentList.findIndex(
           (stduent) => stduent.id === studentId
-        )
+        );
         if (studentListIndex !== -1) {
-          newStudentList.splice(studentListIndex, 1)
-          setStudentList(newStudentList)
+          newStudentList.splice(studentListIndex, 1);
+          setStudentList(newStudentList);
         }
 
-        alert("학생 정보 제거")
+        alert("학생 정보 제거");
       })
       .catch((err) => {
-        console.log(err.response)
-      })
-  }
+        console.log(err.response);
+      });
+  };
 
   const updateHandler = (stduent) => {
-    history.push({ pathname: "/admin/form", state: stduent })
-  }
+    history.push({ pathname: "/admin/form", state: stduent });
+  };
 
   // const fetchStudents = (page) => {
   //   let tmpPage = page - 1;
@@ -128,12 +133,12 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setDangerList(res.data)
+        setDangerList(res.data);
       })
       .catch((err) => {
-        alert("위험 리스트 정보를 불러오지 못했습니다.")
-      })
-  }
+        alert("위험 리스트 정보를 불러오지 못했습니다.");
+      });
+  };
 
   const fetchStudentList = (classCode) => {
     axios1
@@ -143,15 +148,15 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setStudentList(res.data)
+        setStudentList(res.data);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-  }
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+  };
 
   const fetchStudents = () => {
-    setSearchLoading(true)
+    setSearchLoading(true);
     axios1
       .post(
         API_URL + "search",
@@ -164,15 +169,15 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data)
-        setTotal(res.data.length)
-        console.log(res.data)
+        setStudents(res.data);
+        setTotal(res.data.length);
+        console.log(res.data);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-    setSearchLoading(false)
-  }
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+    setSearchLoading(false);
+  };
   // const handlePageChange = (pageNumber) => {
   //   setActivePage(pageNumber);
   // };
@@ -182,24 +187,24 @@ const MainPage = () => {
   // }, [activePage]);
   useEffect(() => {
     // fetchStudents(activePage);
-    setIsLoading(true)
-    const classCode = window.localStorage.getItem("classCode")
-    fetchDangerList(classCode)
-    setSearch(classCode)
-    setIsLoading(true)
-    fetchStudentList(classCode)
+    setIsLoading(true);
+    const classCode = window.localStorage.getItem("classCode");
+    fetchDangerList(classCode);
+    setSearch(classCode);
+    setIsLoading(true);
+    fetchStudentList(classCode);
 
-    setIsLoading(false)
-  }, [])
+    setIsLoading(false);
+  }, []);
 
   const searchChangeHandler = (event) => {
-    const tmpSearch = event.target.value
-    setSearch(tmpSearch)
-  }
+    const tmpSearch = event.target.value;
+    setSearch(tmpSearch);
+  };
 
   const searchHandler = (event) => {
-    event.preventDefault()
-    setSearchLoading(true)
+    event.preventDefault();
+    setSearchLoading(true);
     axios1
       .post(
         API_URL + "search",
@@ -212,47 +217,131 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data)
-        setTotal(res.data.length)
+        setStudents(res.data);
+        setTotal(res.data.length);
+        setIsAbsent(false);
+        setIsClassCode(false);
+        setIsName(false);
+        setIsTeamCode(false);
+        setIsUserCode(false);
+        setIsTrady(false);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-    setSearchLoading(false)
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+    setSearchLoading(false);
     // fetchStudents();
-  }
+  };
+
+  const searchNameHandler = (event) => {
+    event.preventDefault();
+    if (isName && students.length) {
+      setIsName(!isName);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.name.localeCompare(y.name));
+      setStudents(tmpStudents);
+    } else if (!isName && students.length) {
+      setIsName(!isName);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.name.localeCompare(x.name));
+      setStudents(tmpStudents);
+    }
+  };
+
+  const searchUserCodeHandler = (event) => {
+    event.preventDefault();
+    if (isUserCode && students.length) {
+      setIsUserCode(!isUserCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.userCode.localeCompare(y.userCode));
+      setStudents(tmpStudents);
+    } else if (!isUserCode && students.length) {
+      setIsUserCode(!isUserCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.userCode.localeCompare(x.userCode));
+      setStudents(tmpStudents);
+    }
+  };
+
+  const searchTeamCodeHandler = (event) => {
+    event.preventDefault();
+    if (isTeamCode && students.length) {
+      setIsTeamCode(!isTeamCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.teamCode.localeCompare(y.teamCode));
+      setStudents(tmpStudents);
+    } else if (!isTeamCode && students.length) {
+      setIsTeamCode(!isTeamCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.teamCode.localeCompare(x.teamCode));
+      setStudents(tmpStudents);
+    }
+  };
+
+  const searchClassCodeHandler = (event) => {
+    event.preventDefault();
+    if (isClassCode && students.length) {
+      setIsClassCode(!isClassCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.classCode.localeCompare(y.classCode));
+      setStudents(tmpStudents);
+    } else if (!isClassCode && students.length) {
+      setIsClassCode(!isClassCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.classCode.localeCompare(x.classCode));
+      setStudents(tmpStudents);
+    }
+  };
 
   const searchAbsentHandler = (event) => {
-    event.preventDefault()
-    setIsAbsent(!isAbsent)
-    fetchStudents()
-  }
+    event.preventDefault();
+    if (isAbsent && students.length) {
+      setIsAbsent(!isAbsent);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.absent - y.absent);
+      setStudents(tmpStudents);
+    } else if (!isAbsent && students.length) {
+      setIsAbsent(!isAbsent);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.absent - x.absent);
+      setStudents(tmpStudents);
+    }
+  };
 
   const searchTardyHandler = (event) => {
-    event.preventDefault()
-    setIsTrady(!isTrady)
-    fetchStudents()
-  }
+    event.preventDefault();
+    if (isTrady && students.length) {
+      setIsTrady(!isTrady);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.trady - y.trady);
+      setStudents(tmpStudents);
+    } else if (!isTrady && students.length) {
+      setIsTrady(!isTrady);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.trady - x.trady);
+      setStudents(tmpStudents);
+    }
+  };
 
   const handleSingleCheck = (checked, id) => {
     if (checkItems.includes(id)) {
-      setCheckItems(checkItems.filter((el) => el !== id))
+      setCheckItems(checkItems.filter((el) => el !== id));
     } else {
-      setCheckItems((prev) => [...prev, id])
+      setCheckItems((prev) => [...prev, id]);
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
     // } else {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
-    console.log(checkItems)
-  }
+    console.log(checkItems);
+  };
 
   const dangerhandleSingleCheck = (checked, id) => {
     if (dangerCheckItems.includes(id)) {
-      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id))
+      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id));
     } else {
-      setDangerCheckItems((prev) => [...prev, id])
+      setDangerCheckItems((prev) => [...prev, id]);
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
@@ -260,7 +349,7 @@ const MainPage = () => {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
     // console.log(checkItems)
-  }
+  };
 
   const handleAllCheck = (checked) => {
     // if (checked) {
@@ -271,13 +360,13 @@ const MainPage = () => {
     //   setCheckItems([])
     // }
     if (checkItems.length === studentList.length) {
-      setCheckItems([])
+      setCheckItems([]);
     } else {
-      const idArray = []
-      studentList.forEach((el) => idArray.push(el.id))
-      setCheckItems(idArray)
+      const idArray = [];
+      studentList.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
     }
-  }
+  };
   const dangerHandleAllCheck = (checked) => {
     // if (checked) {
     //   const idArray = []
@@ -287,56 +376,56 @@ const MainPage = () => {
     //   setDangerCheckItems([])
     // }
     if (dangerCheckItems.length === dangerList.length) {
-      setDangerCheckItems([])
+      setDangerCheckItems([]);
     } else {
-      const idArray = []
-      dangerList.forEach((el) => idArray.push(el.id))
-      setDangerCheckItems(idArray)
+      const idArray = [];
+      dangerList.forEach((el) => idArray.push(el.id));
+      setDangerCheckItems(idArray);
     }
-  }
+  };
   const mmsHandler = (event) => {
-    event.preventDefault()
-    setModalOpen(true)
-  }
+    event.preventDefault();
+    setModalOpen(true);
+  };
 
   const mmsDangerHandler = (event) => {
-    event.preventDefault()
-    setDangerModalOpen(true)
-  }
+    event.preventDefault();
+    setDangerModalOpen(true);
+  };
 
   const mmsDangerTransferHandler = (event) => {
-    event.preventDefault()
-    const formData = { ids: dangerCheckItems, messages }
+    event.preventDefault();
+    const formData = { ids: dangerCheckItems, messages };
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
-        setDangerModalOpen(false)
-        setMessages("")
+        alert("성공");
+        setDangerModalOpen(false);
+        setMessages("");
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   const mmsTransferHandler = (event) => {
-    event.preventDefault()
-    const formData = { ids: checkItems, messages }
+    event.preventDefault();
+    const formData = { ids: checkItems, messages };
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
-        setModalOpen(false)
-        setMessages("")
+        alert("성공");
+        setModalOpen(false);
+        setMessages("");
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   return (
     !isLoading && (
@@ -595,10 +684,10 @@ const MainPage = () => {
                   <table className={styles.table}>
                     <thead>
                       <tr>
-                        <th>이름</th>
-                        <th>학번</th>
-                        <th>반</th>
-                        <th>팀 코드</th>
+                        <th onClick={searchNameHandler}>이름</th>
+                        <th onClick={searchUserCodeHandler}>학번</th>
+                        <th onClick={searchClassCodeHandler}>반</th>
+                        <th onClick={searchTeamCodeHandler}>팀 코드</th>
                         <th>휴대폰 번호</th>
                         <th>팀장 여부</th>
                         <th onClick={searchAbsentHandler}>결석</th>
@@ -610,12 +699,12 @@ const MainPage = () => {
                       {students.slice(offset, offset + limit).map((student) => {
                         return (
                           <ReadonlyRow
-                            key={student.id}
+                            key={students.indexOf(student)}
                             student={student}
                             deleteHandler={deleteHandler}
                             updateHandler={updateHandler}
                           />
-                        )
+                        );
                       })}
                     </tbody>
                   </table>
@@ -638,7 +727,7 @@ const MainPage = () => {
         </div>
       </div>
     )
-  )
-}
+  );
+};
 
-export default MainPage
+export default MainPage;
