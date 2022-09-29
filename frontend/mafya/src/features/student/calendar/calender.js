@@ -10,7 +10,7 @@ import axios1 from "../../../common/api/axios";
 const Calender = (props) => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentMonth, setCurrentMonth] = useState(9);
+ 
   // 달 이동 시에 state 변환
   const calendarRef = useRef();
 
@@ -106,26 +106,25 @@ const Calender = (props) => {
               text: "<",
               click: function () {
                 calendarRef.current.getApi().prev();
-                console.log("뒤로1:" + currentMonth);
-                setCurrentMonth(currentMonth - 1);
-                console.log("뒤로2:" + currentMonth);
-                console.log("---------------------");
+                props.setMonth(props.month === 1 ? 12 : props.month-1);
+                
+          
               },
             },
             myCustomNext: {
               text: ">",
               click: function () {
                 calendarRef.current.getApi().next();
-                console.log("앞으로1:" + currentMonth);
-                setCurrentMonth(currentMonth + 1);
-                console.log("앞으로2:" + currentMonth);
-                console.log("---------------------");
+                
+                props.setMonth((props.month) % 12 + 1);
+             
               },
             },
             myCustomToday: {
               text: "Today",
               click: function () {
                 calendarRef.current.getApi().today();
+                props.setMonth(new Date().getMonth() + 1)
               },
             },
           }}

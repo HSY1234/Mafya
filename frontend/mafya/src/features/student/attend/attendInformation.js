@@ -52,7 +52,7 @@ const AttendInformation = (props) => {
       });
 
     setIsLoading(false);
-  }, []);
+  }, [props.month]);
 
   return (
     !isLoading && (
@@ -72,9 +72,12 @@ const AttendInformation = (props) => {
             </div>
             <div>
               <div className={styles.percentageBox}>
+                {information.totalDay ? 
                 <p className={styles.percentageP}>
                   {(information.totalAttend / information.totalDay) * 100}%
-                </p>
+                </p> : <p className={styles.percentageP}>0%</p>
+                
+              }
               </div>
               <div className={styles.percentageChart}>
                 <svg viewBox="0 0 200 200">
