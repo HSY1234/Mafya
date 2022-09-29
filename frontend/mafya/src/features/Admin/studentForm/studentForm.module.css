@@ -87,7 +87,7 @@
   border: solid 2px rgba(0, 0, 0, 0.616);
   border-color: #030a4a;
   width: 250px;
-  height: auto;
+  height: 380px;
   overflow: hidden;
 }
 .cutImage:hover {
