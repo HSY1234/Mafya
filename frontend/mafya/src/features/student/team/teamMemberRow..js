@@ -51,6 +51,7 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
           }}
         >
           <span className="material-symbols-outlined">mail</span>
+          <span className="material-symbols-outlined">send</span>
         </button>
 
         {/* 향후에 MMS 기능 넣으면 끝 */}
