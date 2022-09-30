@@ -41,12 +41,16 @@
 }
 .msgBtnFalse {
   border: none;
+  width: 2.5rem;
+  height: 2rem;
   color: rgba(130, 110, 234, 0.4);
   border-radius: 0.5rem;
   background-color: rgba(255, 255, 255, 0.125);
 }
 .msgBtnTrue {
   border: none;
+  width: 2.5rem;
+  height: 2rem;
   color: white;
   border-radius: 0.5rem;
   background-color: rgba(220, 20, 60, 0.7);
@@ -55,6 +59,16 @@
 .msgBtnTrue:hover {
   cursor: pointer;
   scale: 1.2;
+}
+.msgBtnTrue > span:nth-child(2) {
+  display: none;
+  transition: 0.3s;
+}
+.msgBtnTrue:hover > span:nth-child(1) {
+  display: none;
+}
+.msgBtnTrue:hover > span:nth-child(2) {
+  display: block;
 }
 @font-face {
   font-family: "Pretendard-Regular";
