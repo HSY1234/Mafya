@@ -189,8 +189,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional
-    @Scheduled(cron = "0 31 18 * * 1-5", zone = "Asia/Seoul")   //평일 저녁 6시 31분 (퇴실 미체크도 결석으로 처리)
-    public void processAbsentScheduler() {
+    public void processAbsent() {
         System.out.println("[processAbsentScheduler]");
 
         List<User> userList = userRepository.findAll();
@@ -232,6 +231,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    @Transactional
     @Scheduled(cron = "0 0 0 1 * *", zone = "Asia/Seoul")    //매달 1일 0시에 실행
     public void processTradyInitScheduler() {
         System.out.println("[processTradyInitScheduler]");
@@ -245,8 +245,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    @Scheduled(cron = "0 31 18 * * 1-5", zone = "Asia/Seoul") //평일 저녁 6시 31분
-    public void processTradyScheduler() {
+    @Transactional
+    public void processTrady() {
         System.out.println("[processTradyScheduler]");
 
         List<User> userList = userRepository.findAll();
@@ -268,6 +268,15 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
             userRepository.save(userList.get(i));
         }
+    }
+
+    @Override
+    @Scheduled(cron = "0 31 18 * * 1-5", zone = "Asia/Seoul") //평일 저녁 6시 31분
+    public void processAutoScheduler() {
+        System.out.println("[processAutoScheduler]");
+
+        processTrady();
+        processAbsent();
     }
 
     @Override
@@ -296,10 +305,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     public AttendanceSituationRes getSituationData(String userCode, String month) {
         Optional<User> user = userRepository.findByUserCode(userCode);
-        Optional<RefMonth> refMonth = refMonthRepository.findByDay(Integer.parseInt(month));
+        Optional<RefMonth> refMonth = refMonthRepository.findByMonth(Integer.parseInt(month));
         AttendanceSituationRes attendanceSituationRes = new AttendanceSituationRes();
 
-        if (!user.isPresent() || !refMonth.isPresent())  return (attendanceSituationRes);
+        if (!user.isPresent() || !refMonth.isPresent()) return (attendanceSituationRes);
 
         List<Attendance> attendanceList = attendanceRepository.findAllByUserAndMonth(user.get(), month);
         int trady = 0, absent = 0, totalDay, totalAttend, money;
@@ -357,6 +366,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    @Transactional
     public List<UserInfo> getDangerClassInfo(String classCode) {
         List<UserInfo> userInfoList = new LinkedList<>();
 

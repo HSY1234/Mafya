@@ -31,11 +31,13 @@ public interface AttendanceService {
 
     List<AttendanceTeamRes> getTeamInfo(String teamCode);
 
-    void processAbsentScheduler();
+    void processAbsent();
 
-    public void processTradyInitScheduler();
+    void processTradyInitScheduler();
 
-    void processTradyScheduler();
+    void processTrady();
+
+    void processAutoScheduler();
 
     List<CalendarDataRes> getCalendarData(String userCode);
 

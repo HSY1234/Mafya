@@ -31,16 +31,23 @@ public class AttendanceController {
     }
 
     @GetMapping("/absent")
-    @ApiOperation(value = "자동 결석 처리(평일 18시 31에 실행)", notes = "직접 실행하지 말 것")
+    @ApiOperation(value = "자동 결석 처리 기능(평일 18시 31에 실행)", notes = "직접 실행하지 말 것")
     public ResponseEntity<?> processAbsent() {
-        attendanceService.processAbsentScheduler();
+        attendanceService.processAbsent();
         return (new ResponseEntity<Void>(HttpStatus.OK));
     }
 
     @GetMapping("/trady")
-    @ApiOperation(value = "자동 지각 처리(평일 18시 31에 실행)", notes = "직접 실행하지 말 것")
+    @ApiOperation(value = "자동 지각 처리 기능(평일 18시 31에 실행)", notes = "직접 실행하지 말 것")
     public ResponseEntity<?> processTrady() {
-        attendanceService.processTradyScheduler();
+        attendanceService.processTrady();
+        return (new ResponseEntity<Void>(HttpStatus.OK));
+    }
+
+    @GetMapping("/auto")
+    @ApiOperation(value = "자동 지각, 결석 처리 기능(평일 18시 31에 실행, 실제로 이 기능이 실행)", notes = "직접 실행하지 말 것")
+    public ResponseEntity<?> processAuto() {
+        attendanceService.processAutoScheduler();
         return (new ResponseEntity<Void>(HttpStatus.OK));
     }
 
@@ -72,7 +79,7 @@ public class AttendanceController {
     @GetMapping("/class/{classCode}")
     public ResponseEntity<?> getClassStatus(@PathVariable String classCode) {
         List<UserInfo> userInfoList = attendanceService.getDangerClassInfo(classCode);
-
+        System.out.println(">>>> ");
         return (new ResponseEntity<List<UserInfo>>(userInfoList, HttpStatus.OK));
     }
 }
