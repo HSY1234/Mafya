@@ -66,9 +66,6 @@ const StudentForm = () => {
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(tmpFile);
           fileInput.files = dataTransfer.files;
-        })
-        .catch((err) => {
-          alert("이미지 업로드 실패");
         });
     }
   }, [student]);

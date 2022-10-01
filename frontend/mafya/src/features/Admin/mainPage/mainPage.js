@@ -29,6 +29,7 @@ const MainPage = () => {
   const [dangerCheckItems, setDangerCheckItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [messages, setMessages] = useState("");
+  const [isDate, setIsDate] = useState(false);
   const [isName, setIsName] = useState(false);
   const [isUserCode, setIsUserCode] = useState(false);
   const [isClassCode, setIsClassCode] = useState(false);
@@ -219,18 +220,37 @@ const MainPage = () => {
       .then((res) => {
         setStudents(res.data);
         setTotal(res.data.length);
+        setIsDate(false);
         setIsAbsent(false);
         setIsClassCode(false);
         setIsName(false);
         setIsTeamCode(false);
         setIsUserCode(false);
         setIsTrady(false);
+        setPage(1);
       })
       .catch((err) => {
         alert("학생 리스트 정보를 불러오지 못했습니다.");
       });
     setSearchLoading(false);
     // fetchStudents();
+  };
+
+  const searchDateHandler = (event) => {
+    event.preventDefault();
+    if (isDate && students.length) {
+      setIsDate(!isDate);
+      const tmpStudents = students;
+      tmpStudents.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setStudents(tmpStudents);
+      setPage(1);
+    } else if (!isDate && students.length) {
+      setIsDate(!isDate);
+      const tmpStudents = students;
+      tmpStudents.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setStudents(tmpStudents);
+      setPage(1);
+    }
   };
 
   const searchNameHandler = (event) => {
@@ -240,11 +260,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.name.localeCompare(y.name));
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isName && students.length) {
       setIsName(!isName);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.name.localeCompare(x.name));
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -255,11 +277,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.userCode.localeCompare(y.userCode));
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isUserCode && students.length) {
       setIsUserCode(!isUserCode);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.userCode.localeCompare(x.userCode));
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -270,11 +294,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.teamCode.localeCompare(y.teamCode));
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isTeamCode && students.length) {
       setIsTeamCode(!isTeamCode);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.teamCode.localeCompare(x.teamCode));
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -285,11 +311,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.classCode.localeCompare(y.classCode));
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isClassCode && students.length) {
       setIsClassCode(!isClassCode);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.classCode.localeCompare(x.classCode));
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -300,11 +328,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.absent - y.absent);
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isAbsent && students.length) {
       setIsAbsent(!isAbsent);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.absent - x.absent);
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -315,11 +345,13 @@ const MainPage = () => {
       const tmpStudents = students;
       tmpStudents.sort((x, y) => x.trady - y.trady);
       setStudents(tmpStudents);
+      setPage(1);
     } else if (!isTrady && students.length) {
       setIsTrady(!isTrady);
       const tmpStudents = students;
       tmpStudents.sort((x, y) => y.trady - x.trady);
       setStudents(tmpStudents);
+      setPage(1);
     }
   };
 
@@ -684,6 +716,7 @@ const MainPage = () => {
                   <table className={styles.table}>
                     <thead>
                       <tr>
+                        <th onClick={searchDateHandler}>일시</th>
                         <th onClick={searchNameHandler}>이름</th>
                         <th onClick={searchUserCodeHandler}>학번</th>
                         <th onClick={searchClassCodeHandler}>반</th>

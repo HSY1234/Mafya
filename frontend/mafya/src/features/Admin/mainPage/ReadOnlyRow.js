@@ -1,6 +1,7 @@
 const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
   return (
     <tr>
+      <td>{student.date.substr(5)}</td>
       <td>{student.name}</td>
       <td>{student.userCode}</td>
       <td>{student.classCode}</td>
