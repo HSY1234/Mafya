@@ -1,64 +1,64 @@
-import axios from "axios"
-import { useState } from "react"
-import { useHistory } from "react-router-dom"
-import { API_URL } from "../../common/api"
-import { login } from "./loginAPI"
-import styles from "./loginPage.module.css"
-import logo from "../../pngs/mafya_logo.png"
+import axios from "axios";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { API_URL } from "../../common/api";
+import { login } from "./loginAPI";
+import styles from "./loginPage.module.css";
+import logo from "../../pngs/mafya_logo.png";
 
 const LoginPage = () => {
-  const history = useHistory()
-  const [userCode, setUserCode] = useState("")
-  const [password, setPassword] = useState("")
-  const [isStart, setIsStart] = useState(false)
-  const [isChange, setIsChange] = useState(false)
+  const history = useHistory();
+  const [userCode, setUserCode] = useState("");
+  const [password, setPassword] = useState("");
+  const [isStart, setIsStart] = useState(false);
+  const [isChange, setIsChange] = useState(false);
   const userCodeHandler = (event) => {
-    setUserCode(event.target.value)
-  }
+    setUserCode(event.target.value);
+  };
 
   const passwordHandler = (event) => {
-    setPassword(event.target.value)
-  }
+    setPassword(event.target.value);
+  };
 
-  const formIsVaild = userCode && password
+  const formIsVaild = userCode && password;
 
   const loginHandler = async (event) => {
-    event.preventDefault()
-    const userForm = { userCode, password }
+    event.preventDefault();
+    const userForm = { userCode, password };
     axios
       .post(API_URL + "student/login/", userForm, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
         if (res.data.resultCode === 0) {
-          window.localStorage.setItem("userCode", userCode)
-          const token = res.data.accessToken
-          window.localStorage.setItem("token", token)
+          window.localStorage.setItem("userCode", userCode);
+          const token = res.data.accessToken;
+          window.localStorage.setItem("token", token);
           if (res.data.isManager === "Y") {
-            window.localStorage.setItem("isManager", res.data.isManager)
-            window.localStorage.setItem("classCode", res.data.classCode)
+            window.localStorage.setItem("isManager", res.data.isManager);
+            window.localStorage.setItem("classCode", res.data.classCode);
 
-            history.push("/admin")
+            history.push("/admin");
           } else {
-            window.localStorage.setItem("teamCode", res.data.teamCode)
+            window.localStorage.setItem("teamCode", res.data.teamCode);
 
-            history.push("/student")
+            history.push("/student");
           }
         } else {
-          alert("로그인 에러")
+          alert("로그인 에러");
         }
       })
 
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
   const toggleStart = (event) => {
-    setIsChange(true)
+    setIsChange(true);
     setTimeout(() => {
-      setIsStart(true)
-    }, 1000)
-  }
+      setIsStart(true);
+    }, 1000);
+  };
   return (
     <div className={styles.loginBack}>
       <div className={styles.overlay} onClick={toggleStart}>
@@ -129,7 +129,7 @@ const LoginPage = () => {
                     <br />
                     <p>1. 개인정보의 수집목적</p>
                     <p>
-                      MaFya 홈페이지에서는 기본적인 회원 서비스 제공을 위한
+                      본 홈페이지에서는 기본적인 회원 서비스 제공을 위한
                       필수정보를 수집하고 있습니다. MaFya 홈페이지에서는
                       정보주체의 기본적 인권 침해의 우려가 있는 민감한
                       개인정보(사상,신념, 노동조합,정당의 가입,탈퇴, 정치적
@@ -139,12 +139,12 @@ const LoginPage = () => {
                     <br />
                     <p>가. 수집하는 개인정보의 항목</p>
                     <p>
-                      ○ MaFya 홈페이지 회원서비스의 제공을 위해 아래와 같은
+                      ○ 본 홈페이지 회원서비스의 제공을 위해 아래와 같은
                       회원정보를 온라인상에서 입력받고 있습니다.
                     </p>
-                    <p>- (수집 항목)개인 정면 사진</p>
+                    <p>- 이름, 전화번호, 프로필 사진</p>
                     <p>
-                      ○ 여러분이 우리구 홈페이지를 이용할 경우 다음의 정보는
+                      ○ 여러분이 본 홈페이지를 이용할 경우 다음의 정보는
                       자동적으로 수집,저장됩니다.
                     </p>
                     <p>- 로그인 일시, 회원 가입 일시</p>
@@ -169,8 +169,8 @@ const LoginPage = () => {
                     <p>
                       - 개인정보는 등록 후 1년까지 보유되며, 정보주체는
                       개인정보의 수집·이용목적에 대한 동의를 거부할 수 있고,
-                      동의 거부시에는 MaFya 홈페이지에 사용이 불가능 해지며,
-                      MaFya 홈페이지에서 제공하는 서비스를 이용할 수 없습니다.
+                      동의 거부시에는 본 홈페이지에 사용이 불가능하며, 본
+                      홈페이지에서 제공하는 서비스를 이용할 수 없습니다.
                     </p>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ const LoginPage = () => {
       <div className={styles.waveThree}></div>
       <div className={styles.waveTwo}></div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
