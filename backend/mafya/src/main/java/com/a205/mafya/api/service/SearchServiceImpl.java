@@ -36,7 +36,7 @@ public class SearchServiceImpl implements SearchService {
                 .teamLeader(user.isTeamLeader())
                 .absent(user.getAbsent())
                 .trady(user.getTardy())
-                .date(date.getMonth() + "/" + date.getDay())
+                .date(date.getYear() + "/" + date.getMonth() + "/" + date.getDay())
                 .build();
         return (searchRes);
     }
