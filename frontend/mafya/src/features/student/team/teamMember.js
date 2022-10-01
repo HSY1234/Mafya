@@ -14,6 +14,7 @@ const TeamMember = (props) => {
 
   useEffect(() => {
     const teamCode = localStorage.getItem("teamCode");
+
     axios1
       .get(API_URL + `attendance/team/${teamCode}`, {
         headers: {
@@ -22,11 +23,15 @@ const TeamMember = (props) => {
       })
       .then((res) => {
         const data = res.data;
+        const index = data.findIndex((stduent) => stduent.id === props.userId);
+        data.splice(index, 1);
         setTeam(data.slice(0, 5));
       });
 
     setIsLoading(false);
   }, []);
+
+  console.log(props.userId);
 
   return (
     !isLoading && (
