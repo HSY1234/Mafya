@@ -77,7 +77,7 @@ function ExitCamera() {
             new Audio(twoenter).play();
             Swal.fire({
               icon: "success",
-              title: `${maskRes.data.name}님 두 번 입실하셨습니다.`,
+              title: `${maskRes.data.name}님 이미 입실하셨습니다.`,
               showConfirmButton: false,
               timer: 3000,
             });
