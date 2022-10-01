@@ -328,6 +328,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         totalDay = refMonth.get().getDay();
         totalAttend = totalDay - absent;
         money = (int)(((double)totalAttend / totalDay) * SALARY);
+        money /= 10;
+        money *= 10;
 
         attendanceSituationRes.setAbsent(absent);
         attendanceSituationRes.setTrady(trady);

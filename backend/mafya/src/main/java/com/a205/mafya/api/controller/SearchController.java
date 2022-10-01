@@ -1,6 +1,7 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.SearchReq;
+import com.a205.mafya.api.response.SearchRes;
 import com.a205.mafya.api.service.SearchService;
 import com.a205.mafya.db.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class SearchController {
 
     @PostMapping
     public ResponseEntity<?> doSearch(@RequestBody SearchReq searchReq) {
-        List<UserInfo> userInfoList = searchService.doIntegratedSearch(searchReq);
+        List<SearchRes> searchResListe = searchService.doIntegratedSearch(searchReq);
 
-        return (new ResponseEntity<List<UserInfo>>(userInfoList, HttpStatus.OK));
+        return (new ResponseEntity<List<SearchRes>>(searchResListe, HttpStatus.OK));
     }
 }

@@ -1,6 +1,7 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.request.SearchReq;
+import com.a205.mafya.api.response.SearchRes;
 import com.a205.mafya.db.dto.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,12 @@ class SearchServiceImplTest {
         String content = "박세현 홍제민";
         SearchReq searchReq = new SearchReq(content, false, false);
 
-        List<UserInfo> userInfoList = searchService.doIntegratedSearch(searchReq);
+        List<SearchRes> userInfoList = searchService.doIntegratedSearch(searchReq);
 //        List<UserInfo> userInfoList = new LinkedList<>();
 
+
         for (int i = 0; i < userInfoList.size(); i++) {
-            System.out.println(userInfoList.get(i).getName() + "  " + userInfoList.get(i).getId());
+            System.out.println(userInfoList.get(i));
         }
     }
 

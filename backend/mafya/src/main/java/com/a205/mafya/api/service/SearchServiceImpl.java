@@ -1,6 +1,7 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.request.SearchReq;
+import com.a205.mafya.api.response.SearchRes;
 import com.a205.mafya.db.dto.Date;
 import com.a205.mafya.db.dto.UserInfo;
 import com.a205.mafya.db.entity.Attendance;
@@ -23,8 +24,8 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
-    public UserInfo convertUserInfo(User user) {
-        UserInfo userInfo = UserInfo.builder()
+    public SearchRes convertSearchRes(User user, Date date) {
+        SearchRes searchRes = SearchRes.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .userCode(user.getUserCode())
@@ -35,8 +36,9 @@ public class SearchServiceImpl implements SearchService {
                 .teamLeader(user.isTeamLeader())
                 .absent(user.getAbsent())
                 .trady(user.getTardy())
+                .date(date.getMonth() + "/" + date.getDay())
                 .build();
-        return (userInfo);
+        return (searchRes);
     }
 
     public Date getDate() {
@@ -93,12 +95,12 @@ public class SearchServiceImpl implements SearchService {
         return (userList);
     }
 
-    List<UserInfo> addAbsentUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+    List<SearchRes> addAbsentUserInfoListByUserAndDate(List<SearchRes> searchResList, List<User> userList, Date date) {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
             if (!attendance.isPresent()) {      //안왔으면 결석(당일 하루에만 해당)
-                userInfoList.add(convertUserInfo(userList.get(i)));
+                searchResList.add(convertSearchRes(userList.get(i), date));
                 System.out.println(">>> " + userList.get(i));
                 continue;
             }
@@ -106,14 +108,14 @@ public class SearchServiceImpl implements SearchService {
             System.out.println("[A]>>> " + attendance.get());
 
             if (attendance.get().getType() == 99) { //과거
-                userInfoList.add(convertUserInfo(userList.get(i)));
+                searchResList.add(convertSearchRes(userList.get(i), date));
             }
         }
 
-        return (userInfoList);
+        return (searchResList);
     }
 
-    List<UserInfo> addTradyUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+    List<SearchRes> addTradyUserInfoListByUserAndDate(List<SearchRes> searchResList, List<User> userList, Date date) {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
@@ -123,14 +125,14 @@ public class SearchServiceImpl implements SearchService {
             }
 
             if (attendance.get().getType() == 10 || attendance.get().getType() == 11 || attendance.get().getType() == 12 || attendance.get().getType() == 2) {
-                userInfoList.add(convertUserInfo(userList.get(i)));
+                searchResList.add(convertSearchRes(userList.get(i), date));
             }
         }
 
-        return (userInfoList);
+        return (searchResList);
     }
 
-    List<UserInfo> addTeamAndClassUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+    List<SearchRes> addTeamAndClassUserInfoListByUserAndDate(List<SearchRes> searchResList, List<User> userList, Date date) {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
@@ -139,13 +141,13 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            userInfoList.add(convertUserInfo(userList.get(i)));
+            searchResList.add(convertSearchRes(userList.get(i), date));
         }
 
-        return (userInfoList);
+        return (searchResList);
     }
 
-    List<UserInfo> addNameUserInfoListByUserAndDate(List<UserInfo> userInfoList, List<User> userList, Date date) {
+    List<SearchRes> addNameUserInfoListByUserAndDate(List<SearchRes> userInfoList, List<User> userList, Date date) {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
@@ -154,15 +156,15 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            userInfoList.add(convertUserInfo(userList.get(i)));
+            userInfoList.add(convertSearchRes(userList.get(i), date));
         }
 
         return (userInfoList);
     }
 
     @Transactional
-    List<UserInfo> getAbsentUserInfo(SearchReq searchReq) {
-        List<UserInfo> userInfoList = new LinkedList<>();
+    List<SearchRes> getAbsentUserInfo(SearchReq searchReq) {
+        List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> teamCode = new LinkedList<>();
         List<String> classCode = new LinkedList<>();
@@ -215,30 +217,27 @@ public class SearchServiceImpl implements SearchService {
         if (dateConfig > 0) {   //지정한 날짜가 있으면
             for (int i = 0; i < dateConfig; i++) {
                 System.out.println(dates.get(i));
-                userInfoList = addAbsentUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+                searchResList = addAbsentUserInfoListByUserAndDate(searchResList, userList, dates.get(i));
             }
         }
         else  //default 오늘 하루
-            userInfoList = addAbsentUserInfoListByUserAndDate(userInfoList, userList, getDate());
+            searchResList = addAbsentUserInfoListByUserAndDate(searchResList, userList, getDate());
 
         //4페이즈 (정렬)
-        if (searchReq.getAbsentOrder()) {
-            Collections.sort(userInfoList, comparatorAbsent);
-            return (userInfoList);
-        }
-        else if (searchReq.getTradyOrder()) {
-            Collections.sort(userInfoList, comparatorTrady);
-            return (userInfoList);
-        }
-        else{
-            Collections.sort(userInfoList, comparatorDefault);
-            return (userInfoList);
-        }
+        if (searchReq.getAbsentOrder())
+            Collections.sort(searchResList, comparatorAbsent);
+        else if (searchReq.getTradyOrder())
+            Collections.sort(searchResList, comparatorTrady);
+        else
+            Collections.sort(searchResList, comparatorDefault);
+
+
+        return (searchResList);
     }
 
     @Transactional
-    List<UserInfo> getTradyUserInfo(SearchReq searchReq) {
-        List<UserInfo> userInfoList = new LinkedList<>();
+    List<SearchRes> getTradyUserInfo(SearchReq searchReq) {
+        List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> teamCode = new LinkedList<>();
         List<String> classCode = new LinkedList<>();
@@ -287,31 +286,28 @@ public class SearchServiceImpl implements SearchService {
         if (dateConfig > 0) {   //지정한 날짜가 있으면
             for (int i = 0; i < dateConfig; i++) {
                 System.out.println(dates.get(i));
-                userInfoList = addTradyUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+                searchResList = addTradyUserInfoListByUserAndDate(searchResList, userList, dates.get(i));
             }
         }
         else  //default 오늘 하루
-            userInfoList = addTradyUserInfoListByUserAndDate(userInfoList, userList, getDate());
+            searchResList = addTradyUserInfoListByUserAndDate(searchResList, userList, getDate());
 
         //4페이즈 (정렬)
-        if (searchReq.getAbsentOrder()) {
-            Collections.sort(userInfoList, comparatorAbsent);
-            return (userInfoList);
-        }
-        else if (searchReq.getTradyOrder()) {
-            Collections.sort(userInfoList, comparatorTrady);
-            return (userInfoList);
-        }
-        else{
-            Collections.sort(userInfoList, comparatorDefault);
-            return (userInfoList);
-        }
+        if (searchReq.getAbsentOrder())
+            Collections.sort(searchResList, comparatorAbsent);
+        else if (searchReq.getTradyOrder())
+            Collections.sort(searchResList, comparatorTrady);
+        else
+            Collections.sort(searchResList, comparatorDefault);
+
+
+        return (searchResList);
     }
 
 
     @Transactional
-    List<UserInfo> getTeamAndClassCodeUserInfo(SearchReq searchReq) {
-        List<UserInfo> userInfoList = new LinkedList<>();
+    List<SearchRes> getTeamAndClassCodeUserInfo(SearchReq searchReq) {
+        List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> teamCode = new LinkedList<>();
         List<String> classCode = new LinkedList<>();
@@ -360,30 +356,27 @@ public class SearchServiceImpl implements SearchService {
         if (dateConfig > 0) {   //지정한 날짜가 있으면
             for (int i = 0; i < dateConfig; i++) {
                 System.out.println(dates.get(i));
-                userInfoList = addTeamAndClassUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+                searchResList = addTeamAndClassUserInfoListByUserAndDate(searchResList, userList, dates.get(i));
             }
         }
         else  //default 오늘 하루
-            userInfoList = addTeamAndClassUserInfoListByUserAndDate(userInfoList, userList, getDate());
+            searchResList = addTeamAndClassUserInfoListByUserAndDate(searchResList, userList, getDate());
 
         //4페이즈 (정렬)
-        if (searchReq.getAbsentOrder()) {
-            Collections.sort(userInfoList, comparatorAbsent);
-            return (userInfoList);
-        }
-        else if (searchReq.getTradyOrder()) {
-            Collections.sort(userInfoList, comparatorTrady);
-            return (userInfoList);
-        }
-        else{
-            Collections.sort(userInfoList, comparatorDefault);
-            return (userInfoList);
-        }
+        if (searchReq.getAbsentOrder())
+            Collections.sort(searchResList, comparatorAbsent);
+        else if (searchReq.getTradyOrder())
+            Collections.sort(searchResList, comparatorTrady);
+        else
+            Collections.sort(searchResList, comparatorDefault);
+
+
+        return (searchResList);
     }
 
     @Transactional
-    List<UserInfo> getNameCodeUserInfo(SearchReq searchReq) {
-        List<UserInfo> userInfoList = new LinkedList<>();
+    List<SearchRes> getNameCodeUserInfo(SearchReq searchReq) {
+        List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> names = new LinkedList<>();
         Boolean refClass[] = new Boolean[10];
@@ -419,29 +412,26 @@ public class SearchServiceImpl implements SearchService {
         if (dateConfig > 0) {   //지정한 날짜가 있으면
             for (int i = 0; i < dateConfig; i++) {
                 System.out.println(dates.get(i));
-                userInfoList = addNameUserInfoListByUserAndDate(userInfoList, userList, dates.get(i));
+                searchResList = addNameUserInfoListByUserAndDate(searchResList, userList, dates.get(i));
             }
         }
         else  //default 오늘 하루
-            userInfoList = addNameUserInfoListByUserAndDate(userInfoList, userList, getDate());
+            searchResList = addNameUserInfoListByUserAndDate(searchResList, userList, getDate());
 
         //4페이즈 (정렬)
-        if (searchReq.getAbsentOrder()) {
-            Collections.sort(userInfoList, comparatorAbsent);
-            return (userInfoList);
-        }
-        else if (searchReq.getTradyOrder()) {
-            Collections.sort(userInfoList, comparatorTrady);
-            return (userInfoList);
-        }
-        else{
-            Collections.sort(userInfoList, comparatorDefault);
-            return (userInfoList);
-        }
+        if (searchReq.getAbsentOrder())
+            Collections.sort(searchResList, comparatorAbsent);
+        else if (searchReq.getTradyOrder())
+            Collections.sort(searchResList, comparatorTrady);
+        else
+            Collections.sort(searchResList, comparatorDefault);
+
+
+        return (searchResList);
     }
 
     @Override
-    public List<UserInfo> doIntegratedSearch(SearchReq searchReq) {
+    public List<SearchRes> doIntegratedSearch(SearchReq searchReq) {
         int flag = analyzeContent(searchReq.getContent());
 
         if (flag == ERROR)  return (new LinkedList<>());
@@ -452,24 +442,22 @@ public class SearchServiceImpl implements SearchService {
 //        else return (null);
     }
 
-    Comparator<UserInfo> comparatorAbsent = new Comparator<UserInfo>() {
+    Comparator<SearchRes> comparatorAbsent = new Comparator<SearchRes>() {
         @Override
-        public int compare(UserInfo a, UserInfo b) {
+        public int compare(SearchRes a, SearchRes b) {
             return (b.getAbsent() - a.getAbsent());
         }
     };
 
-    Comparator<UserInfo> comparatorTrady = new Comparator<UserInfo>() {
+    Comparator<SearchRes> comparatorTrady = new Comparator<SearchRes>() {
         @Override
-        public int compare(UserInfo a, UserInfo b) {
+        public int compare(SearchRes a, SearchRes b) {
             return (b.getTrady() - a.getTrady());
         }
     };
 
-    Comparator<UserInfo> comparatorDefault = new Comparator<UserInfo>() {
+    Comparator<SearchRes> comparatorDefault = new Comparator<SearchRes>() {
         @Override
-        public int compare(UserInfo a, UserInfo b) {
-            return (a.getId() - b.getId());
-        }
+        public int compare(SearchRes a, SearchRes b) { return (a.getId() - b.getId()); }
     };
 }
