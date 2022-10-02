@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface SearchService {
     static final int ERROR = -1;
+    static final int ALL = 0;
     static final int ABSENT = 1;
     static final int TRADY = 2;
     static final int CLASS_AND_TEAM_CODE = 3;

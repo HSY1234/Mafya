@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import com.a205.mafya.api.helper.ExcelHelper;
+import com.a205.mafya.api.filter.helper.ExcelHelper;
 //import com.a205.mafya.api.model.Tutorial;
 import com.a205.mafya.db.entity.User;
 import com.a205.mafya.api.repository.TutorialRepository;

@@ -30,4 +30,6 @@ public class SearchRes {
     private int trady;
 
     private String date;
+
+    private String trace;   //정상, 지각, 결석
 }

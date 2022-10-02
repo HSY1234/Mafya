@@ -1,4 +1,4 @@
-package com.a205.mafya.api.helper;
+package com.a205.mafya.api.filter.helper;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
