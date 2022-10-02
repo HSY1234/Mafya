@@ -8,12 +8,16 @@ import styles from "./studentMainPage.module.css"
 import CustomModal from "../../common/modal/modal"
 import axios1 from "../../common/api/axios"
 import { API_URL } from "../../common/api"
+import axios from "axios"
 
 const StudentMainPage = () => {
   const [month, setMonth] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [messages, setMessages] = useState("")
   const [ids, setIds] = useState(null)
+  const [name, setName] = useState("")
+  const [userId, setUserId] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   const messegesHandler = (event) => {
     const tmpMessges = event.target.value
     setMessages(tmpMessges)
@@ -51,8 +55,20 @@ const StudentMainPage = () => {
   }
 
   useEffect(() => {
+    const userCode = localStorage.getItem("userCode")
     let today = new Date()
     setMonth(today.getMonth() + 1)
+    axios
+      .get(API_URL + `student/userCode/${userCode}`, {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setUserId(res.data.userInfo.id)
+        setName(res.data.userInfo.name)
+      })
+    setIsLoading(false)
   }, [])
 
   return (
@@ -80,10 +96,14 @@ const StudentMainPage = () => {
           <div className={styles.inner}>
             <div className={styles.statusBox}>
               <div className={styles.attendInfoBox}>
-                <AttendInformation month={month} />
+                <AttendInformation month={month} name={name} />
               </div>
               <div className={styles.teamMemberBox}>
-                <TeamMember mmsHandler={mmsHandler} setIds={setIds} />
+                <TeamMember
+                  mmsHandler={mmsHandler}
+                  setIds={setIds}
+                  userId={userId}
+                />
               </div>
             </div>
             <div className={styles.calenderBox}>
