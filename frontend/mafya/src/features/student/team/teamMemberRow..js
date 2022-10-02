@@ -49,6 +49,11 @@ const TeamMemberRow = ({ student, mmsHandler, setIds }) => {
             mmsHandler()
             setIds(student.id)
           }}
+          disabled={
+            (student.attendanceStatus === 0) | (student.attendanceStatus === 3)
+              ? true
+              : false
+          }
         >
           <span className="material-symbols-outlined">mail</span>
           <span className="material-symbols-outlined">send</span>
