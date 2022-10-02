@@ -15,5 +15,14 @@ public interface SearchService {
     static final int CLASS_AND_TEAM_CODE = 3;
     static final int NAME = 4;
 
+
+    static final int _ENTRANCE = 0;
+    static final int _TRADY = 10;
+    static final int _TRADY_AND_EARLYLEAVE = 11;
+    static final int _TRADY_AND_NORMALEXIT = 12;
+    static final int _ENTRANCE_AND_EARLYLEAVE = 2;
+    static final int _ENTRANCE_AND_NORMALEXIT = 3;
+    static final int _ABSENT = 99;
+
     List<SearchRes> doIntegratedSearch(SearchReq searchReq);
 }

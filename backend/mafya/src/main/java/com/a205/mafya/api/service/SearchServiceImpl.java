@@ -24,7 +24,22 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
-    public SearchRes convertSearchRes(User user, Date date) {
+    public SearchRes convertSearchRes(User user, Date date, int type) {
+        final String NORMAL_PHRASES = "정상";
+        final String TRADY_PHARSES = "지각";
+        final String ABSENT_PHARSES = "결석";
+
+        String trace;
+
+        if (type == _ENTRANCE)      trace = NORMAL_PHRASES;
+        else if (type == _TRADY)    trace = TRADY_PHARSES;
+        else if (type == _TRADY_AND_EARLYLEAVE)     trace = TRADY_PHARSES;
+        else if (type == _TRADY_AND_NORMALEXIT)     trace = TRADY_PHARSES;
+        else if (type == _ENTRANCE_AND_EARLYLEAVE)  trace = TRADY_PHARSES;
+        else if (type == _ENTRANCE_AND_NORMALEXIT)  trace = NORMAL_PHRASES;
+        else                        trace = ABSENT_PHARSES;
+
+
         SearchRes searchRes = SearchRes.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -37,6 +52,7 @@ public class SearchServiceImpl implements SearchService {
                 .absent(user.getAbsent())
                 .trady(user.getTardy())
                 .date(date.getYear() + "/" + date.getMonth() + "/" + date.getDay())
+                .trace(trace)
                 .build();
         return (searchRes);
     }
@@ -109,15 +125,15 @@ public class SearchServiceImpl implements SearchService {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
             if (!attendance.isPresent()) {      //안왔으면 결석(당일 하루에만 해당)
-                searchResList.add(convertSearchRes(userList.get(i), date));
+                searchResList.add(convertSearchRes(userList.get(i), date, _ABSENT));
                 System.out.println(">>> " + userList.get(i));
                 continue;
             }
 
             System.out.println("[A]>>> " + attendance.get());
 
-            if (attendance.get().getType() == 99) { //과거
-                searchResList.add(convertSearchRes(userList.get(i), date));
+            if (attendance.get().getType() == _ABSENT) { //과거
+                searchResList.add(convertSearchRes(userList.get(i), date, _ABSENT));
             }
         }
 
@@ -133,8 +149,9 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            if (attendance.get().getType() == 10 || attendance.get().getType() == 11 || attendance.get().getType() == 12 || attendance.get().getType() == 2) {
-                searchResList.add(convertSearchRes(userList.get(i), date));
+            if (attendance.get().getType() == _TRADY || attendance.get().getType() == _TRADY_AND_EARLYLEAVE ||
+                    attendance.get().getType() == _TRADY_AND_NORMALEXIT || attendance.get().getType() == _ENTRANCE_AND_EARLYLEAVE) {
+                searchResList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
             }
         }
 
@@ -150,7 +167,7 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            searchResList.add(convertSearchRes(userList.get(i), date));
+            searchResList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
         }
 
         return (searchResList);
@@ -165,7 +182,7 @@ public class SearchServiceImpl implements SearchService {
                 continue;
             }
 
-            userInfoList.add(convertSearchRes(userList.get(i), date));
+            userInfoList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
         }
 
         return (userInfoList);
@@ -182,7 +199,7 @@ public class SearchServiceImpl implements SearchService {
                 date.setMonth(attendanceList.get(j).getMonth());
                 date.setDay(attendanceList.get(j).getDay());
 
-                userInfoList.add(convertSearchRes(userList.get(i), date));
+                userInfoList.add(convertSearchRes(userList.get(i), date, attendanceList.get(j).getType()));
             }
         }
 
@@ -192,11 +209,17 @@ public class SearchServiceImpl implements SearchService {
     @Transactional
     List<SearchRes> getAllUserInfo() {
         List<SearchRes> searchResList = new LinkedList<>();
-        List<User> user = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
         Date date = getDate();
 
-        for (int i = 0; i < user.size(); i++)
-            searchResList.add(convertSearchRes(user.get(i), date));
+        for (int i = 0; i < userList.size(); i++){
+            Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
+
+            if (!attendance.isPresent())
+                searchResList.add(convertSearchRes(userList.get(i), date, _ABSENT));
+            else
+                searchResList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
+        }
 
         return (searchResList);
     }
