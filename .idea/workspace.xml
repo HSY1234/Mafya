@@ -38,8 +38,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="JUnit5 Test Class" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -98,7 +98,7 @@
       <recent name="com.a205.mafya.api.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.SearchServiceImplTest.test2 (1)">
+  <component name="RunManager" selected="Spring Boot.MafyaApplication">
     <configuration name="AttendanceServiceImplTest.test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -113,6 +113,29 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;com.a205.mafya.api.service.AttendanceServiceImplTest.test&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="MafyaApplicationTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend/mafya" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.a205.mafya.MafyaApplicationTests&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -183,8 +206,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.SearchServiceImplTest.test2 (1)" />
         <item itemvalue="Spring Boot.MafyaApplication" />
+        <item itemvalue="Gradle.MafyaApplicationTests" />
+        <item itemvalue="Gradle.SearchServiceImplTest.test2 (1)" />
         <item itemvalue="Gradle.AttendanceServiceImplTest.test" />
         <item itemvalue="Gradle.MafyaApplicationTests.contextLoads" />
       </list>
@@ -212,7 +236,7 @@
       <workItem from="1664600344442" duration="248000" />
       <workItem from="1664638822119" duration="15626000" />
       <workItem from="1664697102638" duration="1149000" />
-      <workItem from="1664700871621" duration="12711000" />
+      <workItem from="1664700871621" duration="20242000" />
     </task>
     <servers />
   </component>

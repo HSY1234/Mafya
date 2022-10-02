@@ -31,6 +31,9 @@ public class ImgServiceImpl implements ImgService {
     @Autowired
     UserImgRepository userImgRepository;
 
+    @Autowired
+    AwsS3Service awsS3Service;
+
     @Override
     @Transactional
     public boolean saveImg(MultipartFile img, String userCode) {
@@ -50,18 +53,26 @@ public class ImgServiceImpl implements ImgService {
             if (user.isPresent()) {
                 final String imgFullUrl = imgURL + "/" + userCode + "/" + userCode + ".jpg";
                 final String fileFullPath = filePath + "/" + userCode + ".jpg" ;
+                String url = "";
 
                 //이미지 저장(새로운 저장 혹은 덮어 쓰기)
                 img.transferTo(new File(fileFullPath));
+                url = awsS3Service.uploadFileOnlyOne(img);
+
+                if ("fail".equals(url)) return (false);
 
                 Optional<UserImg> info = userImgRepository.findByUser(user.get());
                 if (info.isPresent()) {
-                    info.get().setImgUrl(imgFullUrl);
+                    String target = info.get().getImgUrl();
+
+                    awsS3Service.deleteFile(target);    //과거 파일 지우기
+
+                    info.get().setImgUrl(url);      //새로운 url 등록
                     userImgRepository.save(info.get());
                 }
                 else {
                     userImg.setUser(user.get());
-                    userImg.setImgUrl(imgFullUrl);
+                    userImg.setImgUrl(url);
                     userImgRepository.save(userImg);
                 }
             }
@@ -85,23 +96,6 @@ public class ImgServiceImpl implements ImgService {
         }
         else
             return ("");
-    }
-
-    private static boolean uploadCamImg(MultipartFile img, String imgName) {
-        String filePath = "/identify";
-
-        File dir = new File(filePath);
-        if (!dir.exists()) dir.mkdir();
-
-        String fileFullPath = filePath + "/" + imgName;
-
-        try {
-            img.transferTo(new File(fileFullPath));
-            return (true);
-        } catch (Exception e) {
-            System.out.println("camImg 업로드 실패");
-            return (false);
-        }
     }
 
     @Override

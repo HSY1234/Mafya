@@ -1,8 +1,10 @@
 package com.a205.mafya.api.controller;
 
+import com.a205.mafya.api.service.AwsS3Service;
 import com.a205.mafya.api.service.ImgService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,8 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/img")
 public class ImgController {
+    private final AwsS3Service awsS3Service;
+
     static final String SUCCESS = "success";
     static final String FAIL = "fail";
 
