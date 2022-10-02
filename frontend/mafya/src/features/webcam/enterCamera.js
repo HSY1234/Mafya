@@ -20,6 +20,7 @@ import normalexit from "./female/exit/normalexit.mp3";
 import notenroll1 from "./female/exit/notenroll1.mp3";
 import absent from "./female/enter/absent.mp3";
 import { HtmlElementTypeError } from "@testing-library/jest-dom/dist/utils";
+import Spinner from "../../common/spinner";
 const Swal = require("sweetalert2");
 
 function EnterCamera() {
@@ -31,7 +32,18 @@ function EnterCamera() {
   const [faceDetacting, setFaceDetacting] = useState(false);
   const [model, setModel] = useState(null);
   const [userCode, setUserCode] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
+  const handleUserMedia = () => {
+    console.log("웹캠 로딩끝났어요!!");
+    setIsLoading2(false);
+  };
+  // const handleUserMedia = () => {
+  //   setTimeout(() => {
+  //     setIsLoading2(false);
+  //     console.log("나 소환해");
+  //   }, 1000);
+  // };
   const dataURLtoFile = (dataurl, fileName) => {
     var arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
@@ -517,6 +529,8 @@ function EnterCamera() {
       const net = await cocossd.load();
       console.log("모델 업로드 끝");
       setModel(net);
+      setIsLoading(false);
+      // setIsLoading2(false);
       // defineInterval(net)
     }
     runModel();
@@ -543,7 +557,12 @@ function EnterCamera() {
 
   return (
     <div className={styles.mainPageContainer}>
-      <div className={styles.webCamBox}>
+      <div
+        className={styles.webCamBox}
+        style={{
+          display: !isLoading && !isLoading2 ? "" : "none",
+        }}
+      >
         <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
           <div
             className={
@@ -560,12 +579,19 @@ function EnterCamera() {
               mirrored={true}
               screenshotFormat="image/jpeg"
               className={styles.webCamArea}
+              onUserMedia={handleUserMedia}
             />
             <canvas ref={canvasRef} className={styles.webCanvas} />
           </div>
         </div>
       </div>
-      {/* <span className={styles.forMJDesign}>{sentence}</span> */}
+      <div
+        style={{
+          display: !isLoading && !isLoading2 ? "none" : "",
+        }}
+      >
+        <Spinner />
+      </div>
     </div>
   );
 }
