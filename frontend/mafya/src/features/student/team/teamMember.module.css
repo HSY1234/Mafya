@@ -47,6 +47,9 @@
   border-radius: 0.5rem;
   background-color: rgba(255, 255, 255, 0.125);
 }
+.msgBtnFalse > span:nth-child(2) {
+  display: none;
+}
 .msgBtnTrue {
   border: none;
   width: 2.5rem;
