@@ -16,7 +16,6 @@ import axios1 from "../../../common/api/axios"
 import CustomPagination from "./customPagination"
 import CustomModal from "../../../common/modal/modal"
 
-
 const MainPage = () => {
   const [students, setStudents] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -42,6 +41,8 @@ const MainPage = () => {
   const [search, setSearch] = useState("")
   const [searchLoading, setSearchLoading] = useState(true)
   const [dangerModalOpen, setDangerModalOpen] = useState(false)
+
+  const [searchBox, setSearchBox] = useState(false)
 
   const dangerOpenModal = () => {
     setDangerModalOpen(true)
@@ -359,10 +360,10 @@ const MainPage = () => {
 
   const searchStatusHandler = (event) => {
     event.preventDefault()
-    if (isStatus&& students.length) {
+    if (isStatus && students.length) {
       setIsStatus(!isStatus)
       const tmpStudents = students
-     
+
       tmpStudents.sort((x, y) => x.trace.localeCompare(y.trace))
       setStudents(tmpStudents)
       setPage(1)
@@ -465,7 +466,7 @@ const MainPage = () => {
 
   const mmsTransferHandler = (event) => {
     event.preventDefault()
-    
+
     const formData = { ids: checkItems, messages }
     axios1
       .post(API_URL + "mms", formData, {
@@ -479,6 +480,9 @@ const MainPage = () => {
       .catch((err) => {
         console.log(err)
       })
+  }
+  const clickSearchBox = () => {
+    setSearchBox(true)
   }
 
   return (
@@ -506,31 +510,31 @@ const MainPage = () => {
             </div>
           </form>
         </CustomModal>
+        <CustomModal
+          open={dangerModalOpen}
+          close={dangerCloseModal}
+          ids={dangerCheckItems}
+          header=""
+        >
+          <form onSubmit={mmsDangerTransferHandler}>
+            전송할 메시지를 입력하세요!
+            <div>
+              <input
+                type="textarea"
+                value={messages}
+                onChange={messegesHandler}
+              />
+            </div>
+            <div>
+              <button type="submit" className="close">
+                전송
+              </button>
+            </div>
+          </form>
+        </CustomModal>
         <div className={styles.wholePage}>
           <AdminHeader />
 
-          <CustomModal
-            open={dangerModalOpen}
-            close={dangerCloseModal}
-            ids={dangerCheckItems}
-            header="Modal heading"
-          >
-            <form onSubmit={mmsDangerTransferHandler}>
-              전송할 메시지를 입력하세요!
-              <div>
-                <input
-                  type="textarea"
-                  value={messages}
-                  onChange={messegesHandler}
-                />
-              </div>
-              <div>
-                <button type="submit" className="close">
-                  전송
-                </button>
-              </div>
-            </form>
-          </CustomModal>
           <div className={styles.inner}>
             <div className={styles.leftSideBox}>
               <div className={styles.teamStudentBox}>
@@ -736,56 +740,89 @@ const MainPage = () => {
             </div>
             <div className={styles.rightSideBox}>
               <div>
-                <h3>학생 명단</h3>
+                <div className={styles.boxTitle}>학생 조회</div>
                 <div className={styles.searchBox}>
-                  <form onSubmit={searchHandler}>
-                    <input type="text" onChange={searchChangeHandler} />
-                    <button type="submit">검색</button>
-                  </form>
-                  {students.length ? (
-                    <table className={styles.table}>
-                      <thead>
-                        <tr>
-                          <th onClick={searchDateHandler}>일시</th>
-                          <th onClick={searchNameHandler}>이름</th>
-                          <th onClick={searchUserCodeHandler}>학번</th>
-                          <th onClick={searchClassCodeHandler}>반</th>
-                          <th onClick={searchTeamCodeHandler}>팀 코드</th>
-                          <th>휴대폰 번호</th>
-                          <th>팀장 여부</th>
-                          <th onClick={searchAbsentHandler}>결석</th>
-                          <th onClick={searchTardyHandler}>지각</th>
-                          <th onClick={searchStatusHandler}>상태</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {students
-                          .slice(offset, offset + limit)
-                          .map((student) => {
-                            return (
-                              <ReadonlyRow
-                                key={students.indexOf(student)}
-                                student={student}
-                                deleteHandler={deleteHandler}
-                                updateHandler={updateHandler}
-                              />
-                            )
-                          })}
-                      </tbody>
-                    </table>
+                  {!searchBox ? (
+                    <div
+                      className={styles.searchBoxBefore}
+                      onClick={clickSearchBox}
+                    >
+                      <div className={styles.searchBtnBefore}>
+                        <span className="material-symbols-outlined">
+                          search
+                        </span>
+                      </div>
+                      {/* <div className={styles.searchBtn}>Hover</div> */}
+                    </div>
                   ) : (
-                    <p>검색 결과가 없습니다.</p>
-                  )}
-                  {students.length ? (
-                    <CustomPagination
-                      total={total}
-                      limit={limit}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  ) : (
-                    <div></div>
+                    <div className={styles.searchBoxAfter}>
+                      <div className={styles.searchEnzineBox}>
+                        <form onSubmit={searchHandler}>
+                          <input
+                            className={styles.searchEnzineInput}
+                            type="text"
+                            onChange={searchChangeHandler}
+                          />
+                          <button
+                            className={styles.searchEnzineBtn}
+                            type="submit"
+                          >
+                            <span className="material-symbols-outlined">
+                              search
+                            </span>
+                          </button>
+                        </form>
+                      </div>
+                      <div className={styles.studentTableBox}>
+                        {students.length ? (
+                          <table className={styles.studentTable}>
+                            <thead>
+                              <tr>
+                                <th onClick={searchDateHandler}>일시</th>
+                                <th onClick={searchNameHandler}>이름</th>
+                                <th onClick={searchUserCodeHandler}>학번</th>
+                                <th onClick={searchClassCodeHandler}>반</th>
+                                <th onClick={searchTeamCodeHandler}>코드</th>
+                                <th>P.N</th>
+                                <th>팀장</th>
+                                <th onClick={searchAbsentHandler}>결석</th>
+                                <th onClick={searchTardyHandler}>지각</th>
+                                <th onClick={searchStatusHandler}>상태</th>
+                                <th>수정</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {students
+                                .slice(offset, offset + limit)
+                                .map((student) => {
+                                  return (
+                                    <ReadonlyRow
+                                      key={students.indexOf(student)}
+                                      student={student}
+                                      deleteHandler={deleteHandler}
+                                      updateHandler={updateHandler}
+                                    />
+                                  )
+                                })}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <div className={styles.noResult}>
+                            <p>검색 결과가 없습니다.</p>
+                          </div>
+                        )}
+                      </div>
+                      {students.length ? (
+                        <CustomPagination
+                          total={total}
+                          limit={limit}
+                          page={page}
+                          setPage={setPage}
+                        />
+                      ) : (
+                        <div></div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

@@ -148,23 +148,6 @@
   font-size: 1.2rem;
   font-weight: bold;
 }
-/* searchBox */
-.searchBox {
-  margin: auto;
-  width: 80%;
-  max-width: 960px;
-  /* min-width: 850px; */
-  max-height: 680px;
-  padding: 1rem 3rem;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.375);
-  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
-  border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.125);
-  position: relative;
-  height: 36rem;
-}
 
 /* dropdown */
 .dropbtn {
@@ -277,6 +260,221 @@
     transform: translateZ(0);
   }
 }
+/* searchBox */
+.searchBox {
+  margin: auto;
+  width: 95%;
+  max-width: 960px;
+  /* min-width: 850px; */
+  /* padding: 1rem 3rem; */
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.375);
+  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  position: relative;
+  height: 45rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.searchBoxBefore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 5%;
+
+  color: #f0f0f0;
+}
+
+@keyframes pulsate {
+  50% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 10px 0 30px #3396f4,
+      -10px 0 30px #0ff, inset 0 0 50px rgba(255, 255, 255, 0.5),
+      inset -50px 0 30px #3396f4, inset 50px 0 30px #0ff,
+      inset -50px 0 100px #3396f4, inset 50px 0 100px #0ff;
+  }
+}
+.searchBoxBefore:hover {
+  cursor: pointer;
+  box-shadow: 0 0 20px #fff, -20px 0 80px #3397f475,
+    20px 0 80px rgba(0, 255, 255, 0.526), inset 0 0 50px #fff,
+    inset 50px 0 80px #3397f475, inset -50px 0 80px rgba(0, 255, 255, 0.526),
+    inset 50px 0 300px #3397f475, inset -50px 0 300px rgba(0, 255, 255, 0.526);
+}
+.searchBtnBefore {
+  width: 10rem;
+  height: 10rem;
+}
+.searchBtnBefore > span {
+  font-size: 10rem;
+  font-weight: 900;
+}
+.searchBoxAfter {
+  width: 100%;
+  height: 100%;
+  padding: 3rem 3rem;
+}
+.searchEnzineBox {
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 1.5rem;
+}
+.searchEnzineBox > form {
+  width: 100%;
+  position: relative;
+}
+.searchEnzineInput {
+  margin: 0.5rem 0;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 0 1rem;
+  border: solid 2px rgba(0, 0, 0, 0.167);
+  outline: none;
+  background: rgba(255, 255, 255, 0.5);
+}
+.searchEnzineInput:focus {
+  background: rgba(255, 255, 255, 0.892);
+}
+.searchEnzineBtn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0.5rem;
+  top: 0.8rem;
+  border: none;
+  background: none;
+  color: rgb(0, 0, 0);
+  margin-left: 0.2rem;
+}
+.searchEnzineBtn > span {
+  font-size: 2rem;
+  font-weight: 600;
+}
+.searchEnzineBtn:hover {
+  cursor: pointer;
+}
+/* .searchBtn {
+  height: 100px;
+  width: 100px;
+  box-shadow: -6px -6px 8px 0 rgba(127, 170, 55, 0.5) inset,
+    7px 7px 12px 0 rgba(220, 235, 194, 0.4) inset,
+    6px 6px 14px 0 rgba(127, 170, 55, 0.5),
+    -3px -3px 12px 0 rgba(220, 235, 194, 0.4);
+  transition: box-shadow 0.4s ease-in-out;
+}
+.searchBtn:hover {
+  box-shadow: 6px 6px 8px 0 rgba(127, 170, 55, 0.5) inset,
+    -7px -7px 12px 0 rgba(220, 235, 194, 0.4) inset,
+    -6px -6px 14px 0 rgba(127, 170, 55, 0.5),
+    3px 3px 12px 0 rgba(220, 235, 194, 0.4);
+  cursor: pointer;
+} */
+.noResult {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+.studentTableBox {
+  width: 103%;
+  height: 34rem;
+  border: solid 2px rgba(0, 0, 0, 0.167);
+  padding-top: 1rem;
+  padding-right: 1rem;
+  border-radius: 2rem;
+  margin-left: -0.6rem;
+}
+.studentTable {
+  width: 100%;
+}
+.studentTable > thead {
+  height: 2rem;
+}
+.studentTable tr th {
+  border-bottom: 1px solid #ccc;
+}
+.studentTable tr {
+  border-bottom: 1px solid #ccc;
+}
+.tableBodyRow {
+  border: solid -1px rgba(0, 0, 0, 0.167);
+}
+.studentTable > tbody > tr > td {
+  text-align: center;
+  line-height: 2.5rem;
+}
+.studentTable > tbody > tr > td > button {
+  border: none;
+  background: none;
+  width: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+.studentTable > tbody > tr > td > button > span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.studentTable > tbody > tr > td > button:nth-child(1) > span {
+  color: #3397f4b9;
+}
+.studentTable > tbody > tr > td > button:nth-child(2) > span {
+  color: #dc143c;
+}
+.studentTable > tbody > tr > td > button:hover {
+  cursor: pointer;
+}
+
+.studentTable > thead > tr > th:nth-child(11) {
+  width: 3rem;
+}
+.studentTable > tbody > tr > td:nth-child(11) {
+  display: flex;
+  width: 3rem;
+  height: 2rem;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+.studentTable > thead > tr > th:nth-child(3) {
+  display: table-cell;
+}
+.studentTable > tbody > tr > td:nth-child(3) {
+  display: table-cell;
+}
+
+.paigBox {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+.paigBox button {
+  border: none;
+  background: none;
+  width: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+.notOnPage:hover {
+  cursor: pointer;
+}
+.notOnPage > span {
+  color: #505a66;
+}
+.onPage > span {
+  font-weight: bold;
+}
 @media only screen and (max-width: 1120px) {
   .inner {
     justify-content: start;
@@ -292,6 +490,12 @@
   }
   .teamStudentBox {
     width: 50%;
+  }
+  .studentTable > thead > tr > th:nth-child(3) {
+    display: none;
+  }
+  .studentTable > tbody > tr > td:nth-child(3) {
+    display: none;
   }
 }
 
@@ -310,5 +514,11 @@
   }
   .teamStudentBox {
     width: 100%;
+  }
+  .studentTable > thead > tr > th:nth-child(6) {
+    display: none;
+  }
+  .studentTable > tbody > tr > td:nth-child(6) {
+    display: none;
   }
 }
