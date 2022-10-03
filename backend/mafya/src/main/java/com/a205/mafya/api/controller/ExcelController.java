@@ -2,6 +2,7 @@ package com.a205.mafya.api.controller;
 
 import java.util.List;
 
+import com.a205.mafya.api.request.SearchReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -10,11 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.a205.mafya.api.filter.helper.ExcelHelper;
@@ -79,4 +76,17 @@ public class ExcelController {
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
     }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> getSearch(@RequestBody SearchReq searchReq) {
+        String filename = "result.xlsx";
+        InputStreamResource file = new InputStreamResource(fileService.getSearchResult(searchReq));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+
+    }
+
 }

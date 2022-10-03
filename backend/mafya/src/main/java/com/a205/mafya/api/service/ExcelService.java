@@ -1,5 +1,7 @@
 package com.a205.mafya.api.service;
 
+import com.a205.mafya.api.request.SearchReq;
+import com.a205.mafya.api.response.SearchRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,9 @@ import com.a205.mafya.api.repository.TutorialRepository;
 public class ExcelService {
     @Autowired
     TutorialRepository repository;
+
+    @Autowired
+    SearchService searchService;
 
     public void save(MultipartFile file){
         System.out.println("ExcelService_save");
@@ -54,5 +59,13 @@ public class ExcelService {
 
     public List<User> getAllTutorials() {
         return repository.findAll();
+    }
+
+    public ByteArrayInputStream getSearchResult(SearchReq searchReq) {
+        List<SearchRes> searchResList = searchService.doIntegratedSearch(searchReq);
+
+        ByteArrayInputStream bais = ExcelHelper.SearchToExcel(searchResList);
+
+        return (bais);
     }
 }
