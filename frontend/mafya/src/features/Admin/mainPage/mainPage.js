@@ -488,12 +488,7 @@ const MainPage = () => {
   return (
     !isLoading && (
       <div>
-        <CustomModal
-          open={modalOpen}
-          close={closeModal}
-          ids={checkItems}
-          header=""
-        >
+        <CustomModal open={modalOpen} close={closeModal} header="">
           <form onSubmit={mmsTransferHandler}>
             <span>전송할 메시지를 입력하세요!</span>
             <div>
@@ -510,12 +505,7 @@ const MainPage = () => {
             </div>
           </form>
         </CustomModal>
-        <CustomModal
-          open={dangerModalOpen}
-          close={dangerCloseModal}
-          ids={dangerCheckItems}
-          header=""
-        >
+        <CustomModal open={dangerModalOpen} close={dangerCloseModal} header="">
           <form onSubmit={mmsDangerTransferHandler}>
             전송할 메시지를 입력하세요!
             <div>
@@ -586,7 +576,7 @@ const MainPage = () => {
                     <div className={styles.dropdownItem}>
                       <form onSubmit={mmsDangerHandler}>
                         <button className={styles.sendBtn} type="submit">
-                          <span class="material-symbols-outlined">
+                          <span className="material-symbols-outlined">
                             outgoing_mail
                           </span>
                         </button>
@@ -622,7 +612,7 @@ const MainPage = () => {
                     </div>
                   </div>
                   <button className={styles.dropbtn}>
-                    <span class="material-symbols-outlined">send</span>
+                    <span className="material-symbols-outlined">send</span>
                   </button>
                 </div>
               </div>
@@ -733,7 +723,7 @@ const MainPage = () => {
                     </div>
                   </div>
                   <button className={styles.dropbtn}>
-                    <span class="material-symbols-outlined">send</span>
+                    <span className="material-symbols-outlined">send</span>
                   </button>
                 </div>
               </div>
