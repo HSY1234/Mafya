@@ -53,6 +53,11 @@
   color: #999;
   background-color: transparent;
 }
+.modal > section > main form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 .modal > section > main span {
   margin-left: 1rem;
   text-align: center;
@@ -62,9 +67,9 @@
 }
 .modal > section > main input {
   margin: 1rem 0;
-  height: 2rem;
+  height: 2.5rem;
   border-radius: 0.5rem;
-  width: 90%;
+  width: 110%;
   padding: 0 1rem;
   border: solid 2px rgba(0, 0, 0, 0.167);
   outline: none;
@@ -75,7 +80,7 @@
   border: solid 2px rgba(0, 0, 0, 0.563);
 }
 .modal > section > main button {
-  width: 108%;
+  width: 100%;
   border: none;
   color: rgba(255, 255, 255, 0.8);
   border-radius: 0.5rem;
