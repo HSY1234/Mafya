@@ -78,6 +78,14 @@ public class SearchServiceImpl implements SearchService {
         return (date);
     }
 
+    public static Boolean checkValid(String word) {
+        for(int i = 0; i < word.length(); i++) {
+            if (!String.valueOf(word.charAt(i)).matches("[a-zA-Z0-9가-힣/]"))
+                return (false);
+        }
+        return (true);
+    }
+
     /**
      *
      * @param content
@@ -249,11 +257,16 @@ public class SearchServiceImpl implements SearchService {
         //
 
         for (String word : words) {     //단어 분석
+            if ("".equals(word) || !checkValid(word))    continue;
+
             if ("결석".equals(word))   continue;
             else if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");
                 int month = Integer.parseInt(st.nextToken());
                 int day = Integer.parseInt(st.nextToken());
+
+                if (month <= 0 || month > 12)   continue;
+                if (day <= 0 || day > 31)   continue;
 
                 Date date = makeDate(day, month);
                 dates.add(date);
@@ -338,11 +351,16 @@ public class SearchServiceImpl implements SearchService {
         //
 
         for (String word : words) {     //단어 분석
+            if ("".equals(word) || !checkValid(word))    continue;
+
             if ("지각".equals(word))   continue;
             else if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");
                 int month = Integer.parseInt(st.nextToken());
                 int day = Integer.parseInt(st.nextToken());
+
+                if (month <= 0 || month > 12)   continue;
+                if (day <= 0 || day > 31)   continue;
 
                 Date date = makeDate(day, month);
                 dates.add(date);
@@ -416,10 +434,15 @@ public class SearchServiceImpl implements SearchService {
         Arrays.fill(refClass, false);
 
         for (String word : words) {     //단어 분석
+            if ("".equals(word) || !checkValid(word))    continue;
+
             if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");
                 int month = Integer.parseInt(st.nextToken());
                 int day = Integer.parseInt(st.nextToken());
+
+                if (month <= 0 || month > 12)   continue;
+                if (day <= 0 || day > 31)   continue;
 
                 Date date = makeDate(day, month);
                 dates.add(date);
@@ -497,10 +520,15 @@ public class SearchServiceImpl implements SearchService {
         Arrays.fill(refClass, false);
 
         for (String word : words) {     //단어 분석
+            if ("".equals(word) || !checkValid(word))    continue;
+
             if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");
                 int month = Integer.parseInt(st.nextToken());
                 int day = Integer.parseInt(st.nextToken());
+
+                if (month <= 0 || month > 12)   continue;
+                if (day <= 0 || day > 31)   continue;
 
                 Date date = makeDate(day, month);
                 dates.add(date);
