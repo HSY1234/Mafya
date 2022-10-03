@@ -16,6 +16,7 @@ import axios1 from "../../../common/api/axios"
 import CustomPagination from "./customPagination"
 import CustomModal from "../../../common/modal/modal"
 
+
 const MainPage = () => {
   const [students, setStudents] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -36,6 +37,7 @@ const MainPage = () => {
   const [isTeamCode, setIsTeamCode] = useState(false)
   const [isAbsent, setIsAbsent] = useState(false)
   const [isTrady, setIsTrady] = useState(false)
+  const [isStatus, setIsStatus] = useState(false)
 
   const [search, setSearch] = useState("")
   const [searchLoading, setSearchLoading] = useState(true)
@@ -355,6 +357,24 @@ const MainPage = () => {
     }
   }
 
+  const searchStatusHandler = (event) => {
+    event.preventDefault()
+    if (isStatus&& students.length) {
+      setIsStatus(!isStatus)
+      const tmpStudents = students
+     
+      tmpStudents.sort((x, y) => x.trace.localeCompare(y.trace))
+      setStudents(tmpStudents)
+      setPage(1)
+    } else if (!isStatus && students.length) {
+      setIsStatus(!isStatus)
+      const tmpStudents = students
+      tmpStudents.sort((x, y) => y.trace.localeCompare(x.trace))
+      setStudents(tmpStudents)
+      setPage(1)
+    }
+  }
+
   const handleSingleCheck = (checked, id) => {
     if (checkItems.includes(id)) {
       setCheckItems(checkItems.filter((el) => el !== id))
@@ -427,6 +447,7 @@ const MainPage = () => {
 
   const mmsDangerTransferHandler = (event) => {
     event.preventDefault()
+    console.log("테스트", dangerCheckItems)
     const formData = { ids: dangerCheckItems, messages }
     axios1
       .post(API_URL + "mms", formData, {
@@ -444,6 +465,7 @@ const MainPage = () => {
 
   const mmsTransferHandler = (event) => {
     event.preventDefault()
+    
     const formData = { ids: checkItems, messages }
     axios1
       .post(API_URL + "mms", formData, {
@@ -558,7 +580,7 @@ const MainPage = () => {
                 <div className={styles.dropdown}>
                   <div className={styles.dropdownContent}>
                     <div className={styles.dropdownItem}>
-                      <form onSubmit={mmsHandler}>
+                      <form onSubmit={mmsDangerHandler}>
                         <button className={styles.sendBtn} type="submit">
                           <span class="material-symbols-outlined">
                             outgoing_mail
@@ -733,6 +755,7 @@ const MainPage = () => {
                           <th>팀장 여부</th>
                           <th onClick={searchAbsentHandler}>결석</th>
                           <th onClick={searchTardyHandler}>지각</th>
+                          <th onClick={searchStatusHandler}>상태</th>
                           <th>Actions</th>
                         </tr>
                       </thead>

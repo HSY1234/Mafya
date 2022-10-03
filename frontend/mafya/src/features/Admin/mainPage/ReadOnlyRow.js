@@ -10,6 +10,7 @@ const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
       <td>{student.teamLeader ? "O" : "X"}</td>
       <td>{student.absent}</td>
       <td>{student.trady}</td>
+      <td>{student.trace}</td>
       <td>
         <button type="button" onClick={(event) => updateHandler(student)}>
           Edit
