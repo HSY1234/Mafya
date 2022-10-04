@@ -58,8 +58,10 @@
   flex-direction: column;
   width: 100%;
 }
-.modal > section > main span {
-  margin-left: 1rem;
+.modal > section > main form > div {
+  width: 100%;
+}
+.modal > section > main {
   text-align: center;
 }
 .modal > section > main div:nth-child(1) {
@@ -69,7 +71,7 @@
   margin: 1rem 0;
   height: 2.5rem;
   border-radius: 0.5rem;
-  width: 110%;
+  width: 86%;
   padding: 0 1rem;
   border: solid 2px rgba(0, 0, 0, 0.167);
   outline: none;
@@ -115,6 +117,8 @@
   color: #f0f0f0;
 }
 .modal > section > main {
+  position: relative;
+  width: 60%;
   padding: 16px;
   border: none;
   display: flex;
