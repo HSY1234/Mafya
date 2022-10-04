@@ -170,8 +170,9 @@ public class SearchServiceImpl implements SearchService {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
-            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임
+            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임 => 결석으로 띄움
                 System.out.println(">>> " + userList.get(i) + "   [ERROR2]");
+                searchResList.add(convertSearchRes(userList.get(i), date, _ABSENT));
                 continue;
             }
 
@@ -181,19 +182,20 @@ public class SearchServiceImpl implements SearchService {
         return (searchResList);
     }
 
-    List<SearchRes> addNameUserInfoListByUserAndDate(List<SearchRes> userInfoList, List<User> userList, Date date) {
+    List<SearchRes> addNameUserInfoListByUserAndDate(List<SearchRes> searchResList, List<User> userList, Date date) {
         for (int i = 0; i < userList.size(); i++) {
             Optional<Attendance> attendance = attendanceRepository.findByUserAndDayAndMonthAndYear(userList.get(i), date.getDay(), date.getMonth(), date.getYear());
 
-            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임
+            if (!attendance.isPresent()) {  //기록이 없다? 이건 에러임 => 결석으로 띄움
                 System.out.println(">>> " + userList.get(i) + "   [ERROR3]");
+                searchResList.add(convertSearchRes(userList.get(i), date, _ABSENT));
                 continue;
             }
 
-            userInfoList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
+            searchResList.add(convertSearchRes(userList.get(i), date, attendance.get().getType()));
         }
 
-        return (userInfoList);
+        return (searchResList);
     }
 
     List<SearchRes> addAllUserInfoListByUser(List<SearchRes> userInfoList, List<User> userList) {
@@ -508,7 +510,6 @@ public class SearchServiceImpl implements SearchService {
             Collections.sort(searchResList, comparatorTrady);
         else
             Collections.sort(searchResList, comparatorDefault);
-
 
         return (searchResList);
     }

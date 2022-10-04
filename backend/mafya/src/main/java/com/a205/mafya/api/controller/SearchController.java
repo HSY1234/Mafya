@@ -24,8 +24,8 @@ public class SearchController {
 
     @PostMapping
     public ResponseEntity<?> doSearch(@RequestBody SearchReq searchReq) {
-        List<SearchRes> searchResListe = searchService.doIntegratedSearch(searchReq);
+        List<SearchRes> searchResList = searchService.doIntegratedSearch(searchReq);
 
-        return (new ResponseEntity<List<SearchRes>>(searchResListe, HttpStatus.OK));
+        return (new ResponseEntity<List<SearchRes>>(searchResList, HttpStatus.OK));
     }
 }
