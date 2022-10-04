@@ -2,12 +2,16 @@ const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
   return (
     <tr>
       <td>{student.date.substr(5)}</td>
-      <td>{student.name}</td>
-      <td>{student.userCode}</td>
       <td>{student.classCode}</td>
       <td>{student.teamCode}</td>
-      <td>{student.phoneNum}</td>
-      <td>{student.teamLeader ? "O" : "X"}</td>
+      <td>{student.userCode}</td>
+      <td>{student.name}</td>
+      <td>
+        {" "}
+        {student.phoneNum.slice(0, 3)}-{student.phoneNum.slice(3, 7)}-
+        {student.phoneNum.slice(7, 11)}
+      </td>
+      <td>{student.teamLeader ? "팀장" : "팀원"}</td>
       <td>{student.absent}</td>
       <td>{student.trady}</td>
       <td>{student.trace}</td>
@@ -20,7 +24,7 @@ const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
         </button>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default ReadonlyRow
+export default ReadonlyRow;

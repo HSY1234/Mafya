@@ -1,75 +1,77 @@
-import { useState } from "react"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { API_URL } from "../../../common/api"
-import AdminHeader from "../header/adminHeader"
-import ReadonlyRow from "./ReadOnlyRow"
-import styles from "./mainPage.module.css"
-import AttendStudents from "./dangerList"
-import NotAttendStudents from "./studentList"
-import Pagination from "react-js-pagination"
-import "./mainPage.css"
-import DangerList from "./dangerList"
-import StudentList from "./studentList"
-import axios from "axios"
-import axios1 from "../../../common/api/axios"
-import CustomPagination from "./customPagination"
-import CustomModal from "../../../common/modal/modal"
+import { useState } from "react";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { API_URL } from "../../../common/api";
+import AdminHeader from "../header/adminHeader";
+import ReadonlyRow from "./ReadOnlyRow";
+import styles from "./mainPage.module.css";
+import AttendStudents from "./dangerList";
+import NotAttendStudents from "./studentList";
+import Pagination from "react-js-pagination";
+import "./mainPage.css";
+import DangerList from "./dangerList";
+import StudentList from "./studentList";
+import axios from "axios";
+import axios1 from "../../../common/api/axios";
+import CustomPagination from "./customPagination";
+import CustomModal from "../../../common/modal/modal";
 
 const MainPage = () => {
-  const [students, setStudents] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [dangerList, setDangerList] = useState([])
-  const [studentList, setStudentList] = useState([])
-  const [limit, setLimit] = useState(10)
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(null)
-  const offset = (page - 1) * limit
-  const [checkItems, setCheckItems] = useState([])
-  const [dangerCheckItems, setDangerCheckItems] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [messages, setMessages] = useState("")
-  const [isDate, setIsDate] = useState(false)
-  const [isName, setIsName] = useState(false)
-  const [isUserCode, setIsUserCode] = useState(false)
-  const [isClassCode, setIsClassCode] = useState(false)
-  const [isTeamCode, setIsTeamCode] = useState(false)
-  const [isAbsent, setIsAbsent] = useState(false)
-  const [isTrady, setIsTrady] = useState(false)
-  const [isStatus, setIsStatus] = useState(false)
+  const [students, setStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dangerList, setDangerList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
+  const offset = (page - 1) * limit;
+  const [checkItems, setCheckItems] = useState([]);
+  const [dangerCheckItems, setDangerCheckItems] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [messages, setMessages] = useState("");
+  const [isDate, setIsDate] = useState(false);
+  const [isName, setIsName] = useState(false);
+  const [isUserCode, setIsUserCode] = useState(false);
+  const [isClassCode, setIsClassCode] = useState(false);
+  const [isTeamCode, setIsTeamCode] = useState(false);
+  const [isAbsent, setIsAbsent] = useState(false);
+  const [isTrady, setIsTrady] = useState(false);
+  const [isStatus, setIsStatus] = useState(false);
+  const [isTeamLeader, setIsTeamLeader] = useState(false);
+  const [userExcel, setUserExcel] = useState(null);
 
-  const [search, setSearch] = useState("")
-  const [searchLoading, setSearchLoading] = useState(true)
-  const [dangerModalOpen, setDangerModalOpen] = useState(false)
+  const [search, setSearch] = useState("");
+  const [searchLoading, setSearchLoading] = useState(true);
+  const [dangerModalOpen, setDangerModalOpen] = useState(false);
 
-  const [searchBox, setSearchBox] = useState(false)
+  const [searchBox, setSearchBox] = useState(false);
 
   const dangerOpenModal = () => {
-    setDangerModalOpen(true)
-  }
+    setDangerModalOpen(true);
+  };
   const dangerCloseModal = () => {
-    setDangerModalOpen(false)
-    setMessages("")
-  }
+    setDangerModalOpen(false);
+    setMessages("");
+  };
 
   const messegesHandler = (event) => {
-    const tmpMessges = event.target.value
-    setMessages(tmpMessges)
-  }
+    const tmpMessges = event.target.value;
+    setMessages(tmpMessges);
+  };
 
   const openModal = () => {
-    setModalOpen(true)
-  }
+    setModalOpen(true);
+  };
   const closeModal = () => {
-    setModalOpen(false)
-    setMessages("")
-  }
+    setModalOpen(false);
+    setMessages("");
+  };
   // const [activePage, setActivePage] = useState(1);
   // const [totalPages, setTotalPages] = useState(null);
   // const [itemsCountPerPage, setItemsCountPerPage] = useState(null);
   // const [totalItemsCount, setTotalItemsCount] = useState(null);
 
-  const history = useHistory()
+  const history = useHistory();
   const deleteHandler = (studentId) => {
     axios1
       .delete(API_URL + `student/${studentId}`, {
@@ -78,37 +80,37 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        const newStudents = [...students]
-        const index = students.findIndex((stduent) => stduent.id === studentId)
-        newStudents.splice(index, 1)
-        setStudents(newStudents)
-        const newDangerList = [...dangerList]
+        const newStudents = [...students];
+        const index = students.findIndex((stduent) => stduent.id === studentId);
+        newStudents.splice(index, 1);
+        setStudents(newStudents);
+        const newDangerList = [...dangerList];
         const dangerIndex = dangerList.findIndex(
           (stduent) => stduent.id === studentId
-        )
+        );
         if (dangerIndex !== -1) {
-          newDangerList.splice(dangerIndex, 1)
-          setDangerList(newDangerList)
+          newDangerList.splice(dangerIndex, 1);
+          setDangerList(newDangerList);
         }
-        const newStudentList = [...studentList]
+        const newStudentList = [...studentList];
         const studentListIndex = studentList.findIndex(
           (stduent) => stduent.id === studentId
-        )
+        );
         if (studentListIndex !== -1) {
-          newStudentList.splice(studentListIndex, 1)
-          setStudentList(newStudentList)
+          newStudentList.splice(studentListIndex, 1);
+          setStudentList(newStudentList);
         }
 
-        alert("학생 정보 제거")
+        alert("학생 정보 제거");
       })
       .catch((err) => {
-        console.log(err.response)
-      })
-  }
+        console.log(err.response);
+      });
+  };
 
   const updateHandler = (stduent) => {
-    history.push({ pathname: "/admin/form", state: stduent })
-  }
+    history.push({ pathname: "/admin/form", state: stduent });
+  };
 
   // const fetchStudents = (page) => {
   //   let tmpPage = page - 1;
@@ -137,12 +139,12 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setDangerList(res.data)
+        setDangerList(res.data);
       })
       .catch((err) => {
-        alert("위험 리스트 정보를 불러오지 못했습니다.")
-      })
-  }
+        alert("위험 리스트 정보를 불러오지 못했습니다.");
+      });
+  };
 
   const fetchStudentList = (classCode) => {
     axios1
@@ -152,15 +154,15 @@ const MainPage = () => {
         },
       })
       .then((res) => {
-        setStudentList(res.data)
+        setStudentList(res.data);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-  }
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+  };
 
   const fetchStudents = () => {
-    setSearchLoading(true)
+    setSearchLoading(true);
     axios1
       .post(
         API_URL + "search",
@@ -173,15 +175,15 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data)
-        setTotal(res.data.length)
-        console.log(res.data)
+        setStudents(res.data);
+        setTotal(res.data.length);
+        console.log(res.data);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-    setSearchLoading(false)
-  }
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+    setSearchLoading(false);
+  };
   // const handlePageChange = (pageNumber) => {
   //   setActivePage(pageNumber);
   // };
@@ -191,24 +193,24 @@ const MainPage = () => {
   // }, [activePage]);
   useEffect(() => {
     // fetchStudents(activePage);
-    setIsLoading(true)
-    const classCode = window.localStorage.getItem("classCode")
-    fetchDangerList(classCode)
-    setSearch(classCode)
-    setIsLoading(true)
-    fetchStudentList(classCode)
+    setIsLoading(true);
+    const classCode = window.localStorage.getItem("classCode");
+    fetchDangerList(classCode);
+    setSearch(classCode);
+    setIsLoading(true);
+    fetchStudentList(classCode);
 
-    setIsLoading(false)
-  }, [])
+    setIsLoading(false);
+  }, []);
 
   const searchChangeHandler = (event) => {
-    const tmpSearch = event.target.value
-    setSearch(tmpSearch)
-  }
+    const tmpSearch = event.target.value;
+    setSearch(tmpSearch);
+  };
 
   const searchHandler = (event) => {
-    event.preventDefault()
-    setSearchLoading(true)
+    event.preventDefault();
+    setSearchLoading(true);
     axios1
       .post(
         API_URL + "search",
@@ -221,180 +223,198 @@ const MainPage = () => {
         }
       )
       .then((res) => {
-        setStudents(res.data)
-        setTotal(res.data.length)
-        setIsDate(false)
-        setIsAbsent(false)
-        setIsClassCode(false)
-        setIsName(false)
-        setIsTeamCode(false)
-        setIsUserCode(false)
-        setIsTrady(false)
-        setPage(1)
+        setStudents(res.data);
+        setTotal(res.data.length);
+        setIsDate(false);
+        setIsAbsent(!isAbsent);
+        setIsClassCode(false);
+        setIsName(false);
+        setIsTeamCode(false);
+        setIsUserCode(false);
+        setIsTrady(!isTrady);
+        setIsTeamLeader(false);
+        setPage(1);
       })
       .catch((err) => {
-        alert("학생 리스트 정보를 불러오지 못했습니다.")
-      })
-    setSearchLoading(false)
+        alert("학생 리스트 정보를 불러오지 못했습니다.");
+      });
+    setSearchLoading(false);
     // fetchStudents();
-  }
+  };
 
   const searchDateHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isDate && students.length) {
-      setIsDate(!isDate)
-      const tmpStudents = students
-      tmpStudents.sort((a, b) => new Date(a.date) - new Date(b.date))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsDate(!isDate);
+      const tmpStudents = students;
+      tmpStudents.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isDate && students.length) {
-      setIsDate(!isDate)
-      const tmpStudents = students
-      tmpStudents.sort((a, b) => new Date(b.date) - new Date(a.date))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsDate(!isDate);
+      const tmpStudents = students;
+      tmpStudents.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchNameHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isName && students.length) {
-      setIsName(!isName)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.name.localeCompare(y.name))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsName(!isName);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.name.localeCompare(y.name));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isName && students.length) {
-      setIsName(!isName)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.name.localeCompare(x.name))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsName(!isName);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.name.localeCompare(x.name));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
+
+  const searchTeamLeaderHandler = (event) => {
+    event.preventDefault();
+    if (isTeamLeader && students.length) {
+      setIsTeamLeader(!isTeamLeader);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.teamLeader - y.teamLeader);
+      setStudents(tmpStudents);
+      setPage(1);
+    } else if (!isTeamLeader && students.length) {
+      setIsTeamLeader(!isTeamLeader);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.teamLeader - x.teamLeader);
+      setStudents(tmpStudents);
+      setPage(1);
+    }
+  };
 
   const searchUserCodeHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isUserCode && students.length) {
-      setIsUserCode(!isUserCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.userCode.localeCompare(y.userCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsUserCode(!isUserCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.userCode.localeCompare(y.userCode));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isUserCode && students.length) {
-      setIsUserCode(!isUserCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.userCode.localeCompare(x.userCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsUserCode(!isUserCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.userCode.localeCompare(x.userCode));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchTeamCodeHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isTeamCode && students.length) {
-      setIsTeamCode(!isTeamCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.teamCode.localeCompare(y.teamCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsTeamCode(!isTeamCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.teamCode.localeCompare(y.teamCode));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isTeamCode && students.length) {
-      setIsTeamCode(!isTeamCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.teamCode.localeCompare(x.teamCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsTeamCode(!isTeamCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.teamCode.localeCompare(x.teamCode));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchClassCodeHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isClassCode && students.length) {
-      setIsClassCode(!isClassCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.classCode.localeCompare(y.classCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsClassCode(!isClassCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.classCode.localeCompare(y.classCode));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isClassCode && students.length) {
-      setIsClassCode(!isClassCode)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.classCode.localeCompare(x.classCode))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsClassCode(!isClassCode);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.classCode.localeCompare(x.classCode));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchAbsentHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isAbsent && students.length) {
-      setIsAbsent(!isAbsent)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.absent - y.absent)
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsAbsent(!isAbsent);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.absent - y.absent);
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isAbsent && students.length) {
-      setIsAbsent(!isAbsent)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.absent - x.absent)
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsAbsent(!isAbsent);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.absent - x.absent);
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchTardyHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isTrady && students.length) {
-      setIsTrady(!isTrady)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => x.trady - y.trady)
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsTrady(!isTrady);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => x.trady - y.trady);
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isTrady && students.length) {
-      setIsTrady(!isTrady)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.trady - x.trady)
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsTrady(!isTrady);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.trady - x.trady);
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const searchStatusHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (isStatus && students.length) {
-      setIsStatus(!isStatus)
-      const tmpStudents = students
+      setIsStatus(!isStatus);
+      const tmpStudents = students;
 
-      tmpStudents.sort((x, y) => x.trace.localeCompare(y.trace))
-      setStudents(tmpStudents)
-      setPage(1)
+      tmpStudents.sort((x, y) => x.trace.localeCompare(y.trace));
+      setStudents(tmpStudents);
+      setPage(1);
     } else if (!isStatus && students.length) {
-      setIsStatus(!isStatus)
-      const tmpStudents = students
-      tmpStudents.sort((x, y) => y.trace.localeCompare(x.trace))
-      setStudents(tmpStudents)
-      setPage(1)
+      setIsStatus(!isStatus);
+      const tmpStudents = students;
+      tmpStudents.sort((x, y) => y.trace.localeCompare(x.trace));
+      setStudents(tmpStudents);
+      setPage(1);
     }
-  }
+  };
 
   const handleSingleCheck = (checked, id) => {
     if (checkItems.includes(id)) {
-      setCheckItems(checkItems.filter((el) => el !== id))
+      setCheckItems(checkItems.filter((el) => el !== id));
     } else {
-      setCheckItems((prev) => [...prev, id])
+      setCheckItems((prev) => [...prev, id]);
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
     // } else {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
-    console.log(checkItems)
-  }
+    console.log(checkItems);
+  };
 
   const dangerhandleSingleCheck = (checked, id) => {
     if (dangerCheckItems.includes(id)) {
-      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id))
+      setDangerCheckItems(dangerCheckItems.filter((el) => el !== id));
     } else {
-      setDangerCheckItems((prev) => [...prev, id])
+      setDangerCheckItems((prev) => [...prev, id]);
     }
     // if (checked) {
     //   setCheckItems((prev) => [...prev, id])
@@ -402,7 +422,7 @@ const MainPage = () => {
     //   setCheckItems(checkItems.filter((el) => el !== id))
     // }
     // console.log(checkItems)
-  }
+  };
 
   const handleAllCheck = (checked) => {
     // if (checked) {
@@ -413,13 +433,13 @@ const MainPage = () => {
     //   setCheckItems([])
     // }
     if (checkItems.length === studentList.length) {
-      setCheckItems([])
+      setCheckItems([]);
     } else {
-      const idArray = []
-      studentList.forEach((el) => idArray.push(el.id))
-      setCheckItems(idArray)
+      const idArray = [];
+      studentList.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
     }
-  }
+  };
   const dangerHandleAllCheck = (checked) => {
     // if (checked) {
     //   const idArray = []
@@ -429,61 +449,150 @@ const MainPage = () => {
     //   setDangerCheckItems([])
     // }
     if (dangerCheckItems.length === dangerList.length) {
-      setDangerCheckItems([])
+      setDangerCheckItems([]);
     } else {
-      const idArray = []
-      dangerList.forEach((el) => idArray.push(el.id))
-      setDangerCheckItems(idArray)
+      const idArray = [];
+      dangerList.forEach((el) => idArray.push(el.id));
+      setDangerCheckItems(idArray);
     }
-  }
+  };
   const mmsHandler = (event) => {
-    event.preventDefault()
-    setModalOpen(true)
-  }
+    event.preventDefault();
+    setModalOpen(true);
+  };
 
   const mmsDangerHandler = (event) => {
-    event.preventDefault()
-    setDangerModalOpen(true)
-  }
+    event.preventDefault();
+    setDangerModalOpen(true);
+  };
 
   const mmsDangerTransferHandler = (event) => {
-    event.preventDefault()
-    console.log("테스트", dangerCheckItems)
-    const formData = { ids: dangerCheckItems, messages }
+    event.preventDefault();
+    console.log("테스트", dangerCheckItems);
+    const formData = { ids: dangerCheckItems, messages };
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
-        setDangerModalOpen(false)
-        setMessages("")
+        alert("성공");
+        setDangerModalOpen(false);
+        setMessages("");
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   const mmsTransferHandler = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const formData = { ids: checkItems, messages }
+    const formData = { ids: checkItems, messages };
     axios1
       .post(API_URL + "mms", formData, {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
-        setModalOpen(false)
-        setMessages("")
+        alert("성공");
+        setModalOpen(false);
+        setMessages("");
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
   const clickSearchBox = () => {
-    setSearchBox(true)
-  }
+    setSearchBox(true);
+  };
+
+  const changeUserExcelHandler = (event) => {
+    event.preventDefault();
+    let file = event.target.files[0];
+    setUserExcel(file);
+  };
+
+  const submitUserExcelHandler = (event) => {
+    event.preventDefault();
+    let formData = new FormData();
+    formData.set("uploadUserFile", userExcel);
+    axios1
+      .post(API_URL + "excel/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          accessToken: window.localStorage.getItem("token"),
+          // "Access-Control-Allow-Origin": "*",
+        },
+      })
+      .then((res) => {
+        alert("등록되었습니다.");
+        setUserExcel(null);
+        const fileInput = document.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        fileInput.files = dataTransfer.files;
+      })
+      .catch((err) => {
+        alert("등록 실패");
+        setUserExcel(null);
+        const fileInput = document.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        fileInput.files = dataTransfer.files;
+      });
+  };
+
+  const searchExcelHandler = (event) => {
+    event.preventDefault();
+    if (students) {
+      axios1
+        .post(
+          API_URL + "excel/search",
+          { content: search, tradyOrder: isTrady, absentOrder: isAbsent },
+          {
+            headers: {
+              accessToken: window.localStorage.getItem("token"),
+              "Content-Type": "application/json",
+            },
+            responseType: "blob",
+          }
+        )
+        .then((response) => {
+          const url = window.URL.createObjectURL(
+            new Blob([response.data], {
+              type: response.headers["content-type"],
+            })
+          );
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "search.xlsx");
+          document.body.appendChild(link);
+          link.click();
+        });
+    }
+  };
+
+  const userExcelHandler = (event) => {
+    event.preventDefault();
+
+    axios1
+      .get(API_URL + "excel/download", {
+        headers: {
+          accessToken: window.localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+        responseType: "blob",
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], {
+            type: response.headers["content-type"],
+          })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "user.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
 
   return (
     !isLoading && (
@@ -765,17 +874,17 @@ const MainPage = () => {
                         <table className={styles.studentTable}>
                           <thead>
                             <tr>
-                              <th onClick={searchDateHandler}>일시</th>
-                              <th onClick={searchNameHandler}>이름</th>
-                              <th onClick={searchUserCodeHandler}>학번</th>
+                              <th onClick={searchDateHandler}>날짜</th>
                               <th onClick={searchClassCodeHandler}>반</th>
-                              <th onClick={searchTeamCodeHandler}>코드</th>
-                              <th>P.N</th>
-                              <th>팀장</th>
+                              <th onClick={searchTeamCodeHandler}>팀 코드</th>
+                              <th onClick={searchUserCodeHandler}>학번</th>
+                              <th onClick={searchNameHandler}>이름</th>
+                              <th>전화번호</th>
+                              <th onClick={searchTeamLeaderHandler}>직위</th>
                               <th onClick={searchAbsentHandler}>결석</th>
                               <th onClick={searchTardyHandler}>지각</th>
                               <th onClick={searchStatusHandler}>상태</th>
-                              <th>수정</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -789,7 +898,7 @@ const MainPage = () => {
                                     deleteHandler={deleteHandler}
                                     updateHandler={updateHandler}
                                   />
-                                )
+                                );
                               })}
                           </tbody>
                         </table>
@@ -812,12 +921,32 @@ const MainPage = () => {
                   </div>
                 )}
               </div>
+              <div>
+                <form onSubmit={submitUserExcelHandler}>
+                  <h5>유저 업로드</h5>
+                  <input
+                    type="file"
+                    id="user_excel"
+                    accept=".xls,.xlsx"
+                    onChange={changeUserExcelHandler}
+                  />
+                  <button type="submit">유저 업로드</button>
+                </form>
+                <div>
+                  <button onClick={searchExcelHandler}>
+                    검색 결과 다운로드
+                  </button>
+                </div>
+                <div>
+                  <button onClick={userExcelHandler}>전체 유저 다운로드</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     )
-  )
-}
+  );
+};
 
-export default MainPage
+export default MainPage;
