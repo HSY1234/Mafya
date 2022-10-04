@@ -507,7 +507,7 @@ const MainPage = () => {
         </CustomModal>
         <CustomModal open={dangerModalOpen} close={dangerCloseModal} header="">
           <form onSubmit={mmsDangerTransferHandler}>
-            전송할 메시지를 입력하세요!
+            <span>전송할 메시지를 입력하세요!</span>
             <div>
               <input
                 type="textarea"
@@ -729,92 +729,88 @@ const MainPage = () => {
               </div>
             </div>
             <div className={styles.rightSideBox}>
-              <div>
-                <div className={styles.boxTitle}>학생 조회</div>
-                <div className={styles.searchBox}>
-                  {!searchBox ? (
-                    <div
-                      className={styles.searchBoxBefore}
-                      onClick={clickSearchBox}
-                    >
-                      <div className={styles.searchBtnBefore}>
-                        <span className="material-symbols-outlined">
-                          search
-                        </span>
-                      </div>
-                      {/* <div className={styles.searchBtn}>Hover</div> */}
+              <div className={styles.boxTitle}>학생 조회</div>
+              <div className={styles.searchBox}>
+                {!searchBox ? (
+                  <div
+                    className={styles.searchBoxBefore}
+                    onClick={clickSearchBox}
+                  >
+                    <div className={styles.searchBtnBefore}>
+                      <span className="material-symbols-outlined">search</span>
                     </div>
-                  ) : (
-                    <div className={styles.searchBoxAfter}>
-                      <div className={styles.searchEnzineBox}>
-                        <form onSubmit={searchHandler}>
-                          <input
-                            className={styles.searchEnzineInput}
-                            type="text"
-                            onChange={searchChangeHandler}
-                          />
-                          <button
-                            className={styles.searchEnzineBtn}
-                            type="submit"
-                          >
-                            <span className="material-symbols-outlined">
-                              search
-                            </span>
-                          </button>
-                        </form>
-                      </div>
-                      <div className={styles.studentTableBox}>
-                        {students.length ? (
-                          <table className={styles.studentTable}>
-                            <thead>
-                              <tr>
-                                <th onClick={searchDateHandler}>일시</th>
-                                <th onClick={searchNameHandler}>이름</th>
-                                <th onClick={searchUserCodeHandler}>학번</th>
-                                <th onClick={searchClassCodeHandler}>반</th>
-                                <th onClick={searchTeamCodeHandler}>코드</th>
-                                <th>P.N</th>
-                                <th>팀장</th>
-                                <th onClick={searchAbsentHandler}>결석</th>
-                                <th onClick={searchTardyHandler}>지각</th>
-                                <th onClick={searchStatusHandler}>상태</th>
-                                <th>수정</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {students
-                                .slice(offset, offset + limit)
-                                .map((student) => {
-                                  return (
-                                    <ReadonlyRow
-                                      key={students.indexOf(student)}
-                                      student={student}
-                                      deleteHandler={deleteHandler}
-                                      updateHandler={updateHandler}
-                                    />
-                                  )
-                                })}
-                            </tbody>
-                          </table>
-                        ) : (
-                          <div className={styles.noResult}>
-                            <p>검색 결과가 없습니다.</p>
-                          </div>
-                        )}
-                      </div>
-                      {students.length ? (
-                        <CustomPagination
-                          total={total}
-                          limit={limit}
-                          page={page}
-                          setPage={setPage}
+                    {/* <div className={styles.searchBtn}>Hover</div> */}
+                  </div>
+                ) : (
+                  <div className={styles.searchBoxAfter}>
+                    <div className={styles.searchEnzineBox}>
+                      <form onSubmit={searchHandler}>
+                        <input
+                          className={styles.searchEnzineInput}
+                          type="text"
+                          onChange={searchChangeHandler}
                         />
+                        <button
+                          className={styles.searchEnzineBtn}
+                          type="submit"
+                        >
+                          <span className="material-symbols-outlined">
+                            search
+                          </span>
+                        </button>
+                      </form>
+                    </div>
+                    <div className={styles.studentTableBox}>
+                      {students.length ? (
+                        <table className={styles.studentTable}>
+                          <thead>
+                            <tr>
+                              <th onClick={searchDateHandler}>일시</th>
+                              <th onClick={searchNameHandler}>이름</th>
+                              <th onClick={searchUserCodeHandler}>학번</th>
+                              <th onClick={searchClassCodeHandler}>반</th>
+                              <th onClick={searchTeamCodeHandler}>코드</th>
+                              <th>P.N</th>
+                              <th>팀장</th>
+                              <th onClick={searchAbsentHandler}>결석</th>
+                              <th onClick={searchTardyHandler}>지각</th>
+                              <th onClick={searchStatusHandler}>상태</th>
+                              <th>수정</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {students
+                              .slice(offset, offset + limit)
+                              .map((student) => {
+                                return (
+                                  <ReadonlyRow
+                                    key={students.indexOf(student)}
+                                    student={student}
+                                    deleteHandler={deleteHandler}
+                                    updateHandler={updateHandler}
+                                  />
+                                )
+                              })}
+                          </tbody>
+                        </table>
                       ) : (
-                        <div></div>
+                        <div className={styles.noResult}>
+                          <p>검색 결과가 없습니다.</p>
+                        </div>
                       )}
                     </div>
-                  )}
-                </div>
+                    {students.length ? (
+                      <CustomPagination
+                        total={total}
+                        limit={limit}
+                        page={page}
+                        setPage={setPage}
+                      />
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
