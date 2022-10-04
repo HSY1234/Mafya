@@ -234,6 +234,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional
     List<SearchRes> getAbsentUserInfo(String content, SearchReq searchReq) {
+        System.out.println("<<< Absent >>>");
         List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> teamCode = new LinkedList<>();
@@ -258,6 +259,8 @@ public class SearchServiceImpl implements SearchService {
 
         for (String word : words) {     //단어 분석
             if ("".equals(word) || !checkValid(word))    continue;
+
+            System.out.println("contain word : " + word);
 
             if ("결석".equals(word))   continue;
             else if (word.contains("/")) {
@@ -328,6 +331,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional
     List<SearchRes> getTradyUserInfo(String content, SearchReq searchReq) {
+        System.out.println("<<<< Trady >>>>");
         List<SearchRes> searchResList = new LinkedList<>();
         List<User> userList = new LinkedList<>();
         List<String> teamCode = new LinkedList<>();
@@ -352,6 +356,8 @@ public class SearchServiceImpl implements SearchService {
 
         for (String word : words) {     //단어 분석
             if ("".equals(word) || !checkValid(word))    continue;
+
+            System.out.println("contain word : " + word);
 
             if ("지각".equals(word))   continue;
             else if (word.contains("/")) {
@@ -435,6 +441,8 @@ public class SearchServiceImpl implements SearchService {
 
         for (String word : words) {     //단어 분석
             if ("".equals(word) || !checkValid(word))    continue;
+
+            System.out.println("contain word : " + word);
 
             if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");
@@ -521,6 +529,8 @@ public class SearchServiceImpl implements SearchService {
 
         for (String word : words) {     //단어 분석
             if ("".equals(word) || !checkValid(word))    continue;
+
+            System.out.println("contain word : " + word);
 
             if (word.contains("/")) {
                 StringTokenizer st = new StringTokenizer(word,"/");

@@ -98,7 +98,7 @@
       <recent name="com.a205.mafya.api.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.MafyaApplication">
+  <component name="RunManager" selected="Gradle.SearchServiceImplTest.test2 (1)">
     <configuration name="AttendanceServiceImplTest.test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -206,9 +206,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.SearchServiceImplTest.test2 (1)" />
         <item itemvalue="Spring Boot.MafyaApplication" />
         <item itemvalue="Gradle.MafyaApplicationTests" />
-        <item itemvalue="Gradle.SearchServiceImplTest.test2 (1)" />
         <item itemvalue="Gradle.AttendanceServiceImplTest.test" />
         <item itemvalue="Gradle.MafyaApplicationTests.contextLoads" />
       </list>
@@ -237,7 +237,7 @@
       <workItem from="1664638822119" duration="15626000" />
       <workItem from="1664697102638" duration="1149000" />
       <workItem from="1664700871621" duration="22825000" />
-      <workItem from="1664792514906" duration="6527000" />
+      <workItem from="1664792514906" duration="8495000" />
     </task>
     <servers />
   </component>
