@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,15 +45,20 @@ public class MmsServiceImpl implements MmsService{
     @Autowired
     private UserRepository userRepository;
 
-    private String accessKey="k1mxFBZqYBfMvaXzqtND";
-    private String secretKey="jzdwkTa17b3Xk31KOr7Ze6IgQmdzsk77Efb8YPZM";
-    private String serviceId="ncp:sms:kr:293403538091:mafya";
-    private String senderPhoneNum="01093086183";
+    @Value("${mms.accessKey}")
+    private String accessKey;
+    @Value("${mms.secretKey}")
+    private String secretKey;
+    @Value("${mms.serviceId}")
+    private String serviceId;
+    @Value("${mms.senderPhoneNum}")
+    private String senderPhoneNum;
 
     @Override
     public String sendMms(MmsReq mmsReq) {
         System.out.println(mmsReq.getMessages());
         System.out.println(Arrays.toString(mmsReq.getIds()));
+        System.out.println(accessKey+" "+secretKey+" "+serviceId+" "+senderPhoneNum);
         List<Integer> ids= new ArrayList<Integer>();
 
         for (int i=0; i< mmsReq.getIds().length; i++){
