@@ -1,8 +1,6 @@
 package com.a205.mafya.api.controller;
 
-import com.a205.mafya.api.filter.exception.TokenException;
-import com.a205.mafya.api.request.LoginReq;
-import com.a205.mafya.api.response.LoginRes;
+import com.a205.mafya.util.filter.exception.TokenException;
 import com.a205.mafya.api.response.TokenExpRes;
 import com.a205.mafya.api.service.AuthService;
 import com.a205.mafya.api.service.UserService;

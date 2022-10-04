@@ -1,7 +1,6 @@
 package com.a205.mafya.api.controller;
 
-import com.a205.mafya.api.filter.exception.TokenException;
-import com.a205.mafya.api.filter.exception.WrongPasswordException;
+import com.a205.mafya.util.filter.exception.TokenException;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.LoginReq;
 import com.a205.mafya.api.request.ModifyUserReq;
@@ -24,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

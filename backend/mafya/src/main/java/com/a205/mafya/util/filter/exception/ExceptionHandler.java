@@ -1,7 +1,6 @@
-package com.a205.mafya.api.filter.exception;
+package com.a205.mafya.util.filter.exception;
 
 import com.a205.mafya.api.response.BasicRes;
-import com.a205.mafya.api.response.TokenExpRes;
 import com.a205.mafya.util.CookieProvider;
 import com.a205.mafya.util.TokenProvider;
 import lombok.RequiredArgsConstructor;

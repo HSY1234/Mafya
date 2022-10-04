@@ -1,6 +1,6 @@
 package com.a205.mafya.api.service;
 
-import com.a205.mafya.api.filter.exception.TokenException;
+import com.a205.mafya.util.filter.exception.TokenException;
 import com.a205.mafya.util.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.a205.mafya.api.service;
 
-import com.a205.mafya.api.filter.exception.UserCodeOverlapException;
+import com.a205.mafya.util.filter.exception.UserCodeOverlapException;
 import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;

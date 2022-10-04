@@ -1,4 +1,4 @@
-package com.a205.mafya.api.filter.helper;
+package com.a205.mafya.util.filter.helper;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -22,8 +22,8 @@ import com.a205.mafya.db.entity.User;
 
 public class ExcelHelper {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = { "Id", "Name", "User_code", "Password", "Status", "Team_code", "Class_code", "Phone_num", "Team_leader",
-            "Created_at", "Updated_at", "Absent", "Tardy" };
+    static String[] HEADERs = { "Id", "Name", "User_code", "Password", "Team_code", "Class_code", "Phone_num", "Team_leader",
+            "Absent", "Tardy" };
 
     static String[] SEARCH_HEADER = { "날짜", "반", "팀코드", "학번", "이름", "전화번호", "직위", "결석", "지각", "상태" };
 
@@ -55,20 +55,19 @@ public class ExcelHelper {
             int rowIdx = 1;
             for (User tutorial : tutorials) {
                 Row row = sheet.createRow(rowIdx++);
+                String phone = tutorial.getPhoneNum();
+                phone = phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7, 12);
 
                 row.createCell(0).setCellValue(tutorial.getId());
                 row.createCell(1).setCellValue(tutorial.getName());
                 row.createCell(2).setCellValue(tutorial.getUserCode());
                 row.createCell(3).setCellValue(tutorial.getPassword());
-                row.createCell(4).setCellValue(tutorial.getStatus());
-                row.createCell(5).setCellValue(tutorial.getTeamCode());
-                row.createCell(6).setCellValue(tutorial.getClassCode());
-                row.createCell(7).setCellValue(tutorial.getPhoneNum());
-                row.createCell(8).setCellValue(tutorial.isTeamLeader());//bool
-                row.createCell(9).setCellValue(tutorial.getCreatedAt());
-                row.createCell(10).setCellValue(tutorial.getUpdatedAt());
-                row.createCell(11).setCellValue(tutorial.getAbsent());
-                row.createCell(12).setCellValue(tutorial.getTardy());
+                row.createCell(4).setCellValue(tutorial.getTeamCode());
+                row.createCell(5).setCellValue(tutorial.getClassCode() + "반");
+                row.createCell(6).setCellValue(phone);
+                row.createCell(7).setCellValue((tutorial.isTeamLeader() ? "팀장" : "팀원"));//bool
+                row.createCell(8).setCellValue(tutorial.getAbsent());
+                row.createCell(9).setCellValue(tutorial.getTardy());
             }
 
             workbook.write(out);

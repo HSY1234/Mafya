@@ -1,9 +1,9 @@
-package com.a205.mafya.api.filter.exception;
+package com.a205.mafya.util.filter.exception;
 
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.a205.mafya.api.message.ResponseMessage;
+import com.a205.mafya.util.message.ResponseMessage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

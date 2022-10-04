@@ -1,4 +1,4 @@
-package com.a205.mafya.api.message;
+package com.a205.mafya.util.message;
 
 public class ResponseMessage {
     private String message;
