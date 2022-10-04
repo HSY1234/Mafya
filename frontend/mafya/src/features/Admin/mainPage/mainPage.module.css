@@ -38,6 +38,7 @@
   transform: translate3d(0, 0, 0);
   font-family: "Pretendard-Regular";
   cursor: default;
+  padding: 2rem 1rem;
 }
 .wholePage:after {
   z-index: 11;
@@ -105,6 +106,11 @@
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.5);
   border: solid 3px #d5d5d52d;
+  /* box-shadow: 0 0 5px #fff, -5px 0 10px #3397f456,
+    5px 0 10px rgba(0, 255, 255, 0.526), inset 0 0 50px #fff,
+    inset 50px 0 10px #3397f456, inset -50px 0 10px rgba(0, 255, 255, 0.526),
+    inset 50px 0 75px #3397f456, inset -50px 0 75px rgba(0, 255, 255, 0.526); */
+  box-shadow: 0rem 0.75rem 3rem 0rem rgba(0, 0, 0, 0.6);
 }
 .teamStudentList::-webkit-scrollbar {
   background: transparent;
@@ -267,13 +273,12 @@
 .searchBox {
   margin: 1rem 2rem 3rem 2rem;
   width: 86%;
-  max-width: 960px;
   display: flex;
   justify-content: center;
   /* min-width: 850px; */
   /* padding: 1rem 3rem; */
   background: rgba(255, 255, 255, 0.375);
-  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0rem 0.75rem 3rem 0rem rgba(0, 0, 0, 0.6);
   border-radius: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.125);
   position: relative;
@@ -474,6 +479,11 @@
 .onPage > span {
   font-weight: bold;
 }
+
+/* excel */
+.excelBox {
+  display: flex;
+}
 @media only screen and (max-width: 1120px) {
   .wholePage {
     height: 300vh;
@@ -493,6 +503,9 @@
   .teamStudentBox {
     width: 50%;
     height: 430px;
+  }
+  .searchBox {
+    width: 93%;
   }
   .studentTable > thead > tr > th:nth-child(3) {
     display: none;
@@ -520,6 +533,9 @@
   }
   .teamStudentBox {
     width: 100%;
+  }
+  .searchBox {
+    width: 86%;
   }
   .studentTable > thead > tr > th:nth-child(6) {
     display: none;
