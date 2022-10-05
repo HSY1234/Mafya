@@ -5,9 +5,14 @@ import { API_URL } from "../../../common/api"
 import { useState, useRef } from "react"
 import axios1 from "../../../common/api/axios"
 
-const AdminHeader = () => {
+const AdminHeader = (props) => {
+  const { onPage } = props
   const history = useHistory()
   const [userExcel, setUserExcel] = useState(null)
+  const [listRegi, setlistRegi] = useState(false)
+  const [listDown, setlistDown] = useState(false)
+  const [fileName, setfileName] = useState("파일을 선택해 주세요")
+  const [onFile, setonFile] = useState(false)
   const logoutHandler = (event) => {
     axios1
       .get(API_URL + "student/logout/", {
@@ -26,8 +31,11 @@ const AdminHeader = () => {
   }
   const changeUserExcelHandler = (event) => {
     event.preventDefault()
+    console.log(event.target.files[0])
     let file = event.target.files[0]
     setUserExcel(file)
+    setfileName(event.target.files[0].name)
+    setonFile(true)
   }
 
   const submitUserExcelHandler = (event) => {
@@ -82,6 +90,13 @@ const AdminHeader = () => {
       })
   }
   const fileInput = useRef()
+  const clickRegi = () => {
+    setlistRegi(!listRegi)
+  }
+  const clickDown = () => {
+    setlistDown(!listDown)
+  }
+
   return (
     // <nav className={classes.navbar}>
     // <Link to="/admin" className={classes.navbar__logo}>
@@ -115,49 +130,68 @@ const AdminHeader = () => {
         <span></span>
 
         <ul className={classes.menu}>
-          <a href="#">
-            <li>
+          <li>
+            {onPage === 1 ? (
+              <div className={classes.onThisPage}>학생 조회</div>
+            ) : (
               <Link to="/admin" className={classes.navbar__item}>
-                Main
+                학생 조회
               </Link>
-            </li>
-          </a>
-          <a href="#">
-            <li>
-              <span className={classes.navbar__item} onClick={logoutHandler}>
-                Logout
-              </span>
-            </li>
-          </a>
-          <a href="#">
-            <li>
+            )}
+            {/* <Link to="/admin" className={classes.navbar__item}>
+              Main
+            </Link> */}
+          </li>
+
+          <li>
+            {onPage === 2 ? (
+              <div className={classes.onThisPage}>학생 추가</div>
+            ) : (
               <Link
                 to="/admin/form"
                 state={null}
                 className={classes.navbar__item}
               >
-                Create
+                학생 추가
               </Link>
-            </li>
-          </a>
-          <a href="#">
-            <li>
-              {" "}
+            )}
+          </li>
+          <li className={classes.webCamList}>
+            <span className={classes.webCamBtn} onClick={clickDown}>
+              출석 시스템
+            </span>
+            <div
+              className={
+                listDown ? classes.downAllUserBox : classes.noDownAllUserBox
+              }
+            >
               <Link to="/enter" className={classes.navbar__item}>
                 프로님 버전
               </Link>
-            </li>
-          </a>
-          <a href="#" target="_blank">
-            <li>
-              {" "}
               <Link to="/exit" className={classes.navbar__item}>
                 컨설턴트님 버전
               </Link>
-            </li>
-          </a>
-          <a>
-            <li>
+            </div>
+          </li>
+          <li>
+            <span className={classes.regiAllUser} onClick={clickRegi}>
+              사용자 일괄 등록
+            </span>
+            <div
+              className={
+                listRegi ? classes.regiAllUserBox : classes.noRegiAllUserBox
+              }
+            >
+              <div
+                className={
+                  onFile ? classes.uploadedFile : classes.notUploadedFile
+                }
+                onClick={() => {
+                  fileInput.current.click()
+                }}
+              >
+                {fileName}
+              </div>
               <button
                 onClick={() => {
                   fileInput.current.click()
@@ -175,23 +209,33 @@ const AdminHeader = () => {
                 />
 
                 <button type="submit">
-                  <span class="material-symbols-outlined">file_upload</span>
+                  <span className="material-symbols-outlined">file_upload</span>
                 </button>
               </form>
-            </li>
-          </a>
-          <a>
-            <li>
-              <div>
-                <span
-                  onClick={userExcelHandler}
-                  class="material-symbols-outlined"
-                >
-                  system_update_alt
-                </span>
-              </div>
-            </li>
-          </a>
+            </div>
+          </li>
+          <li>
+            <span className={classes.downAllUser} onClick={userExcelHandler}>
+              사용자 일괄 저장
+            </span>
+            {/* <div
+              className={
+                listDown ? classes.downAllUserBox : classes.noDownAllUserBox
+              }
+            >
+              <span
+                onClick={userExcelHandler}
+                className="material-symbols-outlined"
+              >
+                system_update_alt
+              </span>
+            </div> */}
+          </li>
+          <li>
+            <span className={classes.logoutBtn} onClick={logoutHandler}>
+              로그 아웃
+            </span>
+          </li>
         </ul>
       </div>
     </nav>
