@@ -1,4 +1,15 @@
 /* by hong */
+.wholePage {
+  background: #1e1e1e;
+  overflow: hidden;
+
+  height: 110vh;
+  transform: translate3d(0, 0, 0);
+  font-family: "Pretendard-Regular";
+  cursor: default;
+  padding: 2rem 1rem;
+  padding-left: 2rem;
+}
 .mainPageContainer {
   position: absolute;
   display: flex;
@@ -23,8 +34,8 @@
   right: 0; */
   /* text-align: "center"; */
   z-index: 9;
-  width: 960px;
-  height: 720px;
+  width: 965px;
+  height: 700px;
 }
 .detectNow {
   padding: 7px;
