@@ -34,11 +34,13 @@
   background: linear-gradient(90deg, rgba(72, 137, 147, 0.4), #2857c496 87%);
   /* height: 150vh; */
   overflow: hidden;
+
   height: 150vh;
   transform: translate3d(0, 0, 0);
   font-family: "Pretendard-Regular";
   cursor: default;
   padding: 2rem 1rem;
+  padding-left: 2rem;
 }
 .wholePage:after {
   z-index: 11;
@@ -62,6 +64,7 @@
 }
 .rightSideBox {
   width: 100%;
+  padding-left: 2rem;
 }
 .boxTitle {
   font-size: 1.5rem;
@@ -514,6 +517,9 @@
     width: 100%;
     display: flex;
   }
+  .rightSideBox {
+    padding: 0;
+  }
   .dangerInfoBox {
     width: 50%;
   }
@@ -544,6 +550,9 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+  .right {
+    padding: 0;
   }
   .dangerInfoBox {
     width: 100%;
