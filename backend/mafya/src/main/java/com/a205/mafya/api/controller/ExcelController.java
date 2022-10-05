@@ -30,23 +30,16 @@ public class ExcelController {
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("uploadUserFile") MultipartFile file) {
         String message = "";
-        System.out.println("upload");
-        System.out.println("0");
         if (ExcelHelper.hasExcelFormat(file)) {
-            System.out.println("1");
             try {
-                System.out.println("2");
                 fileService.save(file);
-                System.out.println("3");
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             } catch (Exception e) {
-                System.out.println("4");
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
             }
         }
-        System.out.println("5");
         message = "Please upload an excel file!";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
@@ -70,7 +63,6 @@ public class ExcelController {
     public ResponseEntity<Resource> getFile() {
         String filename = "user_list.xlsx";
         InputStreamResource file = new InputStreamResource(fileService.load());
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))

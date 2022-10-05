@@ -43,20 +43,20 @@ public class ExcelHelper {
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
             Sheet sheet = workbook.createSheet(SHEET);
-
             // Header
             Row headerRow = sheet.createRow(0);
-
             for (int col = 0; col < HEADERs.length; col++) {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERs[col]);
             }
-
             int rowIdx = 1;
             for (User tutorial : tutorials) {
                 Row row = sheet.createRow(rowIdx++);
                 String phone = tutorial.getPhoneNum();
-                phone = phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7, 12);
+
+                if(phone.length() == 12){
+                    phone = phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7, 11);
+                }
 
                 row.createCell(0).setCellValue(tutorial.getId());
                 row.createCell(1).setCellValue(tutorial.getName());
@@ -80,15 +80,12 @@ public class ExcelHelper {
     public static List<User> excelToTutorials(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
-
             Sheet sheet = workbook.getSheet(SHEET);
             Iterator<Row> rows = sheet.iterator();
             List<User> tutorials = new ArrayList<User>();
-
             int rowNumber = 0;
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
-
                 // skip header
                 if (rowNumber == 0) {
                     rowNumber++;
@@ -97,55 +94,44 @@ public class ExcelHelper {
 
                 Iterator<Cell> cellsInRow = currentRow.iterator();
                 User tutorial = new User();
+                System.out.println(tutorial);
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 0:
-                            break;
-
-                        case 1:
                             tutorial.setName(currentCell.getStringCellValue());
                             break;
 
-                        case 2:
+                        case 1:
                             tutorial.setUserCode(currentCell.getStringCellValue());
                             break;
 
-                        case 3:
+                        case 2:
                             tutorial.setPassword(currentCell.getStringCellValue());
                             break;
 
-                        case 4:
-                            break;
-
-                        case 5:
+                        case 3:
                             tutorial.setTeamCode(currentCell.getStringCellValue());
                             break;
 
-                        case 6:
+                        case 4:
                             tutorial.setClassCode(currentCell.getStringCellValue());
                             break;
 
-                        case 7:
+                        case 5:
                             tutorial.setPhoneNum(currentCell.getStringCellValue());
                             break;
 
-                        case 8:
+                        case 6:
                             tutorial.setTeamLeader(currentCell.getBooleanCellValue());
                             break;
 
-                        case 9:
-                            break;
-
-                        case 10:
-                            break;
-
-                        case 11:
+                        case 7:
                             tutorial.setAbsent((int) currentCell.getNumericCellValue());
                             break;
 
-                        case 12:
+                        case 8:
                             tutorial.setTardy((int) currentCell.getNumericCellValue());
                             break;
 
