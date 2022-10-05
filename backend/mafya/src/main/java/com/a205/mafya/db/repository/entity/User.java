@@ -1,4 +1,4 @@
-package com.a205.mafya.db.entity;
+package com.a205.mafya.db.repository.entity;
 
 import com.a205.mafya.api.request.ModifyUserReq;
 import lombok.*;

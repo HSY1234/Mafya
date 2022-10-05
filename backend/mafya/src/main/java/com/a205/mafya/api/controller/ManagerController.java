@@ -1,17 +1,12 @@
 package com.a205.mafya.api.controller;
 
 import com.a205.mafya.api.request.AddManagerReq;
-import com.a205.mafya.api.request.AddUserReq;
-import com.a205.mafya.api.request.LoginReq;
-import com.a205.mafya.api.response.LoginRes;
 import com.a205.mafya.api.response.UserOneRes;
 import com.a205.mafya.api.service.AuthService;
 import com.a205.mafya.api.service.ManagerService;
 import com.a205.mafya.api.service.TokenService;
 import com.a205.mafya.db.dto.UserInfo;
-import com.a205.mafya.db.entity.Manager;
 import com.a205.mafya.db.repository.ManagerRepository;
-import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.util.CookieProvider;
 import com.a205.mafya.util.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @Slf4j
 @RestController

@@ -1,9 +1,8 @@
 package com.a205.mafya.api.service;
 
 import com.a205.mafya.api.request.AddManagerReq;
-import com.a205.mafya.db.entity.Manager;
+import com.a205.mafya.db.repository.entity.Manager;
 import com.a205.mafya.db.repository.ManagerRepository;
-import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

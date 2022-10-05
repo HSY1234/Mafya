@@ -1,10 +1,8 @@
-package com.a205.mafya.db.entity;
+package com.a205.mafya.db.repository.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor

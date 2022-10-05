@@ -1,4 +1,4 @@
-package com.a205.mafya.db.entity;
+package com.a205.mafya.db.repository.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

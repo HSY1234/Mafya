@@ -5,7 +5,7 @@ import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.db.dto.UserInfo;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

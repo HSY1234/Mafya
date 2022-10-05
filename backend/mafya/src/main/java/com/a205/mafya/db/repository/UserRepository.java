@@ -1,6 +1,6 @@
 package com.a205.mafya.db.repository;
 
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

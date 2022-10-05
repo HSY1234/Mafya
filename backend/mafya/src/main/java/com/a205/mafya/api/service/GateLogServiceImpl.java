@@ -1,7 +1,7 @@
 package com.a205.mafya.api.service;
 
-import com.a205.mafya.db.entity.GateLog;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.GateLog;
+import com.a205.mafya.db.repository.entity.User;
 import com.a205.mafya.db.repository.GateLogRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

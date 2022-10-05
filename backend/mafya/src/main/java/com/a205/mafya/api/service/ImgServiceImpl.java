@@ -1,11 +1,10 @@
 package com.a205.mafya.api.service;
 
-import com.a205.mafya.db.entity.User;
-import com.a205.mafya.db.entity.UserImg;
+import com.a205.mafya.db.repository.entity.User;
+import com.a205.mafya.db.repository.entity.UserImg;
 import com.a205.mafya.db.repository.UserImgRepository;
 import com.a205.mafya.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,9 +18,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class ImgServiceImpl implements ImgService {

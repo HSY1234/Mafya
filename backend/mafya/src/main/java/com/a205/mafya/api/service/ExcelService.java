@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.a205.mafya.util.filter.helper.ExcelHelper;
 //import com.a205.mafya.api.model.Tutorial;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.User;
 import com.a205.mafya.db.repository.TutorialRepository;
 
 @Service

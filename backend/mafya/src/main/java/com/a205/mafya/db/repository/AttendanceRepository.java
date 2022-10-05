@@ -1,7 +1,7 @@
 package com.a205.mafya.db.repository;
 
-import com.a205.mafya.db.entity.Attendance;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.Attendance;
+import com.a205.mafya.db.repository.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

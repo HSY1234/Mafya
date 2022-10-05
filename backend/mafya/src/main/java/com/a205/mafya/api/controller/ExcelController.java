@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.a205.mafya.util.filter.helper.ExcelHelper;
 import com.a205.mafya.util.message.ResponseMessage;
 //import com.a205.mafya.api.model.Tutorial;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.User;
 import com.a205.mafya.api.service.ExcelService;
 
 @CrossOrigin("http://localhost:8080")
