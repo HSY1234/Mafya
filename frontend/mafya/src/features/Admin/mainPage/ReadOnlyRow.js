@@ -19,12 +19,12 @@ const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
         <button type="button" onClick={(event) => updateHandler(student)}>
           <span class="material-symbols-outlined">edit</span>
         </button>
-        <button type="button" onClick={() => deleteHandler(student.id)}>
+        {/* <button type="button" onClick={() => deleteHandler(student.id)}>
           <span class="material-symbols-outlined">delete</span>
-        </button>
+        </button> */}
       </td>
     </tr>
-  );
-};
+  )
+}
 
-export default ReadonlyRow;
+export default ReadonlyRow
