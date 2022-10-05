@@ -15,12 +15,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 //import com.a205.mafya.api.model.Tutorial;
 import com.a205.mafya.db.entity.User;
 
 public class ExcelHelper {
+    @Autowired
+    private static PasswordEncoder passwordEncoder;
+
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = { "Id", "Name", "User_code", "Password", "Team_code", "Class_code", "Phone_num", "Team_leader",
             "Absent", "Tardy" };
@@ -108,7 +113,8 @@ public class ExcelHelper {
                             break;
 
                         case 2:
-                            tutorial.setPassword(currentCell.getStringCellValue());
+                            String password = currentCell.getStringCellValue();
+                            tutorial.setPassword(passwordEncoder.encode(password));
                             break;
 
                         case 3:
