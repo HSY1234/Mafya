@@ -482,7 +482,24 @@
 
 /* excel */
 .excelBox {
+  position: absolute;
+  bottom: 8.5%;
+  right: 7.5%;
   display: flex;
+  justify-content: end;
+}
+.excelBox button {
+  border: none;
+  background: none;
+  color: #d29f82;
+  transition: 0.3s;
+}
+.excelBox button:hover {
+  scale: 1.05;
+  cursor: pointer;
+}
+.excelBox button > span {
+  font-size: 2rem;
 }
 @media only screen and (max-width: 1120px) {
   .wholePage {

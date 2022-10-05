@@ -632,7 +632,7 @@ const MainPage = () => {
           </form>
         </CustomModal>
         <div className={styles.wholePage}>
-          <AdminHeader />
+          <AdminHeader onPage={1} />
 
           <div className={styles.inner}>
             <div className={styles.leftSideBox}>
@@ -843,7 +843,7 @@ const MainPage = () => {
                   </div>
                 ) : (
                   <div className={styles.searchBoxAfter}>
-                    <div className={styles.excelBox}>
+                    {/* <div className={styles.excelBox}>
                       <form onSubmit={submitUserExcelHandler}>
                         <input
                           type="file"
@@ -871,7 +871,7 @@ const MainPage = () => {
                           </span>
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <div className={styles.searchEnzineBox}>
                       <form onSubmit={searchHandler}>
                         <input
@@ -891,37 +891,46 @@ const MainPage = () => {
                     </div>
                     <div className={styles.studentTableBox}>
                       {students.length ? (
-                        <table className={styles.studentTable}>
-                          <thead>
-                            <tr>
-                              <th onClick={searchDateHandler}>날짜</th>
-                              <th onClick={searchClassCodeHandler}>반</th>
-                              <th onClick={searchTeamCodeHandler}>팀 코드</th>
-                              <th onClick={searchUserCodeHandler}>학번</th>
-                              <th onClick={searchNameHandler}>이름</th>
-                              <th>전화번호</th>
-                              <th onClick={searchTeamLeaderHandler}>직위</th>
-                              <th onClick={searchAbsentHandler}>결석</th>
-                              <th onClick={searchTardyHandler}>지각</th>
-                              <th onClick={searchStatusHandler}>상태</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {students
-                              .slice(offset, offset + limit)
-                              .map((student) => {
-                                return (
-                                  <ReadonlyRow
-                                    key={students.indexOf(student)}
-                                    student={student}
-                                    deleteHandler={deleteHandler}
-                                    updateHandler={updateHandler}
-                                  />
-                                )
-                              })}
-                          </tbody>
-                        </table>
+                        <div>
+                          <table className={styles.studentTable}>
+                            <thead>
+                              <tr>
+                                <th onClick={searchDateHandler}>날짜</th>
+                                <th onClick={searchClassCodeHandler}>반</th>
+                                <th onClick={searchTeamCodeHandler}>팀 코드</th>
+                                <th onClick={searchUserCodeHandler}>학번</th>
+                                <th onClick={searchNameHandler}>이름</th>
+                                <th>전화번호</th>
+                                <th onClick={searchTeamLeaderHandler}>직위</th>
+                                <th onClick={searchAbsentHandler}>결석</th>
+                                <th onClick={searchTardyHandler}>지각</th>
+                                <th onClick={searchStatusHandler}>상태</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {students
+                                .slice(offset, offset + limit)
+                                .map((student) => {
+                                  return (
+                                    <ReadonlyRow
+                                      key={students.indexOf(student)}
+                                      student={student}
+                                      deleteHandler={deleteHandler}
+                                      updateHandler={updateHandler}
+                                    />
+                                  )
+                                })}
+                            </tbody>
+                          </table>
+                          <div className={styles.excelBox}>
+                            <button onClick={searchExcelHandler}>
+                              <span class="material-symbols-outlined">
+                                download
+                              </span>
+                            </button>
+                          </div>
+                        </div>
                       ) : (
                         <div className={styles.noResult}>
                           <p>검색 결과가 없습니다.</p>
