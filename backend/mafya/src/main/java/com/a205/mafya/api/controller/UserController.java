@@ -90,8 +90,10 @@ public class UserController {
         }
 
         //비밀번호 일치 확인
-        if (!passwordEncoder.matches(loginReq.getPassword(), password))
-            return (new ResponseEntity<Void>(HttpStatus.OK));
+        if (!passwordEncoder.matches(loginReq.getPassword(), password)) {
+            System.out.println("bad password");
+            return (new ResponseEntity<Void>(HttpStatus.BAD_REQUEST));
+        }
 
         if (!password.equals(loginReq.getPassword()))
             return (new ResponseEntity<Void>(HttpStatus.OK));
