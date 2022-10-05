@@ -25,7 +25,7 @@ class SearchServiceImplTest {
     @Test
     void test2() {
 //        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
-        String content = "%c 2반";
+        String content = "10/4";
         SearchReq searchReq = new SearchReq(content, false, false);
 
         List<SearchRes> userInfoList = searchService.doIntegratedSearch(searchReq);

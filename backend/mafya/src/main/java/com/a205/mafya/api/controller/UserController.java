@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +52,9 @@ public class UserController {
     CookieProvider cookieProvider;
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // 로그인
     @PostMapping("login")
@@ -85,6 +89,12 @@ public class UserController {
             throw new NoSuchElementException("no user exist");
         }
 
+        //비밀번호 일치 확인
+        if (!passwordEncoder.matches(loginReq.getPassword(), password))
+            return (new ResponseEntity<Void>(HttpStatus.OK));
+
+        if (!password.equals(loginReq.getPassword()))
+            return (new ResponseEntity<Void>(HttpStatus.OK));
 
         // accessToken은 responseEntity로 보내기
         LoginRes LR = LoginRes.builder()

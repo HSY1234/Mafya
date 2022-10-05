@@ -25,7 +25,6 @@
 //import org.springframework.web.cors.CorsUtils;
 //
 //
-//@EnableWebSecurity
 //@RequiredArgsConstructor
 //@Configuration(proxyBeanMethods = false)
 //@ConditionalOnDefaultWebSecurity

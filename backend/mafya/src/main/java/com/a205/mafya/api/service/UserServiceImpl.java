@@ -9,7 +9,7 @@ import com.a205.mafya.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
                 .name(userReq.getName())
                 .userCode(userReq.getUserCode())
-                .password(userReq.getUserCode())
-                // 회원가입 시 상태는 기본값으로
+                .password(passwordEncoder.encode(userReq.getUserCode()))
+                // 회원가입 시 상태는 기본값으로(안쓰는 컬럼)
                 // status(0) : 입실
                 // status(1) : 입실안함
                 .status(1)
@@ -73,7 +73,6 @@ public class UserServiceImpl implements UserService{
         user.modifyInfo(userReq);
 
         userRepository.save(user);
-
     }
 
     @Override
