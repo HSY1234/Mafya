@@ -53,15 +53,16 @@
   user-select: none;
 }
 
-.menuToggle a {
+.menuToggle li > a {
   text-decoration: none;
   color: #232323;
 
-  transition: color 0.3s ease;
+  transition: 0.3s ease;
 }
 
-.menuToggle a:hover {
+.menuToggle li > a:hover {
   color: tomato;
+  font-size: 1.7rem;
 }
 
 .menuToggle input {
@@ -159,6 +160,7 @@
 
 .menu li {
   padding: 10px 0;
+  margin-bottom: 1rem;
   font-size: 22px;
 }
 
@@ -167,4 +169,119 @@
   */
 .menuToggle input:checked ~ ul {
   transform: none;
+}
+
+/* logout */
+.logoutBtn {
+  color: crimson;
+  transition: 0.3s ease;
+}
+.logoutBtn:hover {
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+/* web cam */
+.webCamBtn {
+  transition: 0.3s ease;
+}
+.webCamBtn:hover {
+  cursor: pointer;
+  color: tomato;
+  font-size: 1.7rem;
+}
+
+.webCamList > div > a {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.396);
+}
+.webCamList > div > a:hover {
+  color: #232323;
+}
+
+/* in menu, register */
+.noRegiAllUserBox {
+  display: none;
+}
+.regiAllUser {
+  transition: 0.3s ease;
+}
+.regiAllUser:hover {
+  cursor: pointer;
+  color: tomato;
+  font-size: 1.7rem;
+}
+.regiAllUserBox {
+  display: flex;
+  margin-top: 5%;
+  animation: fadeInUp1 0.4s;
+}
+
+.notUploadedFile {
+  display: block;
+  width: 10rem;
+  height: 2rem;
+  margin-right: 1rem;
+  border-bottom: 1px solid #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+  line-height: 2.5rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.396);
+}
+.uploadedFile {
+  display: block;
+  width: 10rem;
+  height: 2rem;
+  margin-right: 1rem;
+  border-bottom: 1px solid #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+  line-height: 2.5rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.703);
+}
+/* in menu, down all */
+.noDownAllUserBox {
+  display: none;
+}
+.downAllUser {
+  transition: 0.3s ease;
+}
+.downAllUser:hover {
+  cursor: pointer;
+  color: tomato;
+  font-size: 1.7rem;
+}
+.downAllUserBox {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+  animation: fadeInUp1 1s;
+}
+
+/* on this page */
+.onThisPage {
+  color: orange;
+  font-size: 2rem;
+}
+@keyframes fadeInUp1 {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -20%, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate3d(0, 0%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
 }
