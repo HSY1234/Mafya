@@ -1,12 +1,17 @@
-import animation from "./spinner.gif";
+import animation from "./spinner.gif"
+import styles from "./spinner.module.css"
 
 const Spinner = () => {
   return (
     <div>
-      Loading....
-      <img src={animation} alt="로딩중!"></img>
+      <div class={styles.load3}>
+        <div class={styles.line}></div>
+        <div class={styles.line}></div>
+        <div class={styles.line}></div>
+        <div class={styles.line}></div>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Spinner;
+export default Spinner
