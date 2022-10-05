@@ -95,9 +95,6 @@ public class UserController {
             return (new ResponseEntity<Void>(HttpStatus.BAD_REQUEST));
         }
 
-        if (!password.equals(loginReq.getPassword()))
-            return (new ResponseEntity<Void>(HttpStatus.OK));
-
         // accessToken은 responseEntity로 보내기
         LoginRes LR = LoginRes.builder()
                 .accessToken(accessToken)
