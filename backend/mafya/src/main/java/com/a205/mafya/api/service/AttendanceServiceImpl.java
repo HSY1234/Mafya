@@ -311,13 +311,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (!user.isPresent() || !refMonth.isPresent()) return (attendanceSituationRes);
 
         List<Attendance> attendanceList = attendanceRepository.findAllByUserAndMonth(user.get(), month);
-        int trady = 0, absent = 0, totalDay, totalAttend, money;
+        int trady = 0, absent = 0, totalDay, totalAttend, money, participation = 0;
 
         for (int i = 0; i < attendanceList.size(); i++) {
             int type = attendanceList.get(i).getType();
 
             if (type == TRADY_AND_EARLYLEAVE || type == TRADY_AND_NORMALEXIT || type == ENTRANCE_AND_EARLYLEAVE)  trady++;   //11, 12, 2
             else if (type == ABSENT) absent++;
+            else    participation++;
         }
 
         if (trady >= 3) {
@@ -336,6 +337,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceSituationRes.setTotalDay(totalDay);
         attendanceSituationRes.setTotalAttend(totalAttend);
         attendanceSituationRes.setMoney(money);
+        attendanceSituationRes.setParticipation(participation);
 
         return (attendanceSituationRes);
     }

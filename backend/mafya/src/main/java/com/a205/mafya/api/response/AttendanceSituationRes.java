@@ -15,4 +15,6 @@ public class AttendanceSituationRes {
      int totalAttend; //참여 수업일수
 
      int money; //교육 지원금
+
+     int participation;  //참여 일수
 }
