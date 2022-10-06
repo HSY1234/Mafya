@@ -65,7 +65,7 @@ def URL2Frame(URL):
     #print(type(urllib.request.urlopen(URL).read()))
     #print(type(image_to_byte_array(Image.open('AR.jpg'))))
     img_arr = np.array(
-        bytearray(image_to_byte_array(Image.open('identify/face.jpg'))), dtype=np.uint8)
+        bytearray(image_to_byte_array(Image.open(URL))), dtype=np.uint8)
         #bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
     frame = cv2.imdecode(img_arr, -1)
     # print(frame)
@@ -216,11 +216,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/ai/maskreco', methods=['GET'])
+@app.route('/ai/maskreco', methods=['POST'])
 def maskreco():
     print("마스크 인식 시작!")
-    if request.method == 'GET':
-        image = Image.open('identify/mask.jpg')
+    if request.method == 'POST':
+        file = request.files['file']
+        image = Image.open(file)
         size = (224, 224)
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
         image_array = np.asarray(image)
@@ -270,12 +271,13 @@ def modelin():
         student_id = get_info(URL_in, landmark, device_0, target, name)
         return {'id': student_id}
 
-@app.route('/ai/modelsearch', methods=['GET'])
+@app.route('/ai/modelsearch', methods=['POST'])
 def modelsearch():
-    if request.method == 'GET':
+    if request.method == 'POST':
         print("누군지 찾아볼께요")
-        URL_fr = ""
-        URL_in = ""
+        file = request.files['file']
+        URL_fr = file
+        URL_in = file
         student_list = get_face(URL_fr, device_0, target, name)
         if not len(student_list):
             return "no face"
