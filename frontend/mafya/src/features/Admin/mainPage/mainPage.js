@@ -39,12 +39,12 @@ const MainPage = () => {
   const [isStatus, setIsStatus] = useState(false)
   const [isTeamLeader, setIsTeamLeader] = useState(false)
   const [userExcel, setUserExcel] = useState(null)
-
   const [search, setSearch] = useState("")
   const [searchLoading, setSearchLoading] = useState(true)
   const [dangerModalOpen, setDangerModalOpen] = useState(false)
-
   const [searchBox, setSearchBox] = useState(false)
+
+  const Swal = require("sweetalert2")
 
   const dangerOpenModal = () => {
     setDangerModalOpen(true)
@@ -475,7 +475,11 @@ const MainPage = () => {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
+        Swal.fire({
+          icon: "success",
+          title: `메세지가 전송되었습니다.`,
+          timer: 1500,
+        })
         setDangerModalOpen(false)
         setMessages("")
       })
@@ -493,7 +497,11 @@ const MainPage = () => {
         headers: { accessToken: window.localStorage.getItem("token") },
       })
       .then((res) => {
-        alert("성공")
+        Swal.fire({
+          icon: "success",
+          title: `메세지가 전송되었습니다.`,
+          timer: 1500,
+        })
         setModalOpen(false)
         setMessages("")
       })
@@ -684,7 +692,15 @@ const MainPage = () => {
                   <div className={styles.dropdownContent}>
                     <div className={styles.dropdownItem}>
                       <form onSubmit={mmsDangerHandler}>
-                        <button className={styles.sendBtn} type="submit">
+                        <button
+                          className={
+                            dangerCheckItems.length
+                              ? styles.sendBtn
+                              : styles.falseSendBtn
+                          }
+                          disabled={dangerCheckItems.length ? false : true}
+                          type="submit"
+                        >
                           <span className="material-symbols-outlined">
                             outgoing_mail
                           </span>
@@ -705,7 +721,8 @@ const MainPage = () => {
                           : false
                       }
                     /> */}
-                      {dangerCheckItems.length === dangerList.length ? (
+                      {dangerCheckItems.length &&
+                      dangerCheckItems.length === dangerList.length ? (
                         <div className={styles.checked}>
                           <span className="material-symbols-outlined">
                             done_all
@@ -796,7 +813,15 @@ const MainPage = () => {
                   <div className={styles.dropdownContent}>
                     <div className={styles.dropdownItem}>
                       <form onSubmit={mmsHandler}>
-                        <button className={styles.sendBtn} type="submit">
+                        <button
+                          className={
+                            checkItems.length
+                              ? styles.sendBtn
+                              : styles.falseSendBtn
+                          }
+                          disabled={checkItems.length ? false : true}
+                          type="submit"
+                        >
                           <span className="material-symbols-outlined">
                             outgoing_mail
                           </span>
@@ -807,7 +832,8 @@ const MainPage = () => {
                       onClick={handleAllCheck}
                       className={styles.dropdownItem}
                     >
-                      {checkItems.length === studentList.length ? (
+                      {checkItems.length &&
+                      checkItems.length === studentList.length ? (
                         <div className={styles.checked}>
                           <span className="material-symbols-outlined">
                             done_all
