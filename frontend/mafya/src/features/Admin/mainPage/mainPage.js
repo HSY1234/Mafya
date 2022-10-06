@@ -211,6 +211,35 @@ const MainPage = () => {
     fetchStudentList(classCode)
 
     setIsLoading(false)
+    setSearchLoading(true)
+    axios1
+      .post(
+        API_URL + "search",
+        { content: search, tradyOrder: isTrady, absentOrder: isAbsent },
+        {
+          headers: {
+            accessToken: window.localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setStudents(res.data)
+        setTotal(res.data.length)
+        setIsDate(false)
+        setIsAbsent(!isAbsent)
+        setIsClassCode(false)
+        setIsName(false)
+        setIsTeamCode(false)
+        setIsUserCode(false)
+        setIsTrady(!isTrady)
+        setIsTeamLeader(false)
+        setPage(1)
+      })
+      .catch((err) => {
+        alert("학생 리스트 정보를 불러오지 못했습니다.")
+      })
+    setSearchLoading(false)
   }, [])
 
   const searchChangeHandler = (event) => {
@@ -897,7 +926,7 @@ const MainPage = () => {
                 </span>
               </div>
               <div className={styles.searchBox}>
-                {!searchBox ? (
+                {searchBox ? (
                   <div
                     className={styles.searchBoxBefore}
                     onClick={clickSearchBox}
