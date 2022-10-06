@@ -13,21 +13,40 @@ const AdminHeader = (props) => {
   const [listDown, setlistDown] = useState(false)
   const [fileName, setfileName] = useState("파일을 선택해 주세요")
   const [onFile, setonFile] = useState(false)
+  const Swal = require("sweetalert2")
   const logoutHandler = (event) => {
-    axios1
-      .get(API_URL + "student/logout/", {
-        headers: {
-          accessToken: window.localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        window.localStorage.clear()
-        history.push("/")
-      })
-      .catch((err) => {
-        console.log(err)
-        console.log(err)
-      })
+    Swal.fire({
+      title: "확실한가요?",
+      text: "관리할 학생들이 없는지 확인하세요.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3396f4",
+      cancelButtonColor: "#dc143cac",
+      confirmButtonText: "로그아웃",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: "success",
+          title: `로그아웃 되었습니다.`,
+          timer: 1500,
+        })
+        axios1
+          .get(API_URL + "student/logout/", {
+            headers: {
+              accessToken: window.localStorage.getItem("token"),
+            },
+          })
+          .then((res) => {
+            window.localStorage.clear()
+            history.push("/")
+          })
+          .catch((err) => {
+            console.log(err)
+            console.log(err)
+          })
+      }
+    })
   }
   const changeUserExcelHandler = (event) => {
     event.preventDefault()
@@ -66,28 +85,46 @@ const AdminHeader = (props) => {
       })
   }
   const userExcelHandler = (event) => {
-    event.preventDefault()
+    Swal.fire({
+      title: "학생 정보를 저장하시겠습니까?",
+      text: "등록된 모든 학생 정보를 저장합니다.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3396f4",
+      cancelButtonColor: "#dc143cac",
+      confirmButtonText: "저장",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: "success",
+          title: `저장 되었습니다.`,
+          timer: 1500,
+        })
+        event.preventDefault()
 
-    axios1
-      .get(API_URL + "excel/download", {
-        headers: {
-          accessToken: window.localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-        responseType: "blob",
-      })
-      .then((response) => {
-        const url = window.URL.createObjectURL(
-          new Blob([response.data], {
-            type: response.headers["content-type"],
+        axios1
+          .get(API_URL + "excel/download", {
+            headers: {
+              accessToken: window.localStorage.getItem("token"),
+              "Content-Type": "application/json",
+            },
+            responseType: "blob",
           })
-        )
-        const link = document.createElement("a")
-        link.href = url
-        link.setAttribute("download", "user.xlsx")
-        document.body.appendChild(link)
-        link.click()
-      })
+          .then((response) => {
+            const url = window.URL.createObjectURL(
+              new Blob([response.data], {
+                type: response.headers["content-type"],
+              })
+            )
+            const link = document.createElement("a")
+            link.href = url
+            link.setAttribute("download", "user.xlsx")
+            document.body.appendChild(link)
+            link.click()
+          })
+      }
+    })
   }
   const fileInput = useRef()
   const clickRegi = () => {
@@ -233,7 +270,7 @@ const AdminHeader = (props) => {
           </li>
           <li>
             <span className={classes.logoutBtn} onClick={logoutHandler}>
-              로그 아웃
+              로그아웃
             </span>
           </li>
         </ul>
