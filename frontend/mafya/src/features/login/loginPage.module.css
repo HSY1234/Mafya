@@ -5,6 +5,13 @@
   font-weight: 400;
   font-style: normal;
 }
+@font-face {
+  font-family: "CWDangamAsac-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
 .mainPageChange {
   animation: fadeout 1s;
   transform: scale(1.05);
@@ -12,6 +19,11 @@
 }
 .mainPage {
   cursor: pointer;
+}
+.logoName {
+  font-family: "CWDangamAsac-Bold";
+  font-size: 5rem;
+  padding-top: 5rem;
 }
 @keyframes fadeout {
   from {
@@ -30,6 +42,7 @@
 }
 .logo {
   width: 200px;
+  height: 230px;
 }
 .seviceInfo {
   text-align: center;
@@ -115,8 +128,135 @@ input:not(:placeholder-shown) {
   background: rgba(255, 255, 255, 0.892);
   border: solid 2px rgba(0, 0, 0, 0.563);
 }
-
+/* start */
+.stars {
+  position: absolute;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.3rem;
+  background-color: rgba(244, 244, 174, 0.795);
+  /* border: solid 1.5px rgba(0, 0, 0, 0.563); */
+  animation: twinkle 2s 0.2s ease infinite;
+}
+.stars:nth-child(2) {
+  position: absolute;
+  top: 5%;
+  left: 15%;
+  animation: twinkle 2s 0.4s ease infinite;
+}
+.stars:nth-child(3) {
+  position: absolute;
+  top: 36%;
+  left: 78%;
+  animation: twinkle 2s 0.6s ease infinite;
+}
+.stars:nth-child(4) {
+  position: absolute;
+  top: 42%;
+  left: 25%;
+  animation: twinkle 2s 0.8s ease infinite;
+}
+.stars:nth-child(5) {
+  position: absolute;
+  top: 53%;
+  left: 75%;
+  animation: twinkle 2s 1s ease infinite;
+}
+.stars:nth-child(6) {
+  position: absolute;
+  top: 32%;
+  left: 14%;
+  animation: twinkle 2s 1.2s ease infinite;
+}
+.stars:nth-child(7) {
+  position: absolute;
+  top: 11%;
+  left: 45%;
+  animation: twinkle 2s 1.2s ease infinite;
+}
+.stars:nth-child(8) {
+  position: absolute;
+  top: 68%;
+  left: 36%;
+  animation: twinkle 2s 1.6s ease infinite;
+}
+.stars:nth-child(9) {
+  position: absolute;
+  top: 85%;
+  left: 11%;
+  animation: twinkle 2s 0.4s ease infinite;
+}
+.stars:nth-child(10) {
+  position: absolute;
+  top: 31%;
+  left: 88%;
+  animation: twinkle 2s 0.2s ease infinite;
+}
+.starBackChange {
+  position: absolute;
+  height: 0px;
+  display: none;
+}
+@keyframes twinkle {
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  30% {
+    opacity: 0.4;
+  }
+  40% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  60% {
+    opacity: 0.2;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
 /* background */
+.loginBackBefore {
+  background: #1d2b6b;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.loginBackChanger {
+  background: #1d2b6b;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transition: background 1s ease;
+}
+.loginBackChanger:hover {
+  background: linear-gradient(
+    -45deg,
+    #336df496,
+    /* #23a6d5,
+    #23d5d5a5, */ rgba(114, 220, 233, 0.4)
+  );
+  background-size: 400% 400%;
+}
 .loginBack {
   background: linear-gradient(
     -45deg,
@@ -130,10 +270,9 @@ input:not(:placeholder-shown) {
   display: flex;
   align-items: center;
   overflow: hidden;
-
-  overflow: hidden;
   transform: translate3d(0, 0, 0);
 }
+
 .loginBack:after {
   z-index: 11;
   transform: translate3d(0, 0, 0);
@@ -141,13 +280,19 @@ input:not(:placeholder-shown) {
 
 @keyframes gradient {
   0% {
+    background-position: 0% 0%;
+  }
+  25% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
+  75% {
+    background-position: 50% 0%;
+  }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
 }
 
@@ -176,14 +321,15 @@ input:not(:placeholder-shown) {
 }
 .overlay_inner {
   max-width: 36rem;
-  animation: fadein 0.5s;
+  animation: fadeout 1s;
+  transition: all 1s;
 }
 @keyframes fadein {
-  from {
-    opacity: 1;
+  0% {
+    color: black;
   }
-  to {
-    opacity: 0;
+  100% {
+    color: white;
   }
 }
 .overlay_title {

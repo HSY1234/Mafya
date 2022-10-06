@@ -83,7 +83,9 @@ const AttendInformation = (props) => {
                 {information.totalDay ? (
                   <div className={styles.percentageP}>
                     {Math.ceil(
-                      (information.totalAttend / information.totalDay) * 100
+                      (information.participation /
+                        (information.participation + information.absent)) *
+                        100
                     )}
                     %
                   </div>
