@@ -11,6 +11,7 @@
   transition: all 1s;
 }
 .mainPage {
+  cursor: pointer;
 }
 @keyframes fadeout {
   from {
@@ -161,13 +162,17 @@ input:not(:placeholder-shown) {
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.375);
-  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0rem 0.75rem 3rem 0rem rgba(0, 0, 0, 0.6);
   border-radius: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.125);
   position: relative;
   height: 36rem;
   font-family: "Pretendard-Regular";
   /* bottom: 3rem; */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .overlay_inner {
   max-width: 36rem;
@@ -217,6 +222,7 @@ input:not(:placeholder-shown) {
   padding: 0%;
   font-family: "Pretendard";
   font-size: 16px;
+  transition: 0.3s;
 }
 .loginBtnFalse {
   width: 98%;
@@ -229,7 +235,7 @@ input:not(:placeholder-shown) {
   padding: 0%;
 }
 .loginBtn:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   cursor: pointer;
 }
 .infoBox {

@@ -41,6 +41,10 @@
   cursor: default;
   padding: 2rem 1rem;
   padding-left: 2rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .wholePage:after {
   z-index: 11;
