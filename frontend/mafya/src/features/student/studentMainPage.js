@@ -18,11 +18,8 @@ const StudentMainPage = () => {
   const [name, setName] = useState("")
   const [userId, setUserId] = useState("")
   const [isLoading, setIsLoading] = useState(true)
-  const [attendNum, setAttendNum] = useState(0)
   const Swal = require("sweetalert2")
-  const getAttendNum = (data) => {
-    setAttendNum(data)
-  }
+
   const messegesHandler = (event) => {
     const tmpMessges = event.target.value
     setMessages(tmpMessges)
@@ -108,11 +105,7 @@ const StudentMainPage = () => {
           <div className={styles.inner}>
             <div className={styles.statusBox}>
               <div className={styles.attendInfoBox}>
-                <AttendInformation
-                  month={month}
-                  name={name}
-                  attendNum={attendNum}
-                />
+                <AttendInformation month={month} name={name} />
               </div>
               <div className={styles.teamMemberBox}>
                 <TeamMember
@@ -123,11 +116,7 @@ const StudentMainPage = () => {
               </div>
             </div>
             <div className={styles.calenderBox}>
-              <Calender
-                setMonth={setMonth}
-                month={month}
-                getAttendNum={getAttendNum}
-              />
+              <Calender setMonth={setMonth} month={month} />
             </div>
           </div>
         </div>

@@ -43,8 +43,18 @@ const MainPage = () => {
   const [searchLoading, setSearchLoading] = useState(true)
   const [dangerModalOpen, setDangerModalOpen] = useState(false)
   const [searchBox, setSearchBox] = useState(false)
+  const [searchModalOpen, setSearchModalOpen] = useState(false)
+  const [ids, setIds] = useState(null)
 
   const Swal = require("sweetalert2")
+
+  const searchOpenModal = () => {
+    setSearchModalOpen(true)
+  }
+  const searchCloseModal = () => {
+    setSearchModalOpen(false)
+    setMessages("")
+  }
 
   const dangerOpenModal = () => {
     setDangerModalOpen(true)
@@ -465,6 +475,31 @@ const MainPage = () => {
     event.preventDefault()
     setDangerModalOpen(true)
   }
+  const searchMmsHandler = (event) => {
+    setSearchModalOpen(true)
+  }
+  const searchMmsTransferHandler = (event) => {
+    event.preventDefault()
+    const formData = { ids: [ids], messages }
+    console.log(formData)
+    axios1
+      .post(API_URL + "mms", formData, {
+        headers: { accessToken: window.localStorage.getItem("token") },
+      })
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: `메세지가 전송되었습니다.`,
+          timer: 1500,
+        })
+        setSearchModalOpen(false)
+        setMessages("")
+        setIds(null)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   const mmsDangerTransferHandler = (event) => {
     event.preventDefault()
@@ -601,6 +636,20 @@ const MainPage = () => {
         link.click()
       })
   }
+  const clickGuideLine = () => {
+    Swal.fire({
+      icon: "info",
+      title: "사용 방법",
+      html: `
+
+      <div style='text-align:start;line-height:2rem; font-family:"Pretendard-Regular";'>
+      1. ["" or "전체"]<br><div style='width:100%;height:0.5rem;'></div>
+      2. ["결석" or "지각"] [반 이름, ... Default X]<br> &nbsp&nbsp[팀코드, ... Default X] [날짜, Default 오늘] <br><div style='width:100%;height:0.5rem;'></div>
+      3. [반 이름, ... Deafult X] [팀 코드, ... Deafult X]<br>&nbsp &nbsp[날짜, ... or "전부" Default 오늘]<br><div style='width:100%;height:0.5rem;'></div>
+      4. ["이름", ... Deafult X] [날짜, ... or "전부" Default 오늘]<br> 
+      </div>`,
+    })
+  }
 
   return (
     !isLoading && (
@@ -624,6 +673,23 @@ const MainPage = () => {
         </CustomModal>
         <CustomModal open={dangerModalOpen} close={dangerCloseModal} header="">
           <form onSubmit={mmsDangerTransferHandler}>
+            <span>전송할 메시지를 입력하세요!</span>
+            <div>
+              <input
+                type="textarea"
+                value={messages}
+                onChange={messegesHandler}
+              />
+            </div>
+            <div>
+              <button type="submit" className="close">
+                전송
+              </button>
+            </div>
+          </form>
+        </CustomModal>
+        <CustomModal open={searchModalOpen} close={searchCloseModal} header="">
+          <form onSubmit={searchMmsTransferHandler}>
             <span>전송할 메시지를 입력하세요!</span>
             <div>
               <input
@@ -734,7 +800,7 @@ const MainPage = () => {
               </div>
 
               <div className={styles.teamStudentBox}>
-                <div className={styles.boxTitle}>금일 명단</div>
+                <div className={styles.boxTitle}>금일 미출석 명단</div>
 
                 <div className={styles.teamStudentList}>
                   <div>
@@ -821,7 +887,15 @@ const MainPage = () => {
               </div>
             </div>
             <div className={styles.rightSideBox}>
-              <div className={styles.boxTitle}>학생 조회</div>
+              <div className={styles.boxTitle}>
+                학생 조회
+                <span
+                  onClick={clickGuideLine}
+                  className="material-symbols-outlined"
+                >
+                  help
+                </span>
+              </div>
               <div className={styles.searchBox}>
                 {!searchBox ? (
                   <div
@@ -878,8 +952,9 @@ const MainPage = () => {
                                     <ReadonlyRow
                                       key={students.indexOf(student)}
                                       student={student}
-                                      deleteHandler={deleteHandler}
+                                      searchMmsHandler={searchMmsHandler}
                                       updateHandler={updateHandler}
+                                      setIds={setIds}
                                     />
                                   )
                                 })}

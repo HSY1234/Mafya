@@ -1,4 +1,4 @@
-const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
+const ReadonlyRow = ({ student, searchMmsHandler, updateHandler, setIds }) => {
   return (
     <tr>
       <td>{student.date.substr(5)}</td>
@@ -17,11 +17,17 @@ const ReadonlyRow = ({ student, deleteHandler, updateHandler }) => {
       <td>{student.trace}</td>
       <td>
         <button type="button" onClick={(event) => updateHandler(student)}>
-          <span class="material-symbols-outlined">edit</span>
+          <span className="material-symbols-outlined">edit</span>
         </button>
-        {/* <button type="button" onClick={() => deleteHandler(student.id)}>
-          <span class="material-symbols-outlined">delete</span>
-        </button> */}
+        <button
+          type="button"
+          onClick={() => {
+            searchMmsHandler()
+            setIds(student.id)
+          }}
+        >
+          <span className="material-symbols-outlined">outgoing_mail</span>
+        </button>
       </td>
     </tr>
   )

@@ -67,10 +67,21 @@
   padding-left: 2rem;
 }
 .boxTitle {
+  display: flex;
   font-size: 1.5rem;
   font-weight: bolder;
   margin: 1rem 3rem;
   color: rgba(0, 0, 0, 0.701);
+}
+.boxTitle > span {
+  margin-left: 1%;
+  margin-top: 0.3%;
+  color: rgba(255, 99, 71, 0.678);
+}
+.boxTitle > span:hover {
+  cursor: pointer;
+  scale: 1.05;
+  color: rgb(255, 99, 71);
 }
 
 /* dangerList */
@@ -125,7 +136,9 @@
   height: 10%;
   border-radius: 0.5rem;
 }
-
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 .studentListItem {
   margin-top: 0.99rem;
   width: 100%;
@@ -434,7 +447,7 @@
 .studentTable > tbody > tr > td > button {
   border: none;
   background: none;
-  width: 1.5rem;
+  width: 0.5rem;
   margin-left: 1rem;
   padding: 0;
 }
@@ -512,6 +525,7 @@
 .excelBox button > span {
   font-size: 2rem;
 }
+
 @media only screen and (max-width: 1120px) {
   .wholePage {
     height: 300vh;
@@ -575,6 +589,12 @@
     display: none;
   }
   .studentTable > tbody > tr > td:nth-child(6) {
+    display: none;
+  }
+  .studentTable > thead > tr > th:nth-child(4) {
+    display: none;
+  }
+  .studentTable > tbody > tr > td:nth-child(4) {
     display: none;
   }
 }
