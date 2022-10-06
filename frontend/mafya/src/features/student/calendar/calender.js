@@ -11,7 +11,6 @@ import styles from "./calender.module.css"
 const Calender = (props) => {
   const [events, setEvents] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [attendNum, setAttendNum] = useState(0)
 
   // 달 이동 시에 state 변환
   const calendarRef = useRef()
@@ -76,15 +75,7 @@ const Calender = (props) => {
             return true
           }
         })
-        let i
-        let cnt = 0
-        for (i = 0; i < result.length; i++) {
-          if (result[i]["title"] === "퇴실") {
-            cnt++
-          }
-        }
-        setAttendNum(cnt)
-        props.getAttendNum(cnt)
+
         setEvents(result)
         setIsLoading(false)
       })
