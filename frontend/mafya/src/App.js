@@ -88,7 +88,7 @@ function App() {
           ></AdminRoute>
 
           <PublicRoute restricted exact path="/" component={LoginPage} />
-          <AdminRoute exact path="/exit" component={ExitCamera} />
+          <AdminRoute exact path="/camera" component={ExitCamera} />
           <PrivateRoute exact path="/student" component={StudentMainPage} />
         </Switch>
       </BrowserRouter>

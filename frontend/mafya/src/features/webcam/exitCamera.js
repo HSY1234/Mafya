@@ -19,6 +19,7 @@ import abnormalexit from "./male/exit/abnormalexit.mp3";
 import normalexit from "./male/exit/normalexit.mp3";
 import notenroll1 from "./male/exit/notenroll1.mp3";
 import absent from "./male/exit/absent.mp3";
+import Spinner from "../../common/spinner";
 const Swal = require("sweetalert2");
 
 function ExitCamera() {
@@ -30,6 +31,12 @@ function ExitCamera() {
   const [faceDetacting, setFaceDetacting] = useState(false);
   const [model, setModel] = useState(null);
   const [userCode, setUserCode] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
+  const handleUserMedia = () => {
+    console.log("웹캠 로딩끝났어요!!");
+    setIsLoading2(false);
+  };
 
   const dataURLtoFile = (dataurl, fileName) => {
     var arr = dataurl.split(","),
@@ -515,6 +522,7 @@ function ExitCamera() {
       const net = await cocossd.load();
       console.log("모델 업로드 끝");
       setModel(net);
+      setIsLoading(false);
       // defineInterval(net)
     }
     runModel();
@@ -541,25 +549,40 @@ function ExitCamera() {
 
   return (
     <div className={styles.mainPageContainer}>
-      <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
-        <div
-          className={
-            humanDetacting
-              ? faceDetacting
-                ? styles.tmp
-                : styles.detectNow
-              : styles.nodetectNow
-          }
-        >
-          <Webcam
-            ref={webcamRef}
-            muted={true}
-            mirrored={true}
-            screenshotFormat="image/jpeg"
-            className={styles.webCamArea}
-          />
-          <canvas ref={canvasRef} className={styles.webCanvas} />
+      <div
+        className={styles.webCamBox}
+        style={{
+          display: !isLoading && !isLoading2 ? "" : "none",
+        }}
+      >
+        <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
+          <div
+            className={
+              humanDetacting
+                ? faceDetacting
+                  ? styles.tmp
+                  : styles.detectNow
+                : styles.nodetectNow
+            }
+          >
+            <Webcam
+              ref={webcamRef}
+              muted={true}
+              mirrored={true}
+              screenshotFormat="image/jpeg"
+              className={styles.webCamArea}
+              onUserMedia={handleUserMedia}
+            />
+            <canvas ref={canvasRef} className={styles.webCanvas} />
+          </div>
         </div>
+      </div>
+      <div
+        style={{
+          display: !isLoading && !isLoading2 ? "none" : "",
+        }}
+      >
+        <Spinner />
       </div>
       {/* <span className={styles.forMJDesign}>{sentence}</span> */}
     </div>

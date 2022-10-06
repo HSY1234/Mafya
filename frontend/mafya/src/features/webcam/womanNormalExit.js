@@ -18,8 +18,8 @@ import abnormalexit from "./female/exit/abnormalexit.mp3";
 import normalexit from "./female/exit/normalexit.mp3";
 import notenroll1 from "./female/exit/notenroll1.mp3";
 import absent from "./female/enter/absent.mp3";
+import Spinner from "../../common/spinner";
 const Swal = require("sweetalert2");
-
 
 function WomanNormalExit() {
   const webcamRef = useRef(null);
@@ -30,6 +30,12 @@ function WomanNormalExit() {
   const [faceDetacting, setFaceDetacting] = useState(false);
   const [model, setModel] = useState(null);
   const [userCode, setUserCode] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
+  const handleUserMedia = () => {
+    console.log("웹캠 로딩끝났어요!!");
+    setIsLoading2(false);
+  };
 
   const dataURLtoFile = (dataurl, fileName) => {
     var arr = dataurl.split(","),
@@ -45,7 +51,6 @@ function WomanNormalExit() {
     return new File([u8arr], fileName, { type: mime });
   };
 
-  
   const detect1 = async (net) => {
     // Check data is available
     if (
@@ -103,23 +108,20 @@ function WomanNormalExit() {
             const res = await detectFace(formData);
 
             if (res.data.status === "0") {
+              new Audio(normalexit).play();
 
-                new Audio(normalexit).play();
+              Swal.fire({
+                icon: "success",
+                title: `${res.data.name}님 퇴실하셨습니다.`,
+                showConfirmButton: false,
+                timer: 2500,
+              });
 
-                Swal.fire({
-                  icon: "success",
-                  title: `${res.data.name}님 퇴실하셨습니다.`,
-                  showConfirmButton: false,
-                  timer: 2500,
-                });
-
-                return new Promise((resolve) => {
-                  setTimeout(() => {
-                    setHumanDetacting(false);
-                  }, 2500);
-                });
-              
-              
+              return new Promise((resolve) => {
+                setTimeout(() => {
+                  setHumanDetacting(false);
+                }, 2500);
+              });
             } else if (res.data.status === "1") {
               new Audio(notenroll).play();
               Swal.fire({
@@ -156,25 +158,24 @@ function WomanNormalExit() {
   };
 
   const defineInterval = (net) => {
-    
-      if (net) {
-        const timeId = setInterval(() => {
-          detect1(net);
-        }, 1000);
-        setTimerId(timeId);
-      }
-      if (humanDetacting) {
-        console.log("인간 인식", net);
-        clearInterval(timerId);
-        setTimerId(null);
-      }
-    
+    if (net) {
+      const timeId = setInterval(() => {
+        detect1(net);
+      }, 1000);
+      setTimerId(timeId);
+    }
+    if (humanDetacting) {
+      console.log("인간 인식", net);
+      clearInterval(timerId);
+      setTimerId(null);
+    }
   };
   useEffect(() => {
     async function runModel() {
       const net = await cocossd.load();
       console.log("모델 업로드 끝");
       setModel(net);
+      setIsLoading(false);
       // defineInterval(net)
     }
     runModel();
@@ -198,25 +199,40 @@ function WomanNormalExit() {
 
   return (
     <div className={styles.mainPageContainer}>
-      <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
-        <div
-          className={
-            humanDetacting
-              ? faceDetacting
-                ? styles.tmp
-                : styles.detectNow
-              : styles.nodetectNow
-          }
-        >
-          <Webcam
-            ref={webcamRef}
-            muted={true}
-            mirrored={true}
-            screenshotFormat="image/jpeg"
-            className={styles.webCamArea}
-          />
-          <canvas ref={canvasRef} className={styles.webCanvas} />
+      <div
+        className={styles.webCamBox}
+        style={{
+          display: !isLoading && !isLoading2 ? "" : "none",
+        }}
+      >
+        <div className={faceDetacting ? styles.humanNow : styles.noHumanNow}>
+          <div
+            className={
+              humanDetacting
+                ? faceDetacting
+                  ? styles.tmp
+                  : styles.detectNow
+                : styles.nodetectNow
+            }
+          >
+            <Webcam
+              ref={webcamRef}
+              muted={true}
+              mirrored={true}
+              screenshotFormat="image/jpeg"
+              className={styles.webCamArea}
+              onUserMedia={handleUserMedia}
+            />
+            <canvas ref={canvasRef} className={styles.webCanvas} />
+          </div>
         </div>
+      </div>
+      <div
+        style={{
+          display: !isLoading && !isLoading2 ? "none" : "",
+        }}
+      >
+        <Spinner />
       </div>
       {/* <span className={styles.forMJDesign}>{sentence}</span> */}
     </div>

@@ -1,19 +1,19 @@
-import classes from "./adminHeader.module.css"
-import { Link, useHistory } from "react-router-dom"
-import axios from "axios"
-import { API_URL } from "../../../common/api"
-import { useState, useRef } from "react"
-import axios1 from "../../../common/api/axios"
+import classes from "./adminHeader.module.css";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
+import { API_URL } from "../../../common/api";
+import { useState, useRef } from "react";
+import axios1 from "../../../common/api/axios";
 
 const AdminHeader = (props) => {
-  const { onPage } = props
-  const history = useHistory()
-  const [userExcel, setUserExcel] = useState(null)
-  const [listRegi, setlistRegi] = useState(false)
-  const [listDown, setlistDown] = useState(false)
-  const [fileName, setfileName] = useState("파일을 선택해 주세요")
-  const [onFile, setonFile] = useState(false)
-  const Swal = require("sweetalert2")
+  const { onPage } = props;
+  const history = useHistory();
+  const [userExcel, setUserExcel] = useState(null);
+  const [listRegi, setlistRegi] = useState(false);
+  const [listDown, setlistDown] = useState(false);
+  const [fileName, setfileName] = useState("파일을 선택해 주세요");
+  const [onFile, setonFile] = useState(false);
+  const Swal = require("sweetalert2");
   const logoutHandler = (event) => {
     Swal.fire({
       title: "확실한가요?",
@@ -30,7 +30,7 @@ const AdminHeader = (props) => {
           icon: "success",
           title: `로그아웃 되었습니다.`,
           timer: 1500,
-        })
+        });
         axios1
           .get(API_URL + "student/logout/", {
             headers: {
@@ -38,29 +38,29 @@ const AdminHeader = (props) => {
             },
           })
           .then((res) => {
-            window.localStorage.clear()
-            history.push("/")
+            window.localStorage.clear();
+            history.push("/");
           })
           .catch((err) => {
-            console.log(err)
-            console.log(err)
-          })
+            console.log(err);
+            console.log(err);
+          });
       }
-    })
-  }
+    });
+  };
   const changeUserExcelHandler = (event) => {
-    event.preventDefault()
-    console.log(event.target.files[0])
-    let file = event.target.files[0]
-    setUserExcel(file)
-    setfileName(event.target.files[0].name)
-    setonFile(true)
-  }
+    event.preventDefault();
+    console.log(event.target.files[0]);
+    let file = event.target.files[0];
+    setUserExcel(file);
+    setfileName(event.target.files[0].name);
+    setonFile(true);
+  };
 
   const submitUserExcelHandler = (event) => {
-    event.preventDefault()
-    let formData = new FormData()
-    formData.set("uploadUserFile", userExcel)
+    event.preventDefault();
+    let formData = new FormData();
+    formData.set("uploadUserFile", userExcel);
     axios1
       .post(API_URL + "excel/upload", formData, {
         headers: {
@@ -70,20 +70,20 @@ const AdminHeader = (props) => {
         },
       })
       .then((res) => {
-        alert("등록되었습니다.")
-        setUserExcel(null)
-        const fileInput = document.querySelector('input[type="file"]')
-        const dataTransfer = new DataTransfer()
-        fileInput.files = dataTransfer.files
+        alert("등록되었습니다.");
+        setUserExcel(null);
+        const fileInput = document.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        fileInput.files = dataTransfer.files;
       })
       .catch((err) => {
-        alert("등록 실패")
-        setUserExcel(null)
-        const fileInput = document.querySelector('input[type="file"]')
-        const dataTransfer = new DataTransfer()
-        fileInput.files = dataTransfer.files
-      })
-  }
+        alert("등록 실패");
+        setUserExcel(null);
+        const fileInput = document.querySelector('input[type="file"]');
+        const dataTransfer = new DataTransfer();
+        fileInput.files = dataTransfer.files;
+      });
+  };
   const userExcelHandler = (event) => {
     Swal.fire({
       title: "학생 정보를 저장하시겠습니까?",
@@ -100,8 +100,8 @@ const AdminHeader = (props) => {
           icon: "success",
           title: `저장 되었습니다.`,
           timer: 1500,
-        })
-        event.preventDefault()
+        });
+        event.preventDefault();
 
         axios1
           .get(API_URL + "excel/download", {
@@ -116,23 +116,23 @@ const AdminHeader = (props) => {
               new Blob([response.data], {
                 type: response.headers["content-type"],
               })
-            )
-            const link = document.createElement("a")
-            link.href = url
-            link.setAttribute("download", "user.xlsx")
-            document.body.appendChild(link)
-            link.click()
-          })
+            );
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "user.xlsx");
+            document.body.appendChild(link);
+            link.click();
+          });
       }
-    })
-  }
-  const fileInput = useRef()
+    });
+  };
+  const fileInput = useRef();
   const clickRegi = () => {
-    setlistRegi(!listRegi)
-  }
+    setlistRegi(!listRegi);
+  };
   const clickDown = () => {
-    setlistDown(!listDown)
-  }
+    setlistDown(!listDown);
+  };
 
   return (
     // <nav className={classes.navbar}>
@@ -205,7 +205,7 @@ const AdminHeader = (props) => {
               <Link to="/enter" className={classes.navbar__item}>
                 프로님 버전
               </Link>
-              <Link to="/exit" className={classes.navbar__item}>
+              <Link to="/camera" className={classes.navbar__item}>
                 컨설턴트님 버전
               </Link>
             </div>
@@ -224,14 +224,14 @@ const AdminHeader = (props) => {
                   onFile ? classes.uploadedFile : classes.notUploadedFile
                 }
                 onClick={() => {
-                  fileInput.current.click()
+                  fileInput.current.click();
                 }}
               >
                 {fileName}
               </div>
               <button
                 onClick={() => {
-                  fileInput.current.click()
+                  fileInput.current.click();
                 }}
               >
                 upload
@@ -276,7 +276,7 @@ const AdminHeader = (props) => {
         </ul>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default AdminHeader
+export default AdminHeader;
