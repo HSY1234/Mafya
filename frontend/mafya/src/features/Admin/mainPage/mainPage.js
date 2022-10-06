@@ -711,16 +711,6 @@ const MainPage = () => {
                       onClick={dangerHandleAllCheck}
                       className={styles.dropdownItem}
                     >
-                      {/* <input
-                      type="checkbox"
-                      name="select-all"
-                      onChange={(e) => dangerHandleAllCheck(e.target.checked)}
-                      checked={
-                        dangerCheckItems.length === dangerList.length
-                          ? true
-                          : false
-                      }
-                    /> */}
                       {dangerCheckItems.length &&
                       dangerCheckItems.length === dangerList.length ? (
                         <div className={styles.checked}>
@@ -742,31 +732,7 @@ const MainPage = () => {
                   </button>
                 </div>
               </div>
-              {/* <div className={styles.dangerInfoBox}>
-              {dangerList?.length ? (
-                <DangerList dangerList={dangerList} />
-              ) : (
-                <p>결석 위험군이 없습니다.</p>
-              )}
-            </div> */}
-              {/* <thead>
-                    <tr>
-                      <th>
-                        <input
-                          type="checkbox"
-                          name="select-all"
-                          onChange={(e) => handleAllCheck(e.target.checked)}
-                          checked={
-                            checkItems.length === studentList.length
-                              ? true
-                              : false
-                          }
-                        />
-                      </th>
-                      <th>이름</th>
-                      <th>전화번호</th>
-                    </tr>
-                  </thead> */}
+
               <div className={styles.teamStudentBox}>
                 <div className={styles.boxTitle}>금일 명단</div>
 
@@ -865,39 +831,9 @@ const MainPage = () => {
                     <div className={styles.searchBtnBefore}>
                       <span className="material-symbols-outlined">search</span>
                     </div>
-                    {/* <div className={styles.searchBtn}>Hover</div> */}
                   </div>
                 ) : (
                   <div className={styles.searchBoxAfter}>
-                    {/* <div className={styles.excelBox}>
-                      <form onSubmit={submitUserExcelHandler}>
-                        <input
-                          type="file"
-                          id="user_excel"
-                          accept=".xls,.xlsx"
-                          onChange={changeUserExcelHandler}
-                        />
-                        <button type="submit">
-                          <span class="material-symbols-outlined">
-                            file_upload
-                          </span>
-                        </button>
-                      </form>
-                      <div>
-                        <button onClick={searchExcelHandler}>
-                          <span class="material-symbols-outlined">
-                            download
-                          </span>
-                        </button>
-                      </div>
-                      <div>
-                        <button onClick={userExcelHandler}>
-                          <span class="material-symbols-outlined">
-                            system_update_alt
-                          </span>
-                        </button>
-                      </div>
-                    </div> */}
                     <div className={styles.searchEnzineBox}>
                       <form onSubmit={searchHandler}>
                         <input

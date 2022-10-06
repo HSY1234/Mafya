@@ -115,11 +115,12 @@
     inset 50px 0 75px #3397f456, inset -50px 0 75px rgba(0, 255, 255, 0.526); */
   box-shadow: 0rem 0.75rem 3rem 0rem rgba(0, 0, 0, 0.6);
 }
-.teamStudentList::-webkit-scrollbar {
+::-webkit-scrollbar {
+  width: 8px;
   background: transparent;
 }
 
-.teamStudentList::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: rgba(121, 121, 121, 0.2);
   height: 10%;
   border-radius: 0.5rem;
