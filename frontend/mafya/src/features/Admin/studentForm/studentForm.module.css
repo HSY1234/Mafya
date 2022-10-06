@@ -72,7 +72,7 @@
   justify-content: center;
   align-items: center;
 }
-.imageBox {
+/* .imageBox {
   display: flex;
   width: 800px;
   min-height: 380px;
@@ -91,6 +91,30 @@
   width: 250px;
   height: 380px;
   overflow: hidden;
+} */
+.imageBox {
+  display: flex;
+  width: 800px;
+  /* width: auto; */
+  min-height: 380px;
+  /* max-height: 380px; */
+  /* margin-left: -110%; */
+  /* overflow: hidden; */
+}
+.cutImage {
+  border-radius: 15px;
+  background-image: url("../../../pngs/profile.png");
+  background-size: 90% 80%;
+  background-position-y: 3.5rem;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  border: solid 2px rgba(0, 0, 0, 0.616);
+  border-color: #030a4a;
+  width: 250px;
+  height: 380px;
+  overflow: hidden;
+  justify-content: center;
+  display: flex;
 }
 .cutImage:hover {
   cursor: pointer;
