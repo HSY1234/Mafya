@@ -1,70 +1,79 @@
-import axios from "axios";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { API_URL } from "../../common/api";
-import { login } from "./loginAPI";
-import styles from "./loginPage.module.css";
-import logo from "../../pngs/mafya_logo.png";
+import axios from "axios"
+import { useState } from "react"
+import { useHistory } from "react-router-dom"
+import { API_URL } from "../../common/api"
+import { login } from "./loginAPI"
+import styles from "./loginPage.module.css"
+import logo from "../../pngs/mafya_logo.png"
 
 const LoginPage = () => {
-  const history = useHistory();
-  const [userCode, setUserCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [isStart, setIsStart] = useState(false);
-  const [isChange, setIsChange] = useState(false);
+  const history = useHistory()
+  const [userCode, setUserCode] = useState("")
+  const [password, setPassword] = useState("")
+  const [isStart, setIsStart] = useState(false)
+  const [isChange, setIsChange] = useState(false)
   const userCodeHandler = (event) => {
-    setUserCode(event.target.value);
-  };
+    setUserCode(event.target.value)
+  }
 
   const passwordHandler = (event) => {
-    setPassword(event.target.value);
-  };
+    setPassword(event.target.value)
+  }
 
-  const formIsVaild = userCode && password;
+  const formIsVaild = userCode && password
 
   const loginHandler = async (event) => {
-    event.preventDefault();
-    const userForm = { userCode, password };
+    event.preventDefault()
+    const userForm = { userCode, password }
     axios
       .post(API_URL + "student/login/", userForm, {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
         if (res.data.resultCode === 0) {
-          window.localStorage.setItem("userCode", userCode);
-          const token = res.data.accessToken;
-          window.localStorage.setItem("token", token);
+          window.localStorage.setItem("userCode", userCode)
+          const token = res.data.accessToken
+          window.localStorage.setItem("token", token)
           if (res.data.isManager === "Y") {
-            window.localStorage.setItem("isManager", res.data.isManager);
-            window.localStorage.setItem("classCode", res.data.classCode);
+            window.localStorage.setItem("isManager", res.data.isManager)
+            window.localStorage.setItem("classCode", res.data.classCode)
 
-            history.push("/admin");
+            history.push("/admin")
           } else {
-            window.localStorage.setItem("teamCode", res.data.teamCode);
+            window.localStorage.setItem("teamCode", res.data.teamCode)
 
-            history.push("/student");
+            history.push("/student")
           }
         } else {
-          alert("로그인 에러");
+          alert("로그인 에러")
         }
       })
 
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
   const toggleStart = (event) => {
-    setIsChange(true);
+    setIsChange(true)
     setTimeout(() => {
-      setIsStart(true);
-    }, 1000);
-  };
+      setIsStart(true)
+    }, 1000)
+  }
   return (
-    <div className={styles.loginBack}>
+    <div
+      className={
+        isStart
+          ? styles.loginBack
+          : !isChange
+          ? styles.loginBackBefore
+          : styles.loginBackChanger
+      }
+    >
       <div className={styles.overlay} onClick={toggleStart}>
         {!isStart ? (
           <div className={isChange ? styles.mainPageChange : styles.mainPage}>
             <div className={styles.logoBox}>
+              <span className={styles.logoName}>MAFYA</span>
               <img className={styles.logo} src={logo} alt="preview" />
             </div>
             <div className={styles.seviceInfo}>
@@ -179,11 +188,23 @@ const LoginPage = () => {
           </div>
         )}
       </div>
-      <div className={styles.wave}></div>
+      <div className={!isChange ? styles.starBack : styles.starBackChange}>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+        <div className={styles.stars}></div>
+      </div>
+      {/* <div className={styles.wave}></div>
       <div className={styles.waveThree}></div>
-      <div className={styles.waveTwo}></div>
+      <div className={styles.waveTwo}></div> */}
     </div>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage
