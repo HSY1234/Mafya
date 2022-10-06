@@ -24,7 +24,6 @@ import ManNormalExit from "./features/webcam/manNormalExit";
 import WomanAbnormalExit from "./features/webcam/womanAbnormalExit";
 import WomanNormalExit from "./features/webcam/womanNormalExit";
 
-
 function App() {
   return (
     <div>
@@ -37,18 +36,56 @@ function App() {
             component={studentForm}
           ></AdminRoute>
           <AdminRoute exact path="/admin" component={MainPage}></AdminRoute>
-          <AdminRoute exact path="/admin/woman/0" component={WomanAbnormalEnter}></AdminRoute>
-          <AdminRoute exact path="/admin/woman/2" component={WomanNormalExit}></AdminRoute>
-          <AdminRoute exact path="/admin/woman/3" component={WomanNormalExit}></AdminRoute>
-          <AdminRoute exact path="/admin/woman/10" component={WomanAbnormalEnter}></AdminRoute>
-          <AdminRoute exact path="/admin/woman/99" component={WomanAbsentEnter}></AdminRoute>
-          <AdminRoute exact path="/admin/man/0" component={ManNormalEnter}></AdminRoute>
-          <AdminRoute exact path="/admin/man/2" component={ManAbnormalExit}></AdminRoute>
-          <AdminRoute exact path="/admin/man/3" component={ManNormalExit}></AdminRoute>
-          <AdminRoute exact path="/admin/man/10" component={ManAbnormalEnter}></AdminRoute>
-          <AdminRoute exact path="/admin/man/99" component={ManAbsentEnter}></AdminRoute>
-
-
+          <AdminRoute
+            exact
+            path="/admin/woman/0"
+            component={WomanNormalEnter}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/woman/2"
+            component={WomanAbnormalExit}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/woman/3"
+            component={WomanNormalExit}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/woman/10"
+            component={WomanAbnormalEnter}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/woman/99"
+            component={WomanAbsentEnter}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/man/0"
+            component={ManNormalEnter}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/man/2"
+            component={ManAbnormalExit}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/man/3"
+            component={ManNormalExit}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/man/10"
+            component={ManAbnormalEnter}
+          ></AdminRoute>
+          <AdminRoute
+            exact
+            path="/admin/man/99"
+            component={ManAbsentEnter}
+          ></AdminRoute>
 
           <PublicRoute restricted exact path="/" component={LoginPage} />
           <AdminRoute exact path="/exit" component={ExitCamera} />
