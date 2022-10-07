@@ -1,20 +1,34 @@
 package com.a205.mafya.api.controller;
 
+import com.a205.mafya.util.filter.exception.TokenException;
 import com.a205.mafya.api.request.AddUserReq;
+import com.a205.mafya.api.request.LoginReq;
 import com.a205.mafya.api.request.ModifyUserReq;
-import com.a205.mafya.api.response.BasicRes;
-import com.a205.mafya.api.response.UserAttendRes;
-import com.a205.mafya.api.response.UserListRes;
-import com.a205.mafya.api.response.UserOneRes;
+import com.a205.mafya.api.response.*;
+import com.a205.mafya.api.service.AuthService;
+import com.a205.mafya.api.service.TokenService;
 import com.a205.mafya.api.service.UserService;
 import com.a205.mafya.db.dto.UserInfo;
+import com.a205.mafya.db.repository.entity.User;
+import com.a205.mafya.db.repository.entity.Manager;
+import com.a205.mafya.db.repository.ManagerRepository;
+import com.a205.mafya.db.repository.UserRepository;
+import com.a205.mafya.util.CookieProvider;
+import com.a205.mafya.util.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -24,14 +38,99 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AuthService authService;
 
-    // 학생 추가, 이미지는 아직
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    ManagerRepository managerRepository;
+    @Autowired
+    TokenProvider tokenProvider;
+    @Autowired
+    CookieProvider cookieProvider;
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // 로그인
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpServletResponse resp){
+
+        log.info("security 통과 완료");
+
+        // jwt 생성
+        String accessToken = authService.login(loginReq, 'a');
+        String refreshToken = authService.login(loginReq, 'r');
+
+        // 매니저인지 확인
+        Optional<User> user = userRepository.findByUserCode(loginReq.getUserCode());
+        Optional<Manager> manager = managerRepository.findByManagerCode(loginReq.getUserCode());
+
+        String userCode = "";
+        String password = "";
+        String isManager = "";
+        String teamCode = "";
+        String classCode = "";
+        if(manager.isPresent()){
+            userCode = manager.get().getManagerCode();
+            password = manager.get().getPassword();
+            isManager = "Y";
+            classCode = manager.get().getClassCode();
+        }else if(user.isPresent()){
+            userCode = user.get().getUserCode();
+            password = user.get().getPassword();
+            isManager = "N";
+            teamCode = user.get().getTeamCode();
+        }else{
+            throw new NoSuchElementException("no user exist");
+        }
+
+        //비밀번호 일치 확인
+        if (!passwordEncoder.matches(loginReq.getPassword(), password)) {
+            System.out.println("bad password");
+            return (new ResponseEntity<Void>(HttpStatus.BAD_REQUEST));
+        }
+
+        // accessToken은 responseEntity로 보내기
+        LoginRes LR = LoginRes.builder()
+                .accessToken(accessToken)
+                .msg("SUCCESS")
+                .resultCode(0)
+                .isManager(isManager)
+                .classCode(classCode)
+                .teamCode(teamCode)
+                .build();
+        // refreshToken은 HttpOnly cookie로 보내기
+        cookieProvider.addTokenToCookie(resp,"refreshToken",refreshToken);
+
+        return new ResponseEntity<>(LR, HttpStatus.OK);
+    }
+
+    // 로그아웃
+    @GetMapping("logout")
+    public ResponseEntity<?> logout(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req, HttpServletResponse resp) throws TokenException {
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ////////////////////////////////////
+
+        // refresh 토큰 제거
+        cookieProvider.addTokenToCookie(resp,"refreshToken","logout");
+
+        return new ResponseEntity<>("logout", HttpStatus.OK);
+    }
+
+
+    // 학생 추가
     @PostMapping("")
-    public ResponseEntity<?> AddStudent(@RequestBody AddUserReq userReq) throws Exception{
+    public ResponseEntity<?> AddStudent(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @RequestBody AddUserReq userReq) throws Exception{
 
         userService.addUser(userReq);
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(UserInfo.builder().userCode(userReq.getUserCode()).build())
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -41,7 +140,11 @@ public class UserController {
 
     // 학생 정보 지우기
     @DeleteMapping ("{id}")
-    public ResponseEntity<?> DeleteStudent(@PathVariable int id) throws Exception{
+    public ResponseEntity<?> DeleteStudent(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable int id) throws Exception{
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        //////////////////////////////////
+
 
         userService.deleteUser(id);
 
@@ -55,7 +158,12 @@ public class UserController {
 
     // 학생 정보 수정
     @PutMapping ("{id}")
-    public ResponseEntity<?> UpdateStudent(@PathVariable int id, @RequestBody ModifyUserReq userReq) throws Exception{
+    public ResponseEntity<?> UpdateStudent(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable int id, @RequestBody ModifyUserReq userReq) throws Exception{
+
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
+
 
         userService.modifyUser(id, userReq);
 
@@ -69,9 +177,14 @@ public class UserController {
 
     // 학생 정보 불러오기 By id
     @GetMapping ("id/{id}")
-    public ResponseEntity<?> GetStudentInfoById(@PathVariable int id) throws Exception{
+    public ResponseEntity<?> GetStudentInfoById(@RequestHeader(value="accessToken") String accessToken, HttpServletRequest req,@PathVariable int id) throws Exception{
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
+
+
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(userService.findUserById(id))
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -82,9 +195,12 @@ public class UserController {
 
     // 학생 정보 불러오기 By userCode
     @GetMapping ("userCode/{userCode}")
-    public ResponseEntity<?> GetStudentInfoByUserCode(@PathVariable String userCode) throws Exception{
+    public ResponseEntity<?> GetStudentInfoByUserCode(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable String userCode) throws Exception{
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        //////////////////////////////////
 
-        UserOneRes UOR = (UserOneRes) UserOneRes.builder()
+        UserOneRes UOR = UserOneRes.builder()
                 .userInfo(userService.findUserByUserCode(userCode))
                 .msg("SUCCESS")
                 .resultCode(0)
@@ -95,7 +211,12 @@ public class UserController {
 
     // 출석, 불출석 학생 리스트 불러오기
     @GetMapping ("attend")
-    public ResponseEntity<?> GetAttendList() throws Exception{
+    public ResponseEntity<?> GetAttendList(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req) throws Exception{
+
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
+
 
         List<UserInfo>[] attList =  userService.findAttendList();
         UserAttendRes UAR = UserAttendRes.builder()
@@ -108,12 +229,19 @@ public class UserController {
         return new ResponseEntity<>(UAR, HttpStatus.OK);
     }
 
-    // 학생 리스트 불러오기
+    // 학생 리스트 불러오기 (페이지네이션)
     @GetMapping ("")
-    public ResponseEntity<?> GetStudentList() throws Exception{
+    public ResponseEntity<?> GetStudentList(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable) throws Exception{
 
-        UserListRes ULR = (UserListRes) UserListRes.builder()
-                .userList(userService.findUserAll())
+        System.out.println(">>> processPaging : " + pageable);
+
+//        //////jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
+
+
+        UserListRes ULR = UserListRes.builder()
+                .userList(userService.findUserAll(pageable))
                 .msg("SUCCESS")
                 .resultCode(0)
                 .build();
@@ -123,8 +251,12 @@ public class UserController {
 
     // 학번 중복 검사
     @GetMapping ("checkId/{userCode}")
-    public ResponseEntity<?> UserCodeOverLapCheck(@PathVariable String userCode) throws Exception{
+    public ResponseEntity<?> UserCodeOverLapCheck(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PathVariable String userCode) throws Exception{
         userService.checkUserCodeOverlap(userCode);
+
+//        ////// jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
 
         BasicRes BR = BasicRes.builder()
                 .msg("SUCCESS")
@@ -134,4 +266,22 @@ public class UserController {
         return new ResponseEntity<>(BR, HttpStatus.OK);
     }
 
+    //[Park SeHyoen Add]
+    @GetMapping("classCode/{classCode}")
+    public ResponseEntity<?> GetStudentListByClassCode(@RequestHeader(value="accessToken") String accessToken,HttpServletRequest req, @PageableDefault(page = 0, size = 10, sort = "id")Pageable pageable, @PathVariable String classCode) throws Exception{
+        System.out.println(">>> GetStudentListByClassCode : " + pageable + "   classCode : " + classCode);
+
+//        ////// jwt 적용 코드 /////////////////
+//        tokenService.TokenValidation(accessToken,tokenProvider.resolveRefreshToken(req));
+//        ///////////////////////////////////
+
+        UserListRes ULR = UserListRes.builder()
+                .userList(userService.findUserAllByClassCode(pageable, classCode))
+                .msg("SUCCESS")
+                .resultCode(0)
+                .build();
+
+        return new ResponseEntity<>(ULR, HttpStatus.OK);
+    }
+    //[Park SeHyeon End]
 }

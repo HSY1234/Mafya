@@ -11,12 +11,9 @@ public interface ImgService {
 
     public boolean saveImg(MultipartFile img, String userCode);
 
-    public String makeUrl(String userCode);
+    public String getUrl(String userCode);
 
     public Map<String, String> processFace(MultipartFile img);
 
     public Map<String, String> processMask(MultipartFile img, String userCode);
-
-//    public boolean uploadCamImg(MultipartFile img);
-
 }

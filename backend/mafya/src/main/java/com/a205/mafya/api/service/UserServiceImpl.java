@@ -1,12 +1,15 @@
 package com.a205.mafya.api.service;
 
-import com.a205.mafya.api.exception.UserCodeOverlapException;
+import com.a205.mafya.util.filter.exception.UserCodeOverlapException;
 import com.a205.mafya.db.repository.UserRepository;
 import com.a205.mafya.api.request.AddUserReq;
 import com.a205.mafya.api.request.ModifyUserReq;
 import com.a205.mafya.db.dto.UserInfo;
-import com.a205.mafya.db.entity.User;
+import com.a205.mafya.db.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,10 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Override
     @Transactional
     public void addUser(AddUserReq userReq) throws Exception {
@@ -29,8 +36,8 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
                 .name(userReq.getName())
                 .userCode(userReq.getUserCode())
-                .password(userReq.getUserCode())
-                // 회원가입 시 상태는 기본값으로
+                .password(passwordEncoder.encode(userReq.getUserCode()))
+                // 회원가입 시 상태는 기본값으로(안쓰는 컬럼)
                 // status(0) : 입실
                 // status(1) : 입실안함
                 .status(1)
@@ -66,7 +73,6 @@ public class UserServiceImpl implements UserService{
         user.modifyInfo(userReq);
 
         userRepository.save(user);
-
     }
 
     @Override
@@ -134,19 +140,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserInfo> findUserAll() throws Exception {
-        List<User> userList = userRepository.findAll();
+    public List<UserInfo> findUserAllByTeamCode(String teamCode) throws Exception {
+        List<User> userList = userRepository.findAllByTeamCode(teamCode);
         if(userList.isEmpty()){
             throw new NoSuchElementException("No Student exist");
         }
-
         List<UserInfo> uirList = new ArrayList<>();
         for( User user : userList) {
-
             uirList.add(UserToUserInfo(user));
         }
 
         return uirList;
+    }
+
+    @Override
+    public Page<UserInfo> findUserAll(Pageable pageable) throws Exception {
+        return userRepository.findAll(pageable).map(
+            user -> { return (UserToUserInfo(user)); }
+        );
     }
 
     @Override
@@ -156,7 +167,14 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public UserInfo UserToUserInfo(User user) throws Exception {
+    @Override
+    public Page<UserInfo> findUserAllByClassCode(Pageable pageable, String classCode) throws Exception {
+        return userRepository.findAllByClassCode(classCode, pageable).map(
+                user -> { return (UserToUserInfo(user)); }
+        );
+    }
+
+    public UserInfo UserToUserInfo(User user) {
         UserInfo uir = UserInfo.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -166,6 +184,10 @@ public class UserServiceImpl implements UserService{
                 .classCode(user.getClassCode())
                 .phoneNum(user.getPhoneNum())
                 .teamLeader(user.isTeamLeader())
+                //[Park SeHyeon Add]
+                .absent(user.getAbsent())
+                .trady(user.getTardy())
+                //[Park SeHyeon End]
                 .build();
         return uir;
     }
