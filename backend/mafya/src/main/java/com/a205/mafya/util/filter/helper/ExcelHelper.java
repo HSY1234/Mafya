@@ -103,39 +103,66 @@ public class ExcelHelper {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 0:
+                            System.out.println("case 0");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             tutorial.setName(currentCell.getStringCellValue());
                             break;
 
                         case 1:
+                            System.out.println("case 1");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             tutorial.setUserCode(currentCell.getStringCellValue());
                             break;
 
                         case 2:
+                            System.out.println("case 2");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             String password = currentCell.getStringCellValue();
                             tutorial.setPassword(passwordEncoder.encode(password));
                             break;
 
                         case 3:
+                            System.out.println("case 3");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             tutorial.setTeamCode(currentCell.getStringCellValue());
                             break;
 
                         case 4:
+                            System.out.println("case 4");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             tutorial.setClassCode(currentCell.getStringCellValue());
                             break;
 
                         case 5:
+                            System.out.println("case 5");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getStringCellValue());
                             tutorial.setPhoneNum(currentCell.getStringCellValue());
                             break;
 
                         case 6:
+                            System.out.println("case 6");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getBooleanCellValue());
                             tutorial.setTeamLeader(currentCell.getBooleanCellValue());
                             break;
 
                         case 7:
+                            System.out.println("case 8");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getNumericCellValue());
                             tutorial.setAbsent((int) currentCell.getNumericCellValue());
                             break;
 
                         case 8:
+                            System.out.println("case 8");
+                            System.out.println("---" + cellIdx + "---");
+                            System.out.println(currentCell.getNumericCellValue());
                             tutorial.setTardy((int) currentCell.getNumericCellValue());
                             break;
 
