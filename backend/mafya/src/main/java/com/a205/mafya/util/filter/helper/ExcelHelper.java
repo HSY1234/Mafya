@@ -34,8 +34,13 @@ public class ExcelHelper {
 
 
     public static boolean hasExcelFormat(MultipartFile file) {
+//        System.out.println(file.getContentType());
+        if("application/haansoftxlsx".equals(file.getContentType())){
+            return true;
+        }
 
         if (!TYPE.equals(file.getContentType())) {
+            System.out.println("우리타입이 아니네요");
             return false;
         }
 
